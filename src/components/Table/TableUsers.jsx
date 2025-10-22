@@ -192,7 +192,7 @@ export default function TableUsers({ users = [
         </Col>
       </Row>
       <div className="table-scroll-container">
-        <Table>
+        <Table className='mb-0'>
           <thead>
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>

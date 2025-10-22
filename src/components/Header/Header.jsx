@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Container, Nav, Navbar, Form, Button} from 'react-bootstrap';
+import { Container, Nav, Navbar, Form } from 'react-bootstrap';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 
 import './Header.css';
@@ -24,10 +24,10 @@ function Header({ onSignout }) {
     if (isAuthPage) return null
 
     return (
-        <Navbar variant='light' expand='md' expanded={expanded} onToggle={setExpanded}>
-            <Container className=''>
+        <Navbar variant='light' expand='md' expanded={expanded} onToggle={setExpanded} className='py-5'>
+            <Container>
                 <Navbar.Brand href='/' className='text-wrap flex-grow-1 flex-md-basis-0'>Inventory Management</Navbar.Brand>
-                <Navbar.Toggle className='' aria-controls='main-navbar-nav' />
+                <Navbar.Toggle aria-controls='main-navbar-nav' />
                 <Navbar.Collapse id='main-navbar-nav' className="justify-content-end">
                     <Nav className='align-items-end align-items-md-center'>
                         <Form className="pt-2 pt-md-0">
@@ -49,8 +49,8 @@ function Header({ onSignout }) {
                             </>
                         ) : (
                             <>
-                                <Nav.Link className='align-self-end' href='/signin' onClick={clickHadler}>Sign In</Nav.Link>
-                                <Nav.Link className='align-self-end' href='/signup' onClick={clickHadler}>Sign Up</Nav.Link>
+                                <Nav.Link className='align-self-end' href='/sign-in' onClick={clickHadler}>Sign In</Nav.Link>
+                                <Nav.Link className='align-self-end' href='/sign-up' onClick={clickHadler}>Sign Up</Nav.Link>
                             </>
                         )}
                     </Nav>
