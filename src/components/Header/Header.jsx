@@ -2,7 +2,6 @@ import { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Container, Nav, Navbar, Form } from 'react-bootstrap';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
-
 import './Header.css';
 
 function Header({ onSignout }) {

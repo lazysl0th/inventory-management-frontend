@@ -7,7 +7,7 @@ export default function InfoTooltip({ isOpen, onClose, title, message }) {
             size="md"
             show={isOpen}
             centered
-            onHide={onClose()}
+            onHide={onClose}
             aria-labelledby="example-modal-sizes-title-sm"
         >
             <Modal.Header closeButton>

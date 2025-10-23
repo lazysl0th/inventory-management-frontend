@@ -23,3 +23,24 @@ export const link = {
     SIGNUP: import.meta.env.VITE_SINGIN_URL ? `${import.meta.env.VITE_SINGIN_URL}` : '/sign-up',
     PASSWORD_RESET: import.meta.env.VITE_SINGIN_URL ? `${import.meta.env.VITE_SINGIN_URL}` : '/reset-password',
 }
+
+export const queryParams = {
+    GET_LATEST_INVENTORIES: {
+        take: 5,
+        createdAt: 'desc'
+    },
+    GET_TOP_INVENTORIES: {
+        take: 5,
+        itemsCount: 'desc'
+    }
+}
+
+export const nameList = {
+    LATEST: 'Latest inventories',
+    TOP_ITEMS: 'Top 5 by number of items'
+}
+
+export const tagCloudColor = {
+    luminosity: 'dark',
+    hue: 'monochrome',
+}
