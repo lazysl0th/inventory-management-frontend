@@ -9,6 +9,7 @@ import {
   getSortedRowModel,
   flexRender,
 } from '@tanstack/react-table';
+import parse from 'html-react-parser'
 import IndeterminateCheckbox from '../IndeterminateCheckbox/IndeterminateCheckbox';
 
 export default function RecordsList({ records, nameList }) {
@@ -58,8 +59,8 @@ export default function RecordsList({ records, nameList }) {
                 />
             ),
         }),
-        columnHelper.accessor('title', { header: 'Title', cell: info => info.getValue() }),
-        columnHelper.accessor('description', { header: 'Description', cell: info => info.getValue() }),
+        columnHelper.accessor('title', { header: 'Title', cell: info => parse(info.row.original.highlightedTitle || info.getValue()) }),
+        columnHelper.accessor('description', { header: 'Description', cell: info => parse(info.row.original.highlightedDescription || info.getValue()) }),
         columnHelper.accessor('image', { header: 'Image', cell: info => info.getValue() }),
         columnHelper.accessor('owner', { header: 'Owner', cell: info => info.getValue().name }),
         ], []

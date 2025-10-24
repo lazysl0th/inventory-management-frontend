@@ -23,21 +23,20 @@ export default function Main({}) {
     const { data: tags, loading: tagsLoading, error: tagsError } = useQuery(GET_TAGS);
 
     const cloudTagData = tags?.selectTags.map((tag) => ({ value: tag.name, count: tag.inventoriesCount })) || []
-    console.log(cloudTagData);
 
     return (
         <Container fluid className="d-flex flex-column gap-4">
             <Row>
                 <Col xs={11} className="d-flex flex-column gap-4">
                     { latestInventorisLoading 
-                        ? <Spinner animation="border" />
+                        ? <Spinner animation="border" className="align-self-center"/>
                         : latestInventorisError
-                            ? <Alert variant="danger">{latestInventorisError.message}</Alert>
+                            ? <Alert variant="danger" className="align-self-center">{latestInventorisError.message}</Alert>
                             : <RercordsList nameList={nameList.LATEST} records={latestInventoris.selectInventories} /> }
                     { topInventoriesLoading 
-                        ? <Spinner animation="border" />
+                        ? <Spinner animation="border" className="align-self-center"/>
                         : topInventoriestopError
-                            ? <Alert variant="danger">{topInventoriestopError.message}</Alert>
+                            ? <Alert variant="danger" className="align-self-center">{topInventoriestopError.message}</Alert>
                             : <RercordsList nameList={nameList.TOP_ITEMS} records={topInventories.selectInventories} /> }
                     
                 </Col>

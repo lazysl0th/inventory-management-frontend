@@ -1,19 +1,5 @@
 import { gql } from "@apollo/client";
 
-export const GET_INVENTORIES = gql`
-  query GetInventories {
-    inventories {
-        id
-        title
-        description
-        category
-        image
-        itemsCount
-        updatedAt
-    }
-  }
-`;
-
 export const GET_LATEST_INVENTORIES = gql`
     query GetLatestInventories($take: Int!, $orderBy: InventoryByConditialInput) {
         selectInventories(orderBy: $orderBy, take: $take) {
@@ -49,3 +35,17 @@ export const GET_TAGS = gql`
         }
     }
 `;
+
+export const SEARCH_INVENTORIES = gql`
+  query SearchInventories($searchQuery: String! $orderBy: String!) {
+    searchInventories(searchQuery: $searchQuery, orderBy: $orderBy) {
+        id
+        image
+        owner { name }
+        highlightedTitle
+        highlightedDescription
+    }
+  }
+`
+
+

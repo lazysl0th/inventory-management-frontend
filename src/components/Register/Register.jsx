@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState } from 'react';
 import { Container, Row, Col, Form, FloatingLabel, Button} from 'react-bootstrap';
-import { FaEyeSlash, FaEye } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import { BsFacebook } from "react-icons/bs";
-import * as Yup from "yup";
-import FormValidation from "../FormValidator/FormValidator";
+import { FaEyeSlash, FaEye } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
+import { BsFacebook } from 'react-icons/bs';
+import FormValidation from '../FormValidator/FormValidator';
+import { SignupSchema } from '../../utils/validationSchema';
 import { link } from '../../utils/constants'
 import './Register.css';
 
@@ -13,12 +13,6 @@ export default function Register ({ onReg }) {
     const [initialValues, setIinitialValues] = useState({ name: '', email: '', password: '' })
 
     const onShowPass = () => setShowPassword(prev => !prev);
-
-    const SignupSchema = Yup.object({
-        name: Yup.string().required("Enter name"),
-        email: Yup.string().email("Please enter a valid email address").required("Enter email"),
-        password: Yup.string().min(1, "Password must be at least 1 characters long").required("Enter password"),
-    });
     
     return (
         <Container fluid className="min-vh-100 align-content-center">

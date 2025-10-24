@@ -13,6 +13,10 @@ export const messageInfoTooltip = {
     RECORDS_DELETE: 'Records deleted success',
     USER_BLOCKED: 'User blocked success',
     USER_UNBLOCKED: 'User unblocked success',
+    RESULT_SEARCH: {
+        prefix: 'No results found for ',
+        suffix: '. Try another search term.'
+    }
 }
 
 export const link = {
@@ -22,6 +26,8 @@ export const link = {
     SINGIN: import.meta.env.VITE_SINGIN_URL ? `${import.meta.env.VITE_SINGIN_URL}` : '/sign-in',
     SIGNUP: import.meta.env.VITE_SINGIN_URL ? `${import.meta.env.VITE_SINGIN_URL}` : '/sign-up',
     PASSWORD_RESET: import.meta.env.VITE_SINGIN_URL ? `${import.meta.env.VITE_SINGIN_URL}` : '/reset-password',
+    SEARCH: import.meta.env.VITE_SINGIN_URL ? `${import.meta.env.VITE_SINGIN_URL}` : '/search',
+
 }
 
 export const queryParams = {
@@ -32,12 +38,16 @@ export const queryParams = {
     GET_TOP_INVENTORIES: {
         take: 5,
         itemsCount: 'desc'
+    },
+    SEARCH_INVENTORIES: {
+        orderBy: 'DESC'
     }
 }
 
 export const nameList = {
     LATEST: 'Latest inventories',
-    TOP_ITEMS: 'Top 5 by number of items'
+    TOP_ITEMS: 'Top 5 by number of items',
+    SEARCH: 'Search result'
 }
 
 export const tagCloudColor = {

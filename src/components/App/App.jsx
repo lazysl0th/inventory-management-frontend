@@ -3,10 +3,12 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import './App.css'
 import Header from '../Header/Header';
 import Main from '../Main/Main';
+import SearchPage from '../SearchPage/SearchPage'
 import Register from '../Register/Register';
 import * as userApi from '../../utils/usersApi';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import { titleInfoTooltip, messageInfoTooltip } from '../../utils/constants';
+
 
 
 function App() {
@@ -15,6 +17,7 @@ function App() {
     const [infoTooltipTitle, setInfoTooltipTitle] = useState('');
     const [infoTooltipMessage, setInfoTooltipMessage] = useState('');
     const [isInfoTooltipOpen,  setIsInfoTooltipOpen] = useState(false);
+    const [search, setSearch] = useState('')
 
 
     const openInfoTooltip = (title, message) => {
@@ -45,13 +48,10 @@ function App() {
 
     return (
             <>
+                <Header />
                 <Routes>
-                    <Route path="/" element={
-                        <>
-                            <Header />
-                            <Main />
-                        </>
-                    }/>
+                    <Route path="/" element={ <Main/>} />
+                    <Route path="/search" element={<SearchPage />} />
                     <Route path="/sign-up" element={<Register onReg={handleSignUpSubmit}/>} />
                 </Routes>
                 <InfoTooltip isOpen={isInfoTooltipOpen} onClose={handleCloseInfoTooltip} title={infoTooltipTitle} message={infoTooltipMessage} />
