@@ -16,7 +16,7 @@ function Header({ onSignout }) {
     const [initialValues] = useState({ searchQuery: '' })
     const [expanded, setExpanded] = useState(false);
 
-    const isAuthPage = ['/signin', '/signup'].includes(location.pathname);
+    const isAuthPage = [link.SINGIN, link.SIGNUP].includes(location.pathname);
 
     const expandedHadle = () => setExpanded(false);
 

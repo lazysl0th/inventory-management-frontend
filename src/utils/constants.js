@@ -32,12 +32,14 @@ export const link = {
 
 export const queryParams = {
     GET_LATEST_INVENTORIES: {
+        name: 'createdBy',
         take: 5,
-        createdAt: 'desc'
+        order: 'desc'
     },
     GET_TOP_INVENTORIES: {
+        name: 'countItems',
         take: 5,
-        itemsCount: 'desc'
+        order: 'desc'
     },
     SEARCH_INVENTORIES: {
         orderBy: 'DESC'
@@ -50,7 +52,73 @@ export const nameList = {
     SEARCH: 'Search result'
 }
 
-export const tagCloudColor = {
+export const TAGS_CLOUD_SOLOR = {
     luminosity: 'dark',
     hue: 'monochrome',
 }
+
+export const tabs = {
+    INVENTORY: [
+        {
+            id: 'detail',
+            title: 'Detail',
+            component: 'DetailTab',
+        },
+        {
+            id: 'customId',
+            title: 'Custom ID',
+            component: 'CustomIdTab',
+        },
+        {
+            id: 'fields',
+            title: 'Fields',
+            component: 'FieldsTab',
+        },
+        {
+            id: 'access',
+            title: 'Access',
+            component: 'AccessTab',
+        },
+                {
+            id: 'chat',
+            title: 'Chat',
+            component: 'ChatTab',
+        },        {
+            id: 'stats',
+            title: 'Stats',
+            component: 'StatsTab',
+        },        {
+            id: 'export',
+            title: 'Export',
+            component: 'ExportTab',
+        },
+    ]
+}
+
+export const RECORDS_LIST_HEADS = {
+    'Inventory': [
+        { id: 'title', header: 'Title', highlightKey: 'highlightedTitle' },
+        { id: 'description', header: 'Description', highlightKey: 'highlightedDescription' },
+        { id: 'category', header: 'Category' },
+        { id: 'owner', header: 'Owner', accessor: value => value?.name },
+    ],
+    'Item': { fieldIdKey: 'id', fieldTitleKey: 'title', fieldValueKey: 'value' },
+    'CustomIdPart': [
+        { id: 'type', header: 'Type' },
+        { id: 'value', header: 'Value' },
+        { id: 'format', header: 'Format' },
+        { id: 'digits', header: 'Digits' },
+    ],
+    'InventoryField': [
+        { id: 'title', header: 'Title' },
+        { id: 'type', header: 'Type' },
+        { id: 'description', header: 'Description' },
+        { id: 'visible', header: 'Show in Table' },
+        { id: 'order', header: 'Order' },
+        { id: 'status', header: 'Status' },
+    ],
+    'User': [
+        { id: 'name', header: 'Name' },
+        { id: 'email', header: 'Email' },
+    ]
+};
