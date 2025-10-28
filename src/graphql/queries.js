@@ -40,12 +40,18 @@ export const GET_INVENTORIES = gql`
         $order: SortOrder,
         $take: Int,
         $ownerId: Int,
+        $isPublic: Boolean,
+        $allowedUser: Int,
+        $logic: String
     ) {
         inventories(
             sortName: $sortName, 
             order: $order, 
             take: $take
             ownerId: $ownerId,
+            isPublic: $isPublic,
+            allowedUser: $allowedUser,
+            logic: $logic
         ) {
             ...InventoryBase
         }

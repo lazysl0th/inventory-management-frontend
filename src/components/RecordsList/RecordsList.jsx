@@ -1,13 +1,14 @@
-import { useMemo, useState, useEffect } from 'react';
-import { Table, Container, } from 'react-bootstrap';
-import { BsSortDown, BsSortUp } from "react-icons/bs";
+import { useMemo, useState } from 'react';
+import { Table, Container, Row, Col, OverlayTrigger, Tooltip, Button, Form } from 'react-bootstrap';
+import { BsSortDown, BsSortUp, BsFillTrashFill } from "react-icons/bs";
+import { VscAdd } from 'react-icons/vsc';
 import {
-  createColumnHelper,
-  useReactTable,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-  flexRender,
+    createColumnHelper,
+    useReactTable,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getSortedRowModel,
+    flexRender,
 } from '@tanstack/react-table';
 import parse from 'html-react-parser'
 import './RecordsList.css'
@@ -24,13 +25,20 @@ export default function RecordsList({ records, nameList, handlerRecordClick }) {
     const type = records?.find(record => record.__typename)?.__typename;
     const columnHelper = createColumnHelper();
 
-    //console.log(type);
-    //console.log(handlerRecordClick?.[type]);
+    const handleBlock = () => {
+        onBlock(rowSelection);
+            setRowSelection({});
+    };
+
+    const handleDelete = () => {
+        onDelete(rowSelection);
+        setRowSelection({});
+    };
+
+    const onDisabled = () => Object.values(rowSelection).some(Boolean)
 
     const getUniqIdValue = (row) => {
-        if (row.id !== undefined && row.id !== null) {
-            return row.id.toString();
-        }
+        if (row.id !== undefined && row.id !== null)  return row.id.toString();
         return Object.values(row).map(value => (value !== null && value !== undefined ? value.toString() : "")).join("_");
     };
 
@@ -70,30 +78,24 @@ export default function RecordsList({ records, nameList, handlerRecordClick }) {
                     checked={table.getIsAllRowsSelected()}
                     indeterminate={table.getIsSomeRowsSelected()}
                     onChange={table.getToggleAllRowsSelectedHandler()}
+                    onClick={(e) => e.stopPropagation()}
                 />),
             cell: ({ row }) => (
                 <IndeterminateCheckbox
                 checked={row.getIsSelected()}
                 indeterminate={row.getIsSomeSelected()}
                 onChange={row.getToggleSelectedHandler()}
+                onClick={(e) => e.stopPropagation()}
                 />)
         })
     }
-
 
     const getColumnsByType = (type) => {
         if (!RECORDS_LIST_HEADS[type]) return [];
         const columns = buildColumns(records, RECORDS_LIST_HEADS[type]);
         const checkboxColumn = createCheckboxColumn();
-        return [ 
-            checkboxColumn,
-            ...columns
-        ]
+        return [ checkboxColumn, ...columns ]
     };
-
-    const onDisabled = () => {
-        return Object.values(rowSelection).some(Boolean);
-    }
 
     const filterTable = (row, columnId, filterValue) => {
         return Object.values(row.original).some(val => String(val).toLowerCase().includes(filterValue.toLowerCase()))
@@ -113,7 +115,7 @@ export default function RecordsList({ records, nameList, handlerRecordClick }) {
         columns,
         getCoreRowModel: getCoreRowModel(),
         getRowId: getUniqIdValue,
-        state: { rowSelection, globalFilter, sorting, columnVisibility: { select: false } },
+        state: { rowSelection, globalFilter, sorting, columnVisibility: { select: location.pathname === '/profile' ? true : false } },
         onRowSelectionChange: setRowSelection,
         onGlobalFilterChange: setGlobalFilter,
         getFilteredRowModel: getFilteredRowModel(),
@@ -125,8 +127,50 @@ export default function RecordsList({ records, nameList, handlerRecordClick }) {
 
     return (
         <Container>
-            {nameList && <h3 className="mb-3">{nameList}</h3>}
-                <Table className='mb-0' hover>
+            {nameList && <h3 className='mb-4 mt-4'>{nameList}</h3>}
+            { location.pathname === '/profile'
+                ? (<Row className="mb-3 align-items-center">
+                    <Col md="auto" className="d-flex gap-2">
+                        <OverlayTrigger
+                            key='add'
+                            placement='top'
+                            overlay={ <Tooltip id={`tooltip-add`}> Add </Tooltip> }
+                        >
+                            <Button 
+                                variant="outline-success" 
+                                onClick={handleBlock}
+                            >
+                                <VscAdd/> 
+                            </Button>
+                        </OverlayTrigger>
+                        
+                        <OverlayTrigger
+                            key='delete'
+                            placement='top'
+                            overlay={ <Tooltip id={`tooltip-delete`}> Delete </Tooltip> }
+                        >
+                            <Button 
+                                variant="outline-danger"
+                                onClick={handleDelete} 
+                                disabled={!onDisabled()}
+                            >
+                                <BsFillTrashFill />
+                            </Button>
+                        </OverlayTrigger>
+                    </Col>
+                    <Col md className="d-flex justify-content-end" >
+                        <Form.Control
+                            type="text"
+                            placeholder="Filter..."
+                            value={globalFilter}
+                            onChange={handelFilterChange}
+                            style={{ width: '200px' }}
+                        />
+                    </Col>
+                </Row>)
+                : (<></>) }
+            <div className='table-scroll-container'>
+                <Table className='mb-0'  hover>
                 <thead>
                     {table.getHeaderGroups().map(headerGroup => (
                     <tr key={headerGroup.id}>
@@ -160,6 +204,7 @@ export default function RecordsList({ records, nameList, handlerRecordClick }) {
                         />))}
                 </tbody>
                 </Table>
+                </div>
         </Container>
     );
 }

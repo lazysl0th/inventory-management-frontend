@@ -1,0 +1,11 @@
+.table-scroll-container {
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+.table-scroll-container thead th {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+}

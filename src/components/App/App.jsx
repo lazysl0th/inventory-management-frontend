@@ -206,7 +206,8 @@ function App() {
                         path="/profile"
                         element={
                             <ProtectedRoute isLoading={isVerifyCurrentUser} >
-                                <Profile />
+                                <Profile 
+                                    handlerRecordClick={handlerRecordClick} />
                             </ProtectedRoute>
                         }/>
                 </Routes>

@@ -32,21 +32,18 @@ export const link = {
 
 export const queryParams = {
     GET_LATEST_INVENTORIES: {
-        name: 'createdBy',
+        sortName: 'createdAt',
         take: 5,
         order: 'desc'
     },
     GET_TOP_INVENTORIES: {
-        name: 'countItems',
+        sortName: 'countItems',
         take: 5,
         order: 'desc'
     },
-    GET_MY_INVENTORIES: {
-        name: 'owner',
-        order: 'desc'
-    },
     GET_EDITABLE_INVENTORIES: {
-
+        isPublic: true,
+        logic: 'OR'
     },
     SEARCH_INVENTORIES: {
         orderBy: 'DESC'

@@ -75,24 +75,37 @@ function Header({ onLog }) {
                                 </Form>
                             ) }
                         </FormValidation>
-                        {currentUser?.loggedIn 
-                        ? ( <>
-                                <Navbar.Text className='ps-2' >
-                                    Signed in as: <a href="/profile">{currentUser?.name}</a>
-                                </Navbar.Text>
-                                <Navbar.Text className='ps-2'>
-                                    Email: <a href={`mailto:${currentUser?.email}`}>{currentUser?.email}</a>
-                                </Navbar.Text>
-                                <Nav.Link className='text-dark' href='/' onClick={hadleLogout}>Sign{'\u00A0'}Out</Nav.Link>
-                            </>
-                        ) : (currentUser?.loggedIn || (location.pathname === '/signup' || location.pathname ==='/signin'))
+                        {(currentUser?.loggedIn) 
+                            ? ( <> 
+                                { location.pathname !== '/profile' && 
+                                    ( <>
+                                        <Navbar.Text className='ps-2'>
+                                            Signed in as: <a href="/profile">{currentUser?.name}</a>
+                                        </Navbar.Text>
+                                        <Navbar.Text className='ps-2'>
+                                            Email: <a href={`mailto:${currentUser?.email}`}>{currentUser?.email}</a>
+                                        </Navbar.Text>
+                                    </> )}
+                                        <Nav.Link className='text-dark' href='/' onClick={hadleLogout}>
+                                            Sign&nbsp;Out
+                                        </Nav.Link>
+                                    </> )
+                            : (currentUser?.loggedIn || (location.pathname === '/signup' || location.pathname ==='/signin'))
                                 ? (<></>)
                                 : ( <>
-                                    <Nav.Link className='align-self-end text-dark' href='/sign-in' onClick={expandedHadle}>Sign In</Nav.Link>
-                                    <Nav.Link className='align-self-end text-dark' href='/sign-up' onClick={expandedHadle}>Sign Up</Nav.Link>
-                                </>)
-
-                        }
+                                        <Nav.Link 
+                                            className='align-self-end text-dark' 
+                                            href='/sign-in' 
+                                            onClick={expandedHadle}>
+                                                Sign In
+                                        </Nav.Link>
+                                        <Nav.Link
+                                            className='align-self-end text-dark'
+                                            href='/sign-up'
+                                            onClick={expandedHadle}>
+                                                Sign Up
+                                        </Nav.Link>
+                                    </>) }
                     </Nav>
                 </Navbar.Collapse>
             </Container>

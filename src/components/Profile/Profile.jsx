@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import { useQuery } from "@apollo/client/react";
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
 import { GET_INVENTORIES } from '../../graphql/queries';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
@@ -6,26 +7,21 @@ import RecordsList from "../RecordsList/RecordsList";
 import { queryParams, nameList } from '../../utils/constants';
 
 
-export default function Profile ({  }) {
+export default function Profile ({ handlerRecordClick }) {
     const currentUser = useContext(CurrentUserContext);
 
     const { data: myInventories, loading: myInventoriesLoading, error: myInventoriesError } = useQuery(GET_INVENTORIES, {
-        variables: {
-            sortName: queryParams.GET_LATEST_INVENTORIES.name,
-            owner: queryParams.GET_MY_INVENTORIES.owner
-        },
+        variables: { ownerId: currentUser.id },
     });
 
     const { data: editableInventories, loading: editableInventoriesLoading, error: editableInventoriestopError } = useQuery(GET_INVENTORIES, {
         variables: {
-            sortName: queryParams.GET_TOP_INVENTORIES.name,
-            order: queryParams.GET_TOP_INVENTORIES.order,
-            take: queryParams.GET_TOP_INVENTORIES.take,
+            isPublic: queryParams.GET_EDITABLE_INVENTORIES.isPublic,
+            allowedUser: currentUser.id,
+            logic: queryParams.GET_EDITABLE_INVENTORIES.logic
         },
     });
 
-
-    // ==== НАСТРОЙКИ АККАУНТА ====
     const [theme, setTheme] = useState('light');
     const [language, setLanguage] = useState('en');
 
@@ -36,71 +32,73 @@ export default function Profile ({  }) {
 
     const handleLanguageChange = (lang) => {
         setLanguage(lang);
-        alert(`Язык изменён на: ${lang === "ru" ? "Русский" : "English"}`);
+        alert(`Language change: ${lang === "es" ? "Spanish" : "English"}`);
     };
 
     return (
         <Container className="py-4">
-            <h2 className="mb-4">Профиль</h2>
+            <Row>
+                <Col>
+                    <h2 className="mb-4">Profile</h2>
+                        <Form>
+                            <Row className="mb-3">
+                                <Form.Group as={Col} controlId="formProfileName">
+                                    <Form.Label>Name</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter name" value={currentUser.name} />
+                                </Form.Group>
+                                <Form.Group as={Col} controlId="formProfilePassword">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control type="email" placeholder="Enter email" value={currentUser.email} />
+                                </Form.Group>
+                            </Row>
+                            <Row className="mb-3">
+                                <Form.Group as={Col} controlId="formProfileInterface">
+                                    <Form.Label>Interface</Form.Label>
+                                    <Button className="w-100"
+                                        variant={theme === "light" ? "outline-dark" : "outline-light"}
+                                        onClick={handleThemeToggle}
+                                    >
+                                        {theme === "light" ? " Dark" : "Light"}
+                                    </Button>
+                                </Form.Group>
 
-        {/* ======== НАСТРОЙКИ АККАУНТА ======== */}
-        <Row className="mb-5">
-            <Col md={6}>
-                <Card>
-                    <Card.Header>
-                        <strong>Настройки учётной записи</strong>
-                    </Card.Header>
-                    <Card.Body>
-                        <Form.Group as={Row} className="mb-3" controlId="language">
-                            <Form.Label column sm={4}>
-                                Язык интерфейса
-                            </Form.Label>
-                            <Col sm={8}>
-                                <Form.Select
-                                    value={language}
-                                    onChange={(e) => handleLanguageChange(e.target.value)}
-                                >
-                                    <option value="ru">Русский</option>
-                                    <option value="en">English</option>
-                                </Form.Select>
-                            </Col>
-                        </Form.Group>
+                                <Form.Group as={Col} controlId="formProfileLanguage">
+                                    <Form.Label>Language</Form.Label>
+                                    <Form.Select
+                                        value={language}
+                                        onChange={(e) => handleLanguageChange(e.target.value)}
+                                    >
+                                        <option value="en">English</option>
+                                        <option value="es">Spanish</option>
+                                    </Form.Select>
+                                </Form.Group>
 
-                        <Form.Group as={Row} className="align-items-center mb-3" controlId="theme">
-                            <Form.Label column sm={4}>
-                                Тема
-                            </Form.Label>
-                            <Col sm={8}>
-                                <Button
-                                    variant={theme === "light" ? "outline-dark" : "outline-light"}
-                                    onClick={handleThemeToggle}
-                                >
-                                    {theme === "light" ? "🌙 Тёмная" : "☀️ Светлая"}
-                                </Button>
-                            </Col>
-                        </Form.Group>
+                                <Form.Group as={Col} controlId="formChangePassword" className="align-self-end">
+                                    <Button variant="outline-secondary" className="w-100" onClick={() => alert("Change password")}>
+                                        Change password
+                                    </Button>{" "}
+                                </Form.Group>
+                            </Row>
+                        </Form>
+                </Col>
+            </Row>
+            <Row className="mb-5">
+                <Col>
+                <RecordsList 
+                    nameList={nameList.OWNER}
+                    records={myInventories?.inventories}
+                    handlerRecordClick={handlerRecordClick} />
+                </Col>
+            </Row>
 
-                        <div className="text-end">
-                            <Button variant="outline-secondary" size="sm" onClick={() => alert("Смена пароля")}>
-                                Сменить пароль
-                            </Button>{" "}
-                        </div>
-                    </Card.Body>
-                </Card>
-            </Col>
-        </Row>
-
-        <Row className="mb-5">
-            <Col>
-               <RecordsList nameList={nameList.OWNER} records={myInventories.inventories} />
-            </Col>
-        </Row>
-
-        <Row>
-            <Col>
-                <RecordsList nameList={nameList.WRITE_ACCESS} records={[]} />
-            </Col>
-        </Row>
-    </Container>
-  );
+            <Row>
+                <Col>
+                    <RecordsList
+                        nameList={nameList.WRITE_ACCESS}
+                        records={editableInventories?.inventories}
+                        handlerRecordClick={handlerRecordClick} />
+                </Col>
+            </Row>
+        </Container>
+    );
 };

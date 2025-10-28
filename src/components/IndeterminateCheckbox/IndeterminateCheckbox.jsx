@@ -1,16 +1,13 @@
-import React from 'react';
+import { forwardRef, useRef, useEffect } from 'react';
+import { Form } from 'react-bootstrap';
 
-const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }, ref) => {
-    const defaultRef = React.useRef();
+const IndeterminateCheckbox = forwardRef(( { indeterminate, ...rest }, ref ) => {
+    const defaultRef = useRef();
     const resolvedRef = ref || defaultRef;
 
-    React.useEffect(() => {
-      if (resolvedRef.current) {
-        resolvedRef.current.indeterminate = indeterminate;
-      }
-    }, [resolvedRef, indeterminate]);
+    useEffect(() => { if (resolvedRef.current) resolvedRef.current.indeterminate = indeterminate; }, [resolvedRef, indeterminate]);
 
-    return <input type="checkbox" ref={resolvedRef} {...rest} />;
+    return <Form> <Form.Check type='checkbox' ref={resolvedRef} {...rest} /></Form>
   }
 );
 
