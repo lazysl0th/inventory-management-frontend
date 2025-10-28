@@ -78,7 +78,7 @@ function Header({ onLog }) {
                         {currentUser?.loggedIn 
                         ? ( <>
                                 <Navbar.Text className='ps-2' >
-                                    Signed in as: <a href="#login">{currentUser?.name}</a>
+                                    Signed in as: <a href="/profile">{currentUser?.name}</a>
                                 </Navbar.Text>
                                 <Navbar.Text className='ps-2'>
                                     Email: <a href={`mailto:${currentUser?.email}`}>{currentUser?.email}</a>

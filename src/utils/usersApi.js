@@ -24,7 +24,6 @@ export const register = async ({ name, email, password }) => {
 }
 
 export const login = async ({ email, password }) => {
-    console.log({ email, password })
     const res = await fetch(`${apiConfig.baseUrl}/signin`, {
         method: 'POST',
         headers: apiConfig.headers(),

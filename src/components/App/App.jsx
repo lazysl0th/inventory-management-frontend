@@ -16,12 +16,14 @@ import InventoryView from '../InventoryView/InventoryView';
 import ItemView from '../ItemView/ItemView';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import { titleInfoTooltip, messageInfoTooltip } from '../../utils/constants';
+import { isOwner, hasAdminRole, hasAccess } from '../../utils/utils';
 
 
 
 function App() {
     const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState({ loggedIn: false });
+    const [isVerifyCurrentUser, setIsVerifyCurrentUser] = useState(true);
     const [infoTooltipTitle, setInfoTooltipTitle] = useState('');
     const [infoTooltipMessage, setInfoTooltipMessage] = useState('');
     const [isInfoTooltipOpen,  setIsInfoTooltipOpen] = useState(false);
@@ -32,28 +34,9 @@ function App() {
     const [activeInventoryTab, setActiveInventoryTab] = useState('details');
     const [activeItemTab, setActiveItemTab] = useState('details');
     const [searchParams] = useSearchParams();
-    
-    console.log(currentUser);
+    const [access, setAccess] = useState(true);
 
-    useEffect(() => {
-        checkToken()
-            .then((userData) => {
-                if (Object.keys(userData).length) {
-                    setCurrentUser({
-                        ...userData,
-                        loggedIn: true,
-                    })
-                //navigate('/')
-                } else {
-                    setCurrentUser({
-                        loggedIn: false,
-                })
-                    (<Redirect to='/sign-in' />)
-                }
-            })
-            .catch((err) => console.log(err));
-    }, [navigate])
-
+    useEffect( () => { handleVerifyUser() }, [navigate])
 
     const [loadInventory, { 
         data: dataInventory, 
@@ -66,7 +49,8 @@ function App() {
         data: dataItem, 
         loading: loadingItem, 
         error: errorItem, 
-        reset: resetItem }] = useLazyQuery(GET_ITEM_TAB[activeItemTab]);
+        reset: resetItem
+    }] = useLazyQuery(GET_ITEM_TAB[activeItemTab]);
 
     useEffect(() => {
         if (selectedInventory?.id) {
@@ -146,6 +130,21 @@ function App() {
         Item: setActiveItemTab,
     }
 
+    const handleVerifyUser = async () => {
+        try {
+            const userData = await checkToken();
+            if (Object.keys(userData).length) setCurrentUser({ ...userData, loggedIn: true })
+            else {
+                setCurrentUser({ loggedIn: false })
+                (<Redirect to='/sign-in' />)
+            }
+        } catch (e) {
+            console.log(e)
+        } finally {
+            setIsVerifyCurrentUser(false);
+        }
+    }
+
     const handlerSignUpSubmit = async (values) => {
         try {
             const data = await register(values);
@@ -185,6 +184,16 @@ function App() {
         navigate('/');
     }
 
+    const handlerCheckPermissionInventory = (inventories, user, requiredRoles) => {
+        if (!isOwner(inventories, user) && !hasAdminRole(requiredRoles, user)) setAccess(false);
+    }
+    
+    const handlerCheckPermissionItem = (item, user, requiredRoles) => {
+        if (!isOwner(uniqueInventories, user) && !hasAdminRole(requiredRoles, user) && !hasAccess(uniqueInventories, user)) {
+                setAccess(false);
+            }
+    }
+
     return (
             <CurrentUserContext.Provider value={currentUser}>
                 <Header onLog={handlerSignOut}/>
@@ -196,7 +205,7 @@ function App() {
                     <Route
                         path="/profile"
                         element={
-                            <ProtectedRoute>
+                            <ProtectedRoute isLoading={isVerifyCurrentUser} >
                                 <Profile />
                             </ProtectedRoute>
                         }/>
