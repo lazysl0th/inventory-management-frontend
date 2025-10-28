@@ -36,14 +36,16 @@ const USER_BASE_FRAGMENT = gql`
 
 export const GET_INVENTORIES = gql`
     query SelectInventories(
-        $sortName: String!,
-        $order: SortOrder!,
-        $take: Int!
+        $sortName: String,
+        $order: SortOrder,
+        $take: Int,
+        $ownerId: Int,
     ) {
         inventories(
             sortName: $sortName, 
             order: $order, 
             take: $take
+            ownerId: $ownerId,
         ) {
             ...InventoryBase
         }

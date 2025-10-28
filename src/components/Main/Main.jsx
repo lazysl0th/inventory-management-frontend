@@ -7,7 +7,7 @@ import { queryParams, nameList, TAGS_CLOUD_SOLOR } from '../../utils/constants';
 
 export default function Main({ handlerRecordClick }) {
 
-    const { data: latestInventoris, loading: latestInventorisLoading, error: latestInventorisError } = useQuery(GET_INVENTORIES, {
+    const { data: latestInventories, loading: latestInventoriesLoading, error: latestInventoriesError } = useQuery(GET_INVENTORIES, {
         variables: {
             sortName: queryParams.GET_LATEST_INVENTORIES.name,
             order: queryParams.GET_LATEST_INVENTORIES.order,
@@ -31,13 +31,13 @@ export default function Main({ handlerRecordClick }) {
         <Container className="d-flex flex-column gap-4" >
             <Row>
                 <Col xs={11} className="d-flex flex-column gap-4">
-                    { latestInventorisLoading 
+                    { latestInventoriesLoading 
                         ? <Spinner animation="border" className="align-self-center"/>
-                        : latestInventorisError
-                            ? <Alert variant="danger" className="align-self-center">{latestInventorisError.message}</Alert>
+                        : latestInventoriesError
+                            ? <Alert variant="danger" className="align-self-center">{latestInventoriesError.message}</Alert>
                             : <RecordsList
                                 nameList={nameList.LATEST}
-                                records={latestInventoris.inventories}
+                                records={latestInventories.inventories}
                                 handlerRecordClick={handlerRecordClick} /> }
 
                     { topInventoriesLoading 

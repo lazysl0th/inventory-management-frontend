@@ -1,28 +1,29 @@
-import { useState } from "react";
-import {
-    Container,
-    Row,
-    Col,
-    Button,
-    Form,
-    Card,
-} from "react-bootstrap";
+import { useState, useContext } from "react";
+import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
+import { GET_INVENTORIES } from '../../graphql/queries';
+import { CurrentUserContext } from '../../context/CurrentUserContext';
 import RecordsList from "../RecordsList/RecordsList";
-import { nameList } from '../../utils/constants'
+import { queryParams, nameList } from '../../utils/constants';
 
 
-export default function Profile ({ onLog }) {
-    // ==== ДАННЫЕ ====
-    const [ownedInventories, setOwnedInventories] = useState([
-        { id: 1, title: "Офисное оборудование", category: "Equipment", itemsCount: 42, updatedAt: "2025-10-20" },
-        { id: 2, title: "Книги библиотеки", category: "Book", itemsCount: 120, updatedAt: "2025-09-12" },
-    ]);
-    const [writeAccessInventories] = useState([
-        { id: 3, title: "Документы HR", category: "Other", itemsCount: 15, updatedAt: "2025-10-25" },
-    ]);
+export default function Profile ({  }) {
+    const currentUser = useContext(CurrentUserContext);
 
-    const [filterOwned, setFilterOwned] = useState("");
-    const [filterAccess, setFilterAccess] = useState("");
+    const { data: myInventories, loading: myInventoriesLoading, error: myInventoriesError } = useQuery(GET_INVENTORIES, {
+        variables: {
+            sortName: queryParams.GET_LATEST_INVENTORIES.name,
+            owner: queryParams.GET_MY_INVENTORIES.owner
+        },
+    });
+
+    const { data: editableInventories, loading: editableInventoriesLoading, error: editableInventoriestopError } = useQuery(GET_INVENTORIES, {
+        variables: {
+            sortName: queryParams.GET_TOP_INVENTORIES.name,
+            order: queryParams.GET_TOP_INVENTORIES.order,
+            take: queryParams.GET_TOP_INVENTORIES.take,
+        },
+    });
+
 
     // ==== НАСТРОЙКИ АККАУНТА ====
     const [theme, setTheme] = useState('light');
@@ -91,7 +92,7 @@ export default function Profile ({ onLog }) {
 
         <Row className="mb-5">
             <Col>
-               <RecordsList nameList={nameList.OWNER} records={[]} />
+               <RecordsList nameList={nameList.OWNER} records={myInventories.inventories} />
             </Col>
         </Row>
 

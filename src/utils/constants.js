@@ -41,6 +41,13 @@ export const queryParams = {
         take: 5,
         order: 'desc'
     },
+    GET_MY_INVENTORIES: {
+        name: 'owner',
+        order: 'desc'
+    },
+    GET_EDITABLE_INVENTORIES: {
+
+    },
     SEARCH_INVENTORIES: {
         orderBy: 'DESC'
     }
