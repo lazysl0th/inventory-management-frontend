@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Form, Row, Col, Image } from "react-bootstrap";
 
-export default function InventoryDetailsTab({ inventory, onChange, onImageFileSelect, categories, readOnly = false }) {
+export default function InventoryDetailsTab({ inventory, onChange, onImageFileSelect, categories, readOnly }) {
 
 
     //console.log(categories);

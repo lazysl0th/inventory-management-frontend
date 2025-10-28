@@ -18,7 +18,8 @@ function InventoryView({
     handlerChangeRecord,
     handlerRecordClick,
     activeTab,
-    onSelectTab}) {
+    onSelectTab
+}) {
 
     const handleImageFileSelect = (file) => {
         console.log("Выбран файл:", file.name);

@@ -1,10 +1,16 @@
 import { useContext } from "react";
 import { Navigate } from 'react-router-dom';
+import { Spinner } from 'react-bootstrap';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 
-const ProtectedRoute = ({ children }) => {
+
+const ProtectedRoute = ({ isLoading, children }) => {
     const currentUser = useContext(CurrentUserContext);
-    return ( currentUser.loggedIn ? children : <Navigate to='/sign-in' replace /> );
+    return ( isLoading 
+        ? <Spinner animation="border" className="align-self-center"/> 
+        : currentUser.loggedIn 
+            ? children 
+            : <Navigate to='/sign-in' replace /> );
 };
 
 export default ProtectedRoute;
