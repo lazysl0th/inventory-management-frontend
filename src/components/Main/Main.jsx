@@ -28,7 +28,7 @@ export default function Main({ handlerRecordClick }) {
     const cloudTagData = tags?.tags.map((tag) => ({ value: tag.name, count: tag.inventoriesCount })) || []
 
     return (
-        <Container fluid className="d-flex flex-column gap-4">
+        <Container className="d-flex flex-column gap-4" >
             <Row>
                 <Col xs={11} className="d-flex flex-column gap-4">
                     { latestInventorisLoading 

@@ -1,23 +1,27 @@
 import { useState, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/client/react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useSearchParams } from 'react-router-dom';
+import { CurrentUserContext } from '../../context/CurrentUserContext';
 import './App.css'
 import { GET_INVENTORY_TAB, GET_ITEM_TAB } from '../../graphql/queries';
-import * as userApi from '../../utils/usersApi';
+import { register, login, checkToken } from '../../utils/usersApi';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
 import SearchPage from '../SearchPage/SearchPage'
 import Register from '../Register/Register';
-import InfoTooltip from '../InfoTooltip/InfoTooltip';
+import Login from '../Login/Login';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import Profile from '../Profile/Profile';
 import InventoryView from '../InventoryView/InventoryView';
 import ItemView from '../ItemView/ItemView';
+import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import { titleInfoTooltip, messageInfoTooltip } from '../../utils/constants';
 
 
 
 function App() {
     const navigate = useNavigate();
-
+    const [currentUser, setCurrentUser] = useState({ loggedIn: false });
     const [infoTooltipTitle, setInfoTooltipTitle] = useState('');
     const [infoTooltipMessage, setInfoTooltipMessage] = useState('');
     const [isInfoTooltipOpen,  setIsInfoTooltipOpen] = useState(false);
@@ -27,8 +31,28 @@ function App() {
     const [selectedItem, setSelectedItem] = useState({});
     const [activeInventoryTab, setActiveInventoryTab] = useState('details');
     const [activeItemTab, setActiveItemTab] = useState('details');
+    const [searchParams] = useSearchParams();
     
-    console.log(selectedInventory);
+    console.log(currentUser);
+
+    useEffect(() => {
+        checkToken()
+            .then((userData) => {
+                if (Object.keys(userData).length) {
+                    setCurrentUser({
+                        ...userData,
+                        loggedIn: true,
+                    })
+                //navigate('/')
+                } else {
+                    setCurrentUser({
+                        loggedIn: false,
+                })
+                    (<Redirect to='/sign-in' />)
+                }
+            })
+            .catch((err) => console.log(err));
+    }, [navigate])
 
 
     const [loadInventory, { 
@@ -115,8 +139,7 @@ function App() {
         Item: closeItem
     };
 
-    const handlerChangeRecord = ((name, value) => { 
-        setSelectedInventory((prev) => ({ ...prev, [name]: value })) });
+    const handlerChangeRecord = ((name, value) => setSelectedInventory((prev) => ({ ...prev, [name]: value })) );
 
     const handlerSelectTabs = {
         Inventory: setActiveInventoryTab,
@@ -125,25 +148,58 @@ function App() {
 
     const handlerSignUpSubmit = async (values) => {
         try {
-            const userData = await userApi.register(values);
-            if (userData) {
-                openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.REGISTRATION.SUCCESS)
-                navigate('/');
+            const data = await register(values);
+            if (data.user) {
+                openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.REGISTRATION.success);
+                handlerSignInSubmit(data.user);
             } else {
-                openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.REGISTRATION.ERROR);
+                openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.ERROR);
             }
         } catch (e) {
             openInfoTooltip(titleInfoTooltip.ERROR, e.message)
         }
     }
 
+    const handlerSignInSubmit = async (values) => {
+        try {
+            const data = await login(values);
+            //const token = searchParams.get('token');
+            if (data.user) {
+                localStorage.setItem('token', data.token);
+                setCurrentUser(() => ({
+                    ...data.user,
+                    loggedIn: true,
+                }))
+                navigate('/profile');
+            } else {
+                openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.ERROR);
+            }
+        } catch (e) {
+            openInfoTooltip(titleInfoTooltip.ERROR, e.message)
+        }
+    }
+
+    const handlerSignOut = () => {
+        localStorage.removeItem('token');
+        setCurrentUser({ loggedIn: false, });
+        navigate('/');
+    }
+
     return (
-            <>
-                <Header />
+            <CurrentUserContext.Provider value={currentUser}>
+                <Header onLog={handlerSignOut}/>
                 <Routes>
                     <Route path="/" element={ <Main handlerRecordClick={handlerRecordClick}/> } />
                     <Route path="/search" element={<SearchPage handlerRecordClick={handlerRecordClick}/>} />
                     <Route path="/sign-up" element={<Register onReg={handlerSignUpSubmit}/>} />
+                    <Route path="/sign-in" element={<Login onAuth={handlerSignInSubmit}/>} />
+                    <Route
+                        path="/profile"
+                        element={
+                            <ProtectedRoute>
+                                <Profile />
+                            </ProtectedRoute>
+                        }/>
                 </Routes>
                 <InventoryView 
                     onShow={isInventoryViewOpen}
@@ -170,7 +226,7 @@ function App() {
                     title={infoTooltipTitle}
                     message={infoTooltipMessage}
                 />
-            </>
+            </CurrentUserContext.Provider>
     )
 }
 

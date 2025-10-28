@@ -7,9 +7,9 @@ export const messageInfoTooltip = {
     PASSWORD_RESET: 'Password reset request completed successfully',
     PASSWORD_UPDATE: 'The password has been updated successfully',
     REGISTRATION: {
-        SUCCESS: 'Registration completed successfully!',
-        ERROR: 'Something went wrong! Try again.',
+        success: 'Registration completed successfully!',
     },
+    ERROR: 'Something went wrong! Try again.',
     RECORDS_DELETE: 'Records deleted success',
     USER_BLOCKED: 'User blocked success',
     USER_UNBLOCKED: 'User unblocked success',
@@ -49,7 +49,9 @@ export const queryParams = {
 export const nameList = {
     LATEST: 'Latest inventories',
     TOP_ITEMS: 'Top 5 by number of items',
-    SEARCH: 'Search result'
+    SEARCH: 'Search result',
+    OWNER: 'My inventories',
+    WRITE_ACCESS: 'Inventories with write access'
 }
 
 export const TAGS_CLOUD_SOLOR = {

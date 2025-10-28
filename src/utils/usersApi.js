@@ -9,9 +9,9 @@ const apiConfig = {
 };
 
 const checkResponse = async (res) => {
-  if (res.ok) return res.json();
-  const e = await res.json();
-  return Promise.reject(e);
+    if (res.ok) return res.json();
+    const e = await res.json();
+    return Promise.reject(e);
 }
 
 export const register = async ({ name, email, password }) => {
@@ -23,32 +23,25 @@ export const register = async ({ name, email, password }) => {
     return checkResponse(res);
 }
 
-export function checkToken() {
-  return fetch(`${apiConfig.baseUrl}/users/me`, {
-    method: 'GET',
-    credentials: 'include',
-  })
-    .then((res) => checkResponse(res))
+export const login = async ({ email, password }) => {
+    console.log({ email, password })
+    const res = await fetch(`${apiConfig.baseUrl}/signin`, {
+        method: 'POST',
+        headers: apiConfig.headers(),
+        body: JSON.stringify({ email, password })
+    })
+    return checkResponse(res); 
 }
 
-export function registerOld({ name, email, password }) {
-  return fetch(`${apiConfig.baseUrl}/signup`, {
-    method: 'POST',
-    headers: apiConfig.headers(),
-    body: JSON.stringify({ name, email, password })
-  })
-    .then((res) => checkResponse(res))
+export const checkToken = async () => {
+    const res = await fetch(`${apiConfig.baseUrl}/users/me`, {
+        method: 'GET',
+        headers: apiConfig.headers(),
+    });
+  return await checkResponse(res);
 }
 
-export function login({ email, password }) {
-  return fetch(`${apiConfig.baseUrl}/signin`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: apiConfig.headers,
-    body: JSON.stringify({ email, password })
-  })
-    .then((res) => checkResponse(res))
-}
+
 
 export function logout() {
   return fetch(`${apiConfig.baseUrl}/signout`, {

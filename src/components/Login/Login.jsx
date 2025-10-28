@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { Container, Row, Col, Form, FloatingLabel, Button} from 'react-bootstrap';
-import { FaEyeSlash, FaEye } from 'react-icons/fa';
+import { Container, Row, Col, Form, Button, Image, Navbar, FloatingLabel, InputGroup} from 'react-bootstrap';
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { BiArrowBack } from 'react-icons/bi';
 import { FcGoogle } from 'react-icons/fc';
 import { BsFacebook } from 'react-icons/bs';
 import FormValidation from '../FormValidator/FormValidator';
-import { SignupSchema } from '../../utils/validationSchema';
+import { SigninSchema } from '../../utils/validationSchema';
 import { link } from '../../utils/constants'
 
-export default function Register ({ onReg }) {
+export default function Register ({ onAuth }) {
     const [showPassword, setShowPassword] = useState(false);
-    const [initialValues, setIinitialValues] = useState({ name: '', email: '', password: '' })
+    const [initialValues, setIinitialValues] = useState({ email: '', password: '', remember: false })
 
     const onShowPass = () => setShowPassword(prev => !prev);
     
@@ -27,36 +27,19 @@ export default function Register ({ onReg }) {
             </Row>
             <Row className='justify-content-start'>
                 <Col xs={12} md={6} className='d-flex flex-column'>
-                    <FormValidation initialValues={initialValues} validationSchema={SignupSchema} onSubmit={onReg}>
-                        { ({ handleSubmit, values, handleChange, handleBlur, touched, errors, isSubmitting}) => (
+                    <FormValidation initialValues={initialValues} validationSchema={SigninSchema} onSubmit={onAuth}>
+                        { ({ handleSubmit, values, handleChange, handleChangeCheckbox, handleBlur, touched, errors, isSubmitting}) => (
                             <Form
                                 noValidate
                                 className='d-flex flex-column align-self-center' 
-                                name='register'
+                                name='login'
                                 onSubmit={handleSubmit}
-                            >
+                            >                                
                                 <p className='text-start mb-0'>Start your journey</p>
-                                <h2 className='text-start mb-5'>Sign Up to The App</h2>
+                                <h2 className='text-start mb-5'>Sign In to The App</h2>
+
+                                
                                 <Form.Group className="mb-3" controlId="formGroup">
-                                    <FloatingLabel
-                                        controlId="floatingInputName"
-                                        label="Name"
-                                        className="mb-3"
-                                    >
-                                        <Form.Control 
-                                            type="text" 
-                                            name="name"
-                                            placeholder="Name" 
-                                            value={values.name}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            isInvalid={touched.name && !!errors.name}
-                                            isValid={touched.name && !errors.name}
-                                        />
-                                        <Form.Control.Feedback type='invalid'>
-                                            {errors.name}
-                                        </Form.Control.Feedback>
-                                    </FloatingLabel>
                                     <FloatingLabel
                                         controlId="floatingInputEmail"
                                         label="Email"
@@ -66,14 +49,14 @@ export default function Register ({ onReg }) {
                                             type="email" 
                                             name="email"
                                             placeholder="name@example.com" 
-                                            value={values.email }
+                                            value={values.email}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isInvalid={touched?.email && !!errors?.email}
-                                            isValid={touched?.email && !errors?.email}
+                                            isInvalid={touched.email && !!errors.email}
+                                            isValid={touched.email && !errors.email}
                                         />
                                         <Form.Control.Feedback type='invalid'>
-                                            {errors?.email}
+                                            {errors.email}
                                         </Form.Control.Feedback>
                                     </FloatingLabel>
                                     <Form.Group className='mb-3 position-relative' controlId='formGroupPassword' >
@@ -100,9 +83,17 @@ export default function Register ({ onReg }) {
                                             {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
                                         </Button>
                                     </Form.Group>
+                                    <Form.Check 
+                                        className='align-self-start mb-3'
+                                        type='checkbox'
+                                        checked={values.remember}
+                                        name='remember'
+                                        id='remember-input'
+                                        label='Remember me'
+                                        onChange={handleChangeCheckbox}/>
                                 </Form.Group>
                                 <Button type='submit' variant='dark' disabled={isSubmitting}>
-                                    {isSubmitting ? "Signing Up..." : "Sign Up"}
+                                    {isSubmitting ? "Signing In..." : "Sign In"}
                                 </Button>
                             </Form>
                         )}
@@ -138,15 +129,14 @@ export default function Register ({ onReg }) {
             <Row className="text-center py-5">
                 <Col xs={6} md={3}>
                     <span>
-                        Account already exist?{' '}
-                        <a href={link.SINGIN} className='text-decoration-underline text-primary fw-normal text-dark'>
-                            Sign{'\u00A0'}in
+                        Don't have an account?{' '}
+                        <a className='fw-normal text-decoration-underline text-dark' href={link.SIGNUP}>
+                            Sign{'\u00A0'}up
                         </a>
                     </span>
                 </Col>
-
                 <Col xs={6} md={3}>
-                    <a href={link.PASSWORD_RESET} className='text-decoration-underline text-primary fw-normal text-dark'>
+                    <a href={link.PASSWORD_RESET} className='text-decoration-underline text-dark fw-normal'>
                         Forgot password?
                     </a>
                 </Col>

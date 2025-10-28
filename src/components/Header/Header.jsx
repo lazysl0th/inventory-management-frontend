@@ -8,7 +8,7 @@ import { searchSchema } from '../../utils/validationSchema';
 import { link } from '../../utils/constants'
 import './Header.css';
 
-function Header({ onSignout }) {
+function Header({ onLog }) {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -20,8 +20,8 @@ function Header({ onSignout }) {
 
     const expandedHadle = () => setExpanded(false);
 
-    const signoutHandler = () => {
-        onSignout();
+    const hadleLogout = () => {
+        onLog();
         expandedHadle();
     }
     const handleSearch = async ({ searchQuery }) => navigate(`${link.SEARCH}?q=${encodeURIComponent(searchQuery)}`)
@@ -67,7 +67,7 @@ function Header({ onSignout }) {
                                                 : <Tooltip id="tooltip-empty" className="d-none" />
                                             }
                                             >
-                                            <Button variant='secondary' type='submit' disabled={isSubmitting}>
+                                            <Button variant='dark' type='submit' disabled={isSubmitting}>
                                                 <FaSearch/>
                                             </Button>
                                         </OverlayTrigger>
@@ -75,22 +75,24 @@ function Header({ onSignout }) {
                                 </Form>
                             ) }
                         </FormValidation>
-                        {currentUser?.loggIn ? (
-                            <>
-                                <Navbar.Text className='ps-2'>
+                        {currentUser?.loggedIn 
+                        ? ( <>
+                                <Navbar.Text className='ps-2' >
                                     Signed in as: <a href="#login">{currentUser?.name}</a>
                                 </Navbar.Text>
                                 <Navbar.Text className='ps-2'>
                                     Email: <a href={`mailto:${currentUser?.email}`}>{currentUser?.email}</a>
                                 </Navbar.Text>
-                                <Nav.Link href='/' className='align-self-end' onClick={signoutHandler}>Sign Out</Nav.Link>
+                                <Nav.Link className='text-dark' href='/' onClick={hadleLogout}>Sign{'\u00A0'}Out</Nav.Link>
                             </>
-                        ) : (
-                            <>
-                                <Nav.Link className='align-self-end' href='/sign-in' onClick={expandedHadle}>Sign In</Nav.Link>
-                                <Nav.Link className='align-self-end' href='/sign-up' onClick={expandedHadle}>Sign Up</Nav.Link>
-                            </>
-                        )}
+                        ) : (currentUser?.loggedIn || (location.pathname === '/signup' || location.pathname ==='/signin'))
+                                ? (<></>)
+                                : ( <>
+                                    <Nav.Link className='align-self-end text-dark' href='/sign-in' onClick={expandedHadle}>Sign In</Nav.Link>
+                                    <Nav.Link className='align-self-end text-dark' href='/sign-up' onClick={expandedHadle}>Sign Up</Nav.Link>
+                                </>)
+
+                        }
                     </Nav>
                 </Navbar.Collapse>
             </Container>
