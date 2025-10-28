@@ -14,7 +14,6 @@ import './RecordsList.css'
 import IndeterminateCheckbox from '../IndeterminateCheckbox/IndeterminateCheckbox';
 import Record from '../Record/Record';
 import { RECORDS_LIST_HEADS } from '../../utils/constants'
-import { object } from 'yup';
 
 
 export default function RecordsList({ records, nameList, handlerRecordClick }) {
@@ -22,13 +21,13 @@ export default function RecordsList({ records, nameList, handlerRecordClick }) {
     const [globalFilter, setGlobalFilter] = useState('');
     const [sorting, setSorting] = useState([]);
 
-    const type = records?.[0]?.__typename;
+    const type = records?.find(record => record.__typename)?.__typename;
     const columnHelper = createColumnHelper();
 
-    console.log(records);
+    //console.log(type);
+    //console.log(handlerRecordClick?.[type]);
 
     const getUniqIdValue = (row) => {
-    //console.log(row);
         if (row.id !== undefined && row.id !== null) {
             return row.id.toString();
         }
@@ -41,10 +40,13 @@ export default function RecordsList({ records, nameList, handlerRecordClick }) {
     }
 
     const collectColumn = (records, config) => {
-        return records.find(record => record.values.length > 0)?.values.map((value) => ({
+        
+        const colemn = records.find(record => record.values.length > 0)?.values?.map((value) => ({
             id: value.field[config.fieldIdKey], 
             header: value.field[config.fieldTitleKey],
-        }))
+            order: value.field.order
+        })).sort((a, b) => a.order - b.order)
+        return colemn;
     }
 
     const getRowValue = (row, col, config) => row.values.find(v => v.field.id === col.id)?.[config.fieldValueKey]
@@ -154,7 +156,7 @@ export default function RecordsList({ records, nameList, handlerRecordClick }) {
                             key={row.id} 
                             record={row}
                             render={flexRender}
-                            onRecordClick={handlerRecordClick}
+                            onRecordClick={handlerRecordClick?.[type]}
                         />))}
                 </tbody>
                 </Table>

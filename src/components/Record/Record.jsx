@@ -1,6 +1,7 @@
 function Record({ record, render, onRecordClick }) {
 
     const handleRecordClick = async () => onRecordClick(record.original)
+    //console.log(onRecordClick)
 
     return (
         <tr onClick={handleRecordClick}>

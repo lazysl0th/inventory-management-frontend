@@ -57,44 +57,6 @@ export const TAGS_CLOUD_SOLOR = {
     hue: 'monochrome',
 }
 
-export const tabs = {
-    INVENTORY: [
-        {
-            id: 'detail',
-            title: 'Detail',
-            component: 'DetailTab',
-        },
-        {
-            id: 'customId',
-            title: 'Custom ID',
-            component: 'CustomIdTab',
-        },
-        {
-            id: 'fields',
-            title: 'Fields',
-            component: 'FieldsTab',
-        },
-        {
-            id: 'access',
-            title: 'Access',
-            component: 'AccessTab',
-        },
-                {
-            id: 'chat',
-            title: 'Chat',
-            component: 'ChatTab',
-        },        {
-            id: 'stats',
-            title: 'Stats',
-            component: 'StatsTab',
-        },        {
-            id: 'export',
-            title: 'Export',
-            component: 'ExportTab',
-        },
-    ]
-}
-
 export const RECORDS_LIST_HEADS = {
     'Inventory': [
         { id: 'title', header: 'Title', highlightKey: 'highlightedTitle' },

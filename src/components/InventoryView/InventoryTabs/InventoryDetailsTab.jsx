@@ -1,16 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
 import { Form, Row, Col, Image } from "react-bootstrap";
 
-export default function DetailsTab({ value, onChange, onImageFileSelect, categories, readOnly = false }) {
+export default function InventoryDetailsTab({ inventory, onChange, onImageFileSelect, categories, readOnly = false }) {
 
 
     //console.log(categories);
     const [localPreview, setLocalPreview] = useState(null);
 
     // 🖼️ Вычисляем источник для превью
-    const previewSrc = useMemo(() => {
+    /*const previewSrc = useMemo(() => {
         return localPreview ?? value?.imageUrl ?? null;
-    }, [localPreview, value?.imageUrl]);
+    }, [localPreview, value?.imageUrl]);*/
 
     // Очистка blob-ссылок при размонтировании
     useEffect(() => {
@@ -43,12 +43,12 @@ export default function DetailsTab({ value, onChange, onImageFileSelect, categor
         <Form>
             <Row className="g-3">
                 <Col xs={12}>
-                    <Form.Group controlId="invTitle">
+                    <Form.Group controlId="title">
                         <Form.Label>Title</Form.Label>
                         <Form.Control
                             type="text"
                             name="title"
-                            value={value.title  ?? ''}
+                            value={inventory.title  ?? ''}
                             onChange={handleChangeFields}
                             placeholder="Enter title..."
                             disabled={readOnly}
@@ -62,7 +62,7 @@ export default function DetailsTab({ value, onChange, onImageFileSelect, categor
                             as="textarea"
                             rows={4}
                             name="description"
-                            value={value?.description  ?? ''}
+                            value={inventory?.description  ?? ''}
                             onChange={handleChangeFields}
                             placeholder="Description…"
                             disabled={readOnly}
@@ -74,7 +74,7 @@ export default function DetailsTab({ value, onChange, onImageFileSelect, categor
                     <Form.Group controlId="category">
                         <Form.Label>Category</Form.Label>
                         <Form.Select
-                            value={value.category  ?? ''}
+                            value={inventory.category  ?? ''}
                             onChange={handleChangeFields}
                             disabled={readOnly}
                             name="category"
@@ -92,9 +92,9 @@ export default function DetailsTab({ value, onChange, onImageFileSelect, categor
                     <Form.Group controlId="image">
                         <Form.Label>Image</Form.Label>
                         <div className="d-flex flex-column gap-2">
-                            {previewSrc ? (
+                            {'previewSrc' ? (
                                 <Image
-                                    src={previewSrc}
+                                    src={'previewSrc'}
                                     alt="Preview"
                                     thumbnail
                                     style={{ maxHeight: 160, objectFit: "cover" }}
@@ -124,7 +124,7 @@ export default function DetailsTab({ value, onChange, onImageFileSelect, categor
                                 <Form.Control
                                     type="text"
                                     name="owner"
-                                    value={value?.owner?.name ?? ''}
+                                    value={inventory?.owner?.name ?? ''}
                                     readOnly
                                     disabled
                                 />
@@ -137,7 +137,7 @@ export default function DetailsTab({ value, onChange, onImageFileSelect, categor
                                     <Form.Control
                                         type="text"
                                         name="createdBy"
-                                        value={new Date(+value.createdAt).toLocaleString()}
+                                        value={new Date(+inventory.createdAt).toLocaleString()}
                                         readOnly
                                         disabled
                                     />
@@ -150,7 +150,7 @@ export default function DetailsTab({ value, onChange, onImageFileSelect, categor
                                     <Form.Control
                                         type="text"
                                         name="updateAt"
-                                        value={new Date(+value.updatedAt).toLocaleString()}
+                                        value={new Date(+inventory.updatedAt).toLocaleString()}
                                         readOnly
                                         disabled
                                     />

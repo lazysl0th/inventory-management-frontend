@@ -10,6 +10,22 @@ const INVENTORY_BASE_FRAGMENT = gql`
         itemsCount
     }
 `
+
+const ITEM_BASE_FRAGMENT = gql`
+    fragment ItemBase on Item {
+        id
+        values {
+            id
+            value
+            field {
+                id
+                title
+                order
+            }
+        }
+    }
+`
+
 const USER_BASE_FRAGMENT = gql`
     fragment UserBase on User {
         id
@@ -124,33 +140,32 @@ export const GET_INVENTORY_TAB = {
     `,
     items: gql`
         query GetItems($inventoryId: Int!) {
-            items: items(inventoryId: $inventoryId) {
-                id
-                values {
-                    id
-                    value
-                    field {
-                        id
-                        title
-                        description
-                    }
-                }
+            items(inventoryId: $inventoryId) {
+                ...ItemBase
+            }
+            inventory(id: $inventoryId) {
+                ...InventoryBase
             }
         }
+        ${ITEM_BASE_FRAGMENT}
+        ${INVENTORY_BASE_FRAGMENT}
     `,
     chat: gql`
-        query GetComments($inventoryId: Int, $itemId: Int) {
+        query GetComments($inventoryId: Int!, $itemId: Int) {
+            inventory(id: $inventoryId) {
+                ...InventoryBase
+            }
             comments: comments(inventoryId: $inventoryId, itemId: $itemId) {
                 id
                 content
                 createdAt
                 user {
-                    id
-                    name
-                    email
+                    ...UserBase
                 }
             }
         }
+        ${USER_BASE_FRAGMENT}
+        ${INVENTORY_BASE_FRAGMENT}
     `,
     stats: gql`
         query GetInventoryStats($id: Int!) {
@@ -177,22 +192,31 @@ export const GET_INVENTORY_TAB = {
     `,
 };
 
-export const GET_ITEMS = gql`
-    query SelectItems($id: Int!) {
-        items(id: $id) {
-            id
-            title
-            description
-            items {
-                id
-                customId
+export const GET_ITEM_TAB = {
+    details: gql`
+        query GetItem($id: Int!) {
+            item(id: $id) {
+                ...ItemBase
+                owner { name }
                 createdAt
                 updatedAt
-                values {
-                    id
-                    value
-                }
+                values { field { type } }
             }
         }
-    }
-`;
+        ${ITEM_BASE_FRAGMENT}
+    `,
+    chat: gql`
+        query GetComments($inventoryId: Int, $itemId: Int) {
+            comments: comments(inventoryId: $inventoryId, itemId: $itemId) {
+                id
+                content
+                createdAt
+                user {
+                    ...UserBase
+                }
+                
+            }
+        } 
+        ${USER_BASE_FRAGMENT}
+    `,
+};

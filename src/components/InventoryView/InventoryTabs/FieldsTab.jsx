@@ -3,7 +3,7 @@ import RecordsList from "../../RecordsList/RecordsList";
 
 export default function FieldsTab({ fields = [] }) {
 
-    console.log(fields)
+    //console.log(fields)
 
     return (
         <div className="p-3">

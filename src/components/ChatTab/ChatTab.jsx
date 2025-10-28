@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, Form, Button, Alert, ListGroup } from "react-bootstrap";
 
-export default function ChatTab({ comments =[], onAddComment }) {
+export default function ChatTab({ comments=[], onAddComment }) {
 
     //console.log(comments)
 
