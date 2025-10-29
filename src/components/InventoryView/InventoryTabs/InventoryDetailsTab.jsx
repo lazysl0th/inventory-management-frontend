@@ -1,9 +1,32 @@
-import { useState, useEffect, useMemo } from "react";
+import { useContext, useState, useEffect } from 'react';
 import { Form, Row, Col, Image } from "react-bootstrap";
+import { CurrentUserContext } from '../../../context/CurrentUserContext';
 
-export default function InventoryDetailsTab({ inventory, onChange, onImageFileSelect, categories, readOnly }) {
+export default function InventoryDetailsTab({
+    categories,
+    details,
+    handlerChangeDetails,
+    onImageFileSelect,
+    readOnly
+}) {
+    //console.log(details);
+    const currentUser = useContext(CurrentUserContext);
 
 
+    //console.log(categories);
+
+
+    const handleChange = (e) => {
+        const { name, value } = e.target
+        handlerChangeDetails(name, value);
+    }
+    
+    
+    //const [image, setImage] = useRef();
+    
+
+
+    
     //console.log(categories);
     const [localPreview, setLocalPreview] = useState(null);
 
@@ -20,8 +43,6 @@ export default function InventoryDetailsTab({ inventory, onChange, onImageFileSe
             }
         };
     }, [localPreview]);
-
-    const handleChangeFields = (e) => onChange(e.target.name, e.target.value)
 
     // ✅ Стандартный onChange, никакого кастомного event handler в DOM
     const handleFileChange = (e) => {
@@ -48,8 +69,8 @@ export default function InventoryDetailsTab({ inventory, onChange, onImageFileSe
                         <Form.Control
                             type="text"
                             name="title"
-                            value={inventory.title  ?? ''}
-                            onChange={handleChangeFields}
+                            value={details.title}
+                            onChange={handleChange}
                             placeholder="Enter title..."
                             disabled={readOnly}
                         />
@@ -62,8 +83,8 @@ export default function InventoryDetailsTab({ inventory, onChange, onImageFileSe
                             as="textarea"
                             rows={4}
                             name="description"
-                            value={inventory?.description  ?? ''}
-                            onChange={handleChangeFields}
+                            value={details.description}
+                            onChange={handleChange}
                             placeholder="Description…"
                             disabled={readOnly}
                         />
@@ -74,13 +95,14 @@ export default function InventoryDetailsTab({ inventory, onChange, onImageFileSe
                     <Form.Group controlId="category">
                         <Form.Label>Category</Form.Label>
                         <Form.Select
-                            value={inventory.category  ?? ''}
-                            onChange={handleChangeFields}
+                            value={details.category}
+                            onChange={handleChange}
                             disabled={readOnly}
                             name="category"
                         >
                             <option value="" disabled> Select category… </option>
-                            { categories.map((category) => ( <option key={category.name} value={category.name}> {category.name} </option>)) }
+                            { categories?.enumValues.map((category) => ( 
+                                <option key={category.name} value={category.name}> {category.name} </option>)) }
                         </Form.Select>
                         <Form.Text className="text-muted">
                             Value definition develop (enum).
@@ -124,7 +146,7 @@ export default function InventoryDetailsTab({ inventory, onChange, onImageFileSe
                                 <Form.Control
                                     type="text"
                                     name="owner"
-                                    value={inventory?.owner?.name ?? ''}
+                                    value={details.owner ? details.owner : currentUser.name}
                                     readOnly
                                     disabled
                                 />
@@ -136,8 +158,8 @@ export default function InventoryDetailsTab({ inventory, onChange, onImageFileSe
                                 <Form.Label>Created by</Form.Label>
                                     <Form.Control
                                         type="text"
-                                        name="createdBy"
-                                        value={new Date(+inventory.createdAt).toLocaleString()}
+                                        name="createdAt"
+                                        value={details.createdAt}
                                         readOnly
                                         disabled
                                     />
@@ -150,7 +172,7 @@ export default function InventoryDetailsTab({ inventory, onChange, onImageFileSe
                                     <Form.Control
                                         type="text"
                                         name="updateAt"
-                                        value={new Date(+inventory.updatedAt).toLocaleString()}
+                                        value={details.updatedAt}
                                         readOnly
                                         disabled
                                     />

@@ -17,21 +17,34 @@ import Record from '../Record/Record';
 import { RECORDS_LIST_HEADS } from '../../utils/constants'
 
 
-export default function RecordsList({ records, nameList, handlerRecordClick }) {
+export default function RecordsList({
+    records,
+    nameList,
+    handlerClickRecord,
+    handlerDeleteRecords,
+    onAdd,
+    onRefetch,
+}) {
     const [rowSelection, setRowSelection] = useState({});
     const [globalFilter, setGlobalFilter] = useState('');
     const [sorting, setSorting] = useState([]);
 
     const type = records?.find(record => record.__typename)?.__typename;
+    //console.log(records)
     const columnHelper = createColumnHelper();
 
     const handleBlock = () => {
         onBlock(rowSelection);
-            setRowSelection({});
+        setRowSelection({});
     };
 
-    const handleDelete = () => {
-        onDelete(rowSelection);
+    const handleDelete = async () => {
+        console.log(rowSelection)
+        //const usersId = Object.keys(rowSelection);
+        //const selectedIds = table.getRowModel().rows[Number(52)]?.original.id;
+        //table.getRowModel().rows[Number(key)].original.id
+        await handlerDeleteRecords(rowSelection);
+        await onRefetch();
         setRowSelection({});
     };
 
@@ -48,7 +61,6 @@ export default function RecordsList({ records, nameList, handlerRecordClick }) {
     }
 
     const collectColumn = (records, config) => {
-        
         const colemn = records.find(record => record.values.length > 0)?.values?.map((value) => ({
             id: value.field[config.fieldIdKey], 
             header: value.field[config.fieldTitleKey],
@@ -82,10 +94,10 @@ export default function RecordsList({ records, nameList, handlerRecordClick }) {
                 />),
             cell: ({ row }) => (
                 <IndeterminateCheckbox
-                checked={row.getIsSelected()}
-                indeterminate={row.getIsSomeSelected()}
-                onChange={row.getToggleSelectedHandler()}
-                onClick={(e) => e.stopPropagation()}
+                    checked={row.getIsSelected()}
+                    indeterminate={row.getIsSomeSelected()}
+                    onChange={row.getToggleSelectedHandler()}
+                    onClick={(e) => e.stopPropagation()}
                 />)
         })
     }
@@ -138,7 +150,7 @@ export default function RecordsList({ records, nameList, handlerRecordClick }) {
                         >
                             <Button 
                                 variant="outline-success" 
-                                onClick={handleBlock}
+                                onClick={onAdd}
                             >
                                 <VscAdd/> 
                             </Button>
@@ -200,7 +212,7 @@ export default function RecordsList({ records, nameList, handlerRecordClick }) {
                             key={row.id} 
                             record={row}
                             render={flexRender}
-                            onRecordClick={handlerRecordClick?.[type]}
+                            onClick={handlerClickRecord?.[type]}
                         />))}
                 </tbody>
                 </Table>

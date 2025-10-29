@@ -228,3 +228,33 @@ export const GET_ITEM_TAB = {
         ${USER_BASE_FRAGMENT}
     `,
 };
+
+export const DELETE_INVENTORY = gql`
+    mutation DeleteInventories($ids: [Int!]!) {
+        deleteInventories(ids: $ids) {
+            id
+        }
+    }
+`;
+
+export const GET_CATEGORIES = gql`
+    query GetCategory {
+        categories: __type(name: "Category") {
+            name
+            enumValues {
+                name
+            }
+        }
+    }
+`;
+
+export const CREATE_INVENTORY = gql`
+    mutation createInventory($input: CreateInventoryInput!) {
+        createInventory(input: $input) {
+            title
+            description
+            category
+            createdAt
+        }
+    }
+`;

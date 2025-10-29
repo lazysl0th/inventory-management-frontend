@@ -1,6 +1,6 @@
-function Record({ record, render, onRecordClick }) {
+function Record({ record, render, onClick }) {
 
-    const handleRecordClick = async () => onRecordClick(record.original)
+    const handleRecordClick = () => onClick(record.original)
     //console.log(onRecordClick)
 
     return (

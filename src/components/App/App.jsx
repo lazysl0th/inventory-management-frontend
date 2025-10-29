@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useLazyQuery } from '@apollo/client/react';
+import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { Routes, Route, useNavigate, useSearchParams } from 'react-router-dom';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import './App.css'
-import { GET_INVENTORY_TAB, GET_ITEM_TAB } from '../../graphql/queries';
+import { GET_ITEM_TAB, DELETE_INVENTORY, GET_CATEGORIES, CREATE_INVENTORY } from '../../graphql/queries';
 import { register, login, checkToken } from '../../utils/usersApi';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
@@ -29,21 +29,13 @@ function App() {
     const [isInfoTooltipOpen,  setIsInfoTooltipOpen] = useState(false);
     const [isInventoryViewOpen, setIsInventoryViewOpen] = useState(false);
     const [isItemViewOpen, setIsItemViewOpen] = useState(false);
-    const [selectedInventory, setSelectedInventory] = useState({});
+    const [selectedInventoryId, setSelectedInventoryId] = useState(null);
     const [selectedItem, setSelectedItem] = useState({});
-    const [activeInventoryTab, setActiveInventoryTab] = useState('details');
     const [activeItemTab, setActiveItemTab] = useState('details');
     const [searchParams] = useSearchParams();
     const [access, setAccess] = useState(true);
 
     useEffect( () => { handleVerifyUser() }, [navigate])
-
-    const [loadInventory, { 
-        data: dataInventory, 
-        loading: loadingInventory, 
-        error: errorInventory, 
-        reset: resetInventory 
-    }] = useLazyQuery(GET_INVENTORY_TAB[activeInventoryTab]);
 
     const [loadItem, { 
         data: dataItem, 
@@ -52,14 +44,9 @@ function App() {
         reset: resetItem
     }] = useLazyQuery(GET_ITEM_TAB[activeItemTab]);
 
-    useEffect(() => {
-        if (selectedInventory?.id) {
-            if (['items', 'chat'].includes(activeInventoryTab)) {
-                loadInventory({ variables: { [`${selectedInventory.__typename.toLowerCase()}Id`]: selectedInventory.id } })
-            }
-            else loadInventory({ variables: { id: selectedInventory.id } })
-        }
-    }, [activeInventoryTab, selectedInventory.id]);
+    const [loadCategories, { data: dataCategories, loading, error, reset }] = useLazyQuery(GET_CATEGORIES);
+
+    useEffect(() => { loadCategories() }, []);
 
     useEffect(() => {
         if (selectedItem?.id) {
@@ -71,11 +58,16 @@ function App() {
     }, [activeItemTab, selectedItem.id]);
 
 
-    const inventory = dataInventory?.inventory || {}
-    const categories = dataInventory?.categories?.enumValues ?? [];
-    const items = dataInventory?.items ?? [];
-    const item = dataItem?.item || {}
+    const [createInventory, { loading: creating, error: errorCreate }] = useMutation(CREATE_INVENTORY);
 
+    const [deleteInventories, { loading: deleting }] = useMutation(DELETE_INVENTORY);
+
+    const categories = dataCategories?.categories || {}
+    const item = dataItem?.item || {}
+    
+    //console.log(inventory);
+    //console.log(categories);
+    
     const openInfoTooltip = (title, message) => {
         setInfoTooltipTitle(title);
         setInfoTooltipMessage(message);
@@ -88,34 +80,32 @@ function App() {
         setInfoTooltipMessage('');
     }
 
+    const openInventory = (record) => {
+        setSelectedInventoryId(record.id)
+        setIsInventoryViewOpen(true);
+    }
+
     const openItem = (record) => {
         setSelectedItem(record);
         setIsItemViewOpen(true);
     }
 
-    const closeItem = () => {
-        setIsItemViewOpen(false);
-        resetItem?.();
-        setActiveItemTab('details');
-        setSelectedItem({});
-    }
-
-    const openInventory = (record) => {
-        setSelectedInventory(record);
-        setIsInventoryViewOpen(true);
-        loadInventory({ variables: { id: record.id } });
+    const handlerClickRecord = {
+        Inventory: openInventory,
+        Item: openItem,
     }
 
     const closeInventory = () => {
         setIsInventoryViewOpen(false);
-        resetInventory?.();
         setActiveInventoryTab('details');
-        setSelectedInventory({});
+        setSelectedInventoryId(null);
     }
 
-    const handlerRecordClick = {
-        Inventory: openInventory,
-        Item: openItem,
+    const closeItem = () => {
+        setSelectedItem({});
+        resetItem?.();
+        setActiveItemTab('details');
+        setIsItemViewOpen(false);
     }
     
     const handlerCloseRecordView = {
@@ -123,10 +113,37 @@ function App() {
         Item: closeItem
     };
 
-    const handlerChangeRecord = ((name, value) => setSelectedInventory((prev) => ({ ...prev, [name]: value })) );
+    const addInventory = () => setIsInventoryViewOpen(true)
+
+    const handlerAddRecord = {
+        Inventory: addInventory
+    }
+
+    const hendleDeleteInventories = async (rowSelection) => {
+        try {
+            const selectedIds = Object.keys(rowSelection).map(Number);
+            deleteInventories({ variables: { ids: selectedIds } });
+            openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORDS_DELETE)
+        } catch (e) {
+            console.error(e);
+            openInfoTooltip(titleInfoTooltip.ERROR, e.message)
+        }
+    }
+
+    const handlerCreateInventory = (inventory) => {
+        createInventory({ variables: { input: inventory } });
+    }
+
+    const hendleDeleteItems = async (selectedIds) => {
+
+    }
+    
+    const handlerDeleteRecords = {
+        Inventory: hendleDeleteInventories,
+        Item: hendleDeleteItems,
+    }
 
     const handlerSelectTabs = {
-        Inventory: setActiveInventoryTab,
         Item: setActiveItemTab,
     }
 
@@ -198,8 +215,8 @@ function App() {
             <CurrentUserContext.Provider value={currentUser}>
                 <Header onLog={handlerSignOut}/>
                 <Routes>
-                    <Route path="/" element={ <Main handlerRecordClick={handlerRecordClick}/> } />
-                    <Route path="/search" element={<SearchPage handlerRecordClick={handlerRecordClick}/>} />
+                    <Route path="/" element={ <Main handlerClickRecord={handlerClickRecord}/> } />
+                    <Route path="/search" element={<SearchPage handlerClickRecord={handlerClickRecord}/>} />
                     <Route path="/sign-up" element={<Register onReg={handlerSignUpSubmit}/>} />
                     <Route path="/sign-in" element={<Login onAuth={handlerSignInSubmit}/>} />
                     <Route
@@ -207,24 +224,22 @@ function App() {
                         element={
                             <ProtectedRoute isLoading={isVerifyCurrentUser} >
                                 <Profile 
-                                    handlerRecordClick={handlerRecordClick} />
+                                    handlerClickRecord={handlerClickRecord}
+                                    handlerDeleteRecords={handlerDeleteRecords.Inventory}
+                                    handlerAddRecords={handlerAddRecord.Inventory} />
                             </ProtectedRoute>
                         }/>
                 </Routes>
                 <InventoryView 
-                    onShow={isInventoryViewOpen}
-                    inventory={inventory}
-                    items={items}
+                    isOpen={isInventoryViewOpen}
                     categories={categories}
-                    status={{loadingInventory, errorInventory}}
-                    onClose={handlerCloseRecordView.Inventory}
-                    handlerChangeRecord={handlerChangeRecord}
-                    handlerRecordClick={handlerRecordClick}
-                    activeTab={activeInventoryTab}
-                    onSelectTab={handlerSelectTabs.Inventory}
+                    inventoryId={selectedInventoryId}
+                    handlerCloseView={handlerCloseRecordView.Inventory}
+                    handlerClickRecord={handlerClickRecord}
+                    handlerCreateInventory={handlerCreateInventory}
                 />
                 <ItemView
-                    onShow={isItemViewOpen}
+                    isOpen={isItemViewOpen}
                     activeTab={activeItemTab}
                     item={item}
                     status={{loadingItem, errorItem}}

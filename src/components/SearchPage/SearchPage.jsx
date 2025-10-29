@@ -25,7 +25,7 @@ export default function SearchPage({ handlerRecordClick }) {
                         : <RecordsList 
                             nameList={nameList.SEARCH}
                             records={data.searchInventories}
-                            handlerRecordClick={handlerRecordClick} /> }
+                            handlerClickRecord={handlerClickRecord} /> }
         </Container>
     );
 }

@@ -1,4 +1,8 @@
+import { useState, useEffect, useRef } from 'react';
+import { useLazyQuery, } from '@apollo/client/react';
 import { Modal, Button, Spinner, Alert, Tabs, Tab, } from 'react-bootstrap';
+
+import { GET_INVENTORY_TAB } from '../../graphql/queries';
 import InventoryDetailsTab from './InventoryTabs/InventoryDetailsTab';
 import CustomIdTab from './InventoryTabs/CustomIdTab';
 import FieldsTab from './InventoryTabs/FieldsTab';
@@ -9,28 +13,78 @@ import RecordsList from '../RecordsList/RecordsList';
 
 
 function InventoryView({
-    onShow,
-    inventory,
+    isOpen,
     categories,
-    items,
-    status,
-    onClose,
-    handlerChangeRecord,
-    handlerRecordClick,
-    activeTab,
-    onSelectTab
+    inventoryId,
+    handlerCloseView,
+    handlerClickRecord,
+    handlerCreateInventory
 }) {
+
+    const [activeTab, setActiveTab] = useState('details');
+    const [inventory, setInventory] = useState({
+        title: '',
+        description: '',
+        category: '',
+        image: '',
+        owner: '',
+        createdAt: new Date().toLocaleString(),
+        updatedAt: new Date().toLocaleString(),
+        customIdFormat: {},
+    })
+
+    const [loadInventory, { data, loading, error, reset }] = useLazyQuery(GET_INVENTORY_TAB[activeTab]);
+
+    useEffect(() => {
+        if (inventoryId) loadInventory({ variables: { id: inventoryId } })
+        if (['items', 'chat'].includes(activeTab)) loadInventory({ variables: { inventoryId: inventoryId } })
+    }, [inventoryId, activeTab]);
+
+    const inventoryPart = data?.inventory || {}
+    
+    const handlerChangeInventory = ((name, value) => {
+        setInventory(prev => ({ ...prev,
+            [name]: value,
+        }));
+    });
+
+    useEffect(() => {
+        for(let key in inventoryPart) {
+            key === 'owner' ? handlerChangeInventory(key, inventoryPart[key].name) : handlerChangeInventory(key, inventoryPart[key]);
+            (kye === 'createdAt' || kye === 'updatedAt') ?? new Date(+inventoryPart[key]).toLocaleString()
+        }
+    }, [loading]);
+
+
+
+    const handleCloseView = () => {
+        setInventory({ title: '', description: '', category: '', image: '', owner: '', createdAt: '', updatedAt: '' });
+        reset?.();
+        handlerCloseView();
+    }
 
     const handleImageFileSelect = (file) => {
         console.log("Выбран файл:", file.name);
     };
 
-    //console.log(inventory.title)
+
+    const handleCreateInventory = (e) => {
+        console.log(e);
+        console.log(inventory);
+        handlerCreateInventory(inventory);
+    }
+
+
+    //console.log(inventory?.__typename)
+    //console.log(inventory);
+
+    //console.log(inventoryId)
+    //console.log(inventoryDetails);
 
     return (
         <Modal
-            show={onShow}
-            onHide={onClose}
+            show={isOpen}
+            onHide={handleCloseView}
             size="xl"
             backdrop="static"
             keyboard={false}
@@ -39,59 +93,59 @@ function InventoryView({
             <Modal.Header closeButton>
                 <Modal.Title>{inventory?.title}</Modal.Title>
             </Modal.Header>
-            <Modal.Body className={(status.loadingInventory || status.errorInventory) && "align-self-center"}>
+            <Modal.Body className={(loading || error) && "align-self-center"}>
                 <Tabs
                     id={inventory?.__typename}
                     className="mb-3"
                     activeKey={activeTab}
-                    onSelect={onSelectTab}
+                    onSelect={setActiveTab}
                     fill
                 >
-                    <Tab eventKey="details" title="Details">
-                        {status.loadingInventory
+                    <Tab eventKey='details' title='Details'>
+                        {loading
                             ? <Spinner animation="border"/>
-                            : status.errorInventory
-                                ? <Alert variant="danger">{status.errorInventory}</Alert>
+                            : error
+                                ? <Alert variant="danger">{error.message}</Alert>
                                 : <InventoryDetailsTab
-                                    inventory={inventory}
                                     categories={categories}
-                                    onChange={handlerChangeRecord}
+                                    details={inventory}
+                                    handlerChangeDetails={handlerChangeInventory}
                                     onImageFileSelect={handleImageFileSelect}
                                 /> }
                     </Tab>
                     <Tab eventKey="customId" title="Custom ID">
-                        {status.loadingInventory 
+                        {loading 
                             ? <Spinner animation="border" className="align-self-center"/>
-                            : status.errorInventory
-                                ? <Alert variant="danger" className="align-self-center">{status.errorInventory}</Alert>
+                            : error
+                                ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
                                 : <CustomIdTab customIdFormat={inventory.customIdFormat} /> }
                     </Tab>
                     <Tab eventKey="fields" title="Fields">
-                        {status.loadingInventory 
+                        {loading 
                             ? <Spinner animation="border" className="align-self-center"/>
-                            : status.errorInventory
-                                ? <Alert variant="danger" className="align-self-center">{status.errorInventory}</Alert>
+                            : error
+                                ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
                                 : <FieldsTab fields={inventory.fields} /> }
                     </Tab>
                     <Tab eventKey="access" title="Access">
-                        {status.loadingInventory
+                        {loading
                             ? <Spinner animation="border" className="align-self-center"/>
-                            : status.errorInventory
-                                ? <Alert variant="danger" className="align-self-center">{status.errorInventory}</Alert>
+                            : error
+                                ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
                                 : <AccessTab inventory={inventory} /> }
                     </Tab>
                     <Tab eventKey="items" title="Items">
-                        {status.loadingInventory
+                        {loading
                             ? <Spinner animation="border" className="align-self-center"/>
-                            : status.errorInventory
-                                ? <Alert variant="danger" className="align-self-center">{status.errorInventory}</Alert>
-                                : <RecordsList records={items} handlerRecordClick={handlerRecordClick} /> }
+                            : error
+                                ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
+                                : <RecordsList records={inventoryPart.items} handlerClickRecord={handlerClickRecord} /> }
                     </Tab>
                     <Tab eventKey="chat" title="Chat">
-                        {status.loadingInventory
+                        {loading
                             ? <Spinner animation="border" className="align-self-center"/>
-                            : status.errorInventory
-                                ? <Alert variant="danger" className="align-self-center">{status.errorInventory}</Alert>
+                            : error
+                                ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
                                 : <ChatTab
                                     comments={inventory.comments}
                                     onAddComment={async (text) => {
@@ -101,10 +155,10 @@ function InventoryView({
                                 /> }
                     </Tab>
                     <Tab eventKey="stats" title="Stats">
-                        {status.loadingInventory
+                        {loading
                             ? <Spinner animation="border" className="align-self-center"/>
-                            : status.errorInventory
-                                ? <Alert variant="danger" className="align-self-center">{status.errorInventory}</Alert>
+                            : error
+                                ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
                                 : <StatsTab inventory={inventory}
                                 /> }
                     </Tab>
@@ -112,10 +166,7 @@ function InventoryView({
                 </Tabs>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={onClose}>
-                    Close
-                </Button>
-                <Button variant="primary">Understood</Button>
+                <Button variant="secondary" onClick={handleCreateInventory}> Create </Button>
             </Modal.Footer>
         </Modal>
     );

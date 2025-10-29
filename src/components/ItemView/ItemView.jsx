@@ -2,7 +2,7 @@ import { Modal, Button, Spinner, Alert, Tabs, Tab, } from 'react-bootstrap';
 import ItemDetailsTab from './ItemTabs.jsx/ItemDetailTabs';
 import ChatTab from '../ChatTab/ChatTab';
 
-function ItemView({ onShow, item, activeTab, onSelectTab, status, onClose }) {
+function ItemView({ isOpen, item, activeTab, onSelectTab, status, onClose }) {
 
     //console.log(item);
 
@@ -12,7 +12,7 @@ function ItemView({ onShow, item, activeTab, onSelectTab, status, onClose }) {
 
     return (
         <Modal
-            show={onShow}
+            show={isOpen}
             onHide={onClose}
             size="xl"
             backdrop="static"

@@ -7,10 +7,10 @@ import RecordsList from "../RecordsList/RecordsList";
 import { queryParams, nameList } from '../../utils/constants';
 
 
-export default function Profile ({ handlerRecordClick }) {
+export default function Profile ({ handlerClickRecord, handlerDeleteRecords, handlerAddRecords }) {
     const currentUser = useContext(CurrentUserContext);
 
-    const { data: myInventories, loading: myInventoriesLoading, error: myInventoriesError } = useQuery(GET_INVENTORIES, {
+    const { data: myInventories, loading: myInventoriesLoading, error: myInventoriesError, refetch } = useQuery(GET_INVENTORIES, {
         variables: { ownerId: currentUser.id },
     });
 
@@ -44,11 +44,11 @@ export default function Profile ({ handlerRecordClick }) {
                             <Row className="mb-3">
                                 <Form.Group as={Col} controlId="formProfileName">
                                     <Form.Label>Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter name" value={currentUser.name} />
+                                    <Form.Control type="text" placeholder="Enter name" />
                                 </Form.Group>
                                 <Form.Group as={Col} controlId="formProfilePassword">
                                     <Form.Label>Email</Form.Label>
-                                    <Form.Control type="email" placeholder="Enter email" value={currentUser.email} />
+                                    <Form.Control type="email" placeholder="Enter email" />
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">
@@ -87,7 +87,10 @@ export default function Profile ({ handlerRecordClick }) {
                 <RecordsList 
                     nameList={nameList.OWNER}
                     records={myInventories?.inventories}
-                    handlerRecordClick={handlerRecordClick} />
+                    handlerClickRecord={handlerClickRecord}
+                    onAdd={handlerAddRecords}
+                    handlerDeleteRecords={handlerDeleteRecords}
+                    onRefetch={refetch} />
                 </Col>
             </Row>
 
@@ -95,8 +98,7 @@ export default function Profile ({ handlerRecordClick }) {
                 <Col>
                     <RecordsList
                         nameList={nameList.WRITE_ACCESS}
-                        records={editableInventories?.inventories}
-                        handlerRecordClick={handlerRecordClick} />
+                        records={editableInventories?.inventories} />
                 </Col>
             </Row>
         </Container>

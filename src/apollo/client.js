@@ -1,7 +1,15 @@
-import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink, ApolloLink } from '@apollo/client';
+import { SetContextLink } from '@apollo/client/link/context';
+
+const httpLink = new HttpLink({ uri: import.meta.env.VITE_GRAPHQL_URL });
+
+const authLink = new SetContextLink((prevContext) => {
+  const token = localStorage.getItem('token');
+  return { headers: { ...prevContext.headers, authorization: token ? `Bearer ${token}` : '' } };
+});
 
 const apolloClient = new ApolloClient({
-    link: new HttpLink({ uri: import.meta.env.VITE_GRAPHQL_URL }),
+    link: ApolloLink.from([authLink, httpLink]),
     cache: new InMemoryCache(),
     defaultOptions: {
         watchQuery: {

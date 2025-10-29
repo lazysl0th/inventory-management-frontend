@@ -7,7 +7,7 @@ export default function CustomIdTab({ customIdFormat }) {
 
     return (
         <div className="p-3">
-            {customIdFormat?.parts.length === 0 
+            {customIdFormat?.parts?.length === 0 
                 ? ( <Alert variant="light" className="border"> No parts defined for this Custom ID. </Alert>)
                 : ( <RecordsList records={customIdFormat?.parts}/> )}
 

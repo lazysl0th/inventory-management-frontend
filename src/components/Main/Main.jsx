@@ -5,11 +5,11 @@ import { Spinner, Alert, Container, Row, Col } from 'react-bootstrap';
 import RecordsList from '../RecordsList/RecordsList';
 import { queryParams, nameList, TAGS_CLOUD_SOLOR } from '../../utils/constants';
 
-export default function Main({ handlerRecordClick }) {
+export default function Main({ handlerClickRecord }) {
 
     const { data: latestInventories, loading: latestInventoriesLoading, error: latestInventoriesError } = useQuery(GET_INVENTORIES, {
         variables: {
-            sortName: queryParams.GET_LATEST_INVENTORIES.name,
+            sortName: queryParams.GET_LATEST_INVENTORIES.sortName,
             order: queryParams.GET_LATEST_INVENTORIES.order,
             take: queryParams.GET_LATEST_INVENTORIES.take,
         },
@@ -17,7 +17,7 @@ export default function Main({ handlerRecordClick }) {
 
     const { data: topInventories, loading: topInventoriesLoading, error: topInventoriestopError } = useQuery(GET_INVENTORIES, {
         variables: {
-            sortName: queryParams.GET_TOP_INVENTORIES.name,
+            sortName: queryParams.GET_TOP_INVENTORIES.sortName,
             order: queryParams.GET_TOP_INVENTORIES.order,
             take: queryParams.GET_TOP_INVENTORIES.take,
         },
@@ -38,7 +38,7 @@ export default function Main({ handlerRecordClick }) {
                             : <RecordsList
                                 nameList={nameList.LATEST}
                                 records={latestInventories.inventories}
-                                handlerRecordClick={handlerRecordClick} /> }
+                                handlerClickRecord={handlerClickRecord} /> }
 
                     { topInventoriesLoading 
                         ? <Spinner animation="border" className="align-self-center"/>
@@ -47,7 +47,7 @@ export default function Main({ handlerRecordClick }) {
                             : <RecordsList 
                                 nameList={nameList.TOP_ITEMS}
                                 records={topInventories.inventories} 
-                                handlerRecordClick={handlerRecordClick} /> }
+                                handlerClickRecord={handlerClickRecord} /> }
                 </Col>
                 <Col xs={1}>
                     <TagCloud
