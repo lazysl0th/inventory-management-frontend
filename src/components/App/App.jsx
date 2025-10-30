@@ -97,7 +97,6 @@ function App() {
 
     const closeInventory = () => {
         setIsInventoryViewOpen(false);
-        setActiveInventoryTab('details');
         setSelectedInventoryId(null);
     }
 
@@ -212,46 +211,46 @@ function App() {
     }
 
     return (
-            <CurrentUserContext.Provider value={currentUser}>
-                <Header onLog={handlerSignOut}/>
-                <Routes>
-                    <Route path="/" element={ <Main handlerClickRecord={handlerClickRecord}/> } />
-                    <Route path="/search" element={<SearchPage handlerClickRecord={handlerClickRecord}/>} />
-                    <Route path="/sign-up" element={<Register onReg={handlerSignUpSubmit}/>} />
-                    <Route path="/sign-in" element={<Login onAuth={handlerSignInSubmit}/>} />
-                    <Route
-                        path="/profile"
-                        element={
-                            <ProtectedRoute isLoading={isVerifyCurrentUser} >
-                                <Profile 
-                                    handlerClickRecord={handlerClickRecord}
-                                    handlerDeleteRecords={handlerDeleteRecords.Inventory}
-                                    handlerAddRecords={handlerAddRecord.Inventory} />
-                            </ProtectedRoute>
-                        }/>
-                </Routes>
-                <InventoryView 
-                    isOpen={isInventoryViewOpen}
-                    categories={categories}
-                    inventoryId={selectedInventoryId}
-                    handlerCloseView={handlerCloseRecordView.Inventory}
-                    handlerClickRecord={handlerClickRecord}
-                    handlerCreateInventory={handlerCreateInventory}
-                />
-                <ItemView
-                    isOpen={isItemViewOpen}
-                    activeTab={activeItemTab}
-                    item={item}
-                    status={{loadingItem, errorItem}}
-                    onSelectTab={handlerSelectTabs.Item}
-                    onClose={handlerCloseRecordView.Item}/>
-                <InfoTooltip
-                    isOpen={isInfoTooltipOpen}
-                    onClose={handlerCloseInfoTooltip}
-                    title={infoTooltipTitle}
-                    message={infoTooltipMessage}
-                />
-            </CurrentUserContext.Provider>
+        <CurrentUserContext.Provider value={currentUser}>
+            <Header onLog={handlerSignOut}/>
+            <Routes>
+                <Route path="/" element={ <Main handlerClickRecord={handlerClickRecord}/> } />
+                <Route path="/search" element={<SearchPage handlerClickRecord={handlerClickRecord}/>} />
+                <Route path="/sign-up" element={<Register onReg={handlerSignUpSubmit}/>} />
+                <Route path="/sign-in" element={<Login onAuth={handlerSignInSubmit}/>} />
+                <Route
+                    path="/profile"
+                    element={
+                        <ProtectedRoute isLoading={isVerifyCurrentUser} >
+                            <Profile 
+                                handlerClickRecord={handlerClickRecord}
+                                handlerDeleteRecords={handlerDeleteRecords.Inventory}
+                                handlerAddRecords={handlerAddRecord.Inventory} />
+                        </ProtectedRoute>
+                    }/>
+            </Routes>
+            <InventoryView 
+                isOpen={isInventoryViewOpen}
+                categories={categories}
+                inventoryId={selectedInventoryId}
+                handlerCloseView={handlerCloseRecordView.Inventory}
+                handlerClickRecord={handlerClickRecord}
+                handlerCreateInventory={handlerCreateInventory}
+            />
+            <ItemView
+                isOpen={isItemViewOpen}
+                activeTab={activeItemTab}
+                item={item}
+                status={{loadingItem, errorItem}}
+                onSelectTab={handlerSelectTabs.Item}
+                onClose={handlerCloseRecordView.Item}/>
+            <InfoTooltip
+                isOpen={isInfoTooltipOpen}
+                onClose={handlerCloseInfoTooltip}
+                title={infoTooltipTitle}
+                message={infoTooltipMessage}
+            />
+        </CurrentUserContext.Provider>
     )
 }
 

@@ -1,17 +1,18 @@
-import { Table, Alert, Card } from "react-bootstrap";
-import RecordsList from "../../RecordsList/RecordsList";
+import { Alert, Card } from "react-bootstrap";
+import CustomIdForm from "../../CustomIdBuilder/CustomIdBuilder";
 
-export default function CustomIdTab({ customIdFormat }) {
+export default function CustomIdTab({ parts }) {
 
     //console.log(customIdFormat)
 
     return (
         <div className="p-3">
-            {customIdFormat?.parts?.length === 0 
+            {parts?.length === 0 
                 ? ( <Alert variant="light" className="border"> No parts defined for this Custom ID. </Alert>)
-                : ( <RecordsList records={customIdFormat?.parts}/> )}
+                : ( <CustomIdForm parts={parts}/> )}
+            
 
-            {customIdFormat?.summary && (
+            {parts?.summary && (
                 <Card className="mt-3">
                     <Card.Header>Generated ID Preview</Card.Header>
                     <Card.Body>

@@ -1,3 +1,6 @@
+import dayjs from "dayjs";
+import cryptoRandomString from "crypto-random-string";
+
 export const titleInfoTooltip = {
     SUCCESS: 'Success!',
     ERROR: 'Error',
@@ -89,4 +92,126 @@ export const RECORDS_LIST_HEADS = {
         { id: 'name', header: 'Name' },
         { id: 'email', header: 'Email' },
     ]
+};
+
+export const PART_DEFINITIONS = {
+    TEXT: {
+        label: "Fixed",
+        help: "A piece of unchanging text. You can use Unicode or emoji.",
+        formatHelp: "Optional. Leave empty, value will be used as-is.",
+        formats: null,
+        gen: (part) => String(part.value ?? ""),
+        example: (part) => String(part.value ?? ""),
+    },
+
+    RANDOM20: {
+        label: "20-bit random",
+        help: "A random value. E.g., format as six-digit decimal (D6) or 5-digit hex (X5).",
+        formatHelp: "Choose how to represent the random bits.",
+        formats: [
+            { value: "D6",  label: "Decimal D6 (000000)" },
+            { value: "X5",  label: "Hex X5 (00000..fffff)" },
+            { value: "B20", label: "Binary B20" },
+        ],
+        gen: (part) => {
+            const format = part.format || "D6";
+                if (format === "D6")  return cryptoRandomString({ length: 6, type: "numeric" });
+                if (format === "X5")  return cryptoRandomString({ length: 5, type: "hex" });
+                if (format === "B20") return cryptoRandomString({ length: 20, characters: "01" });
+                return cryptoRandomString({ length: 6, type: "numeric" });
+            },
+        example: (part) => {
+            const format = part.format || "D6";
+            if (format === "D6") return "025413";
+            if (format === "X5") return "a7e3a";
+            if (format === "B20") return "01001101100100101011";
+            return "025413";
+        },
+    },
+
+    RANDOM32: {
+        label: "32-bit random",
+        help: "A 32-bit random. Format as decimal (D10) or hex (X8).",
+        formatHelp: "Choose the representation.",
+        formats: [
+            { value: "D10", label: "Decimal D10 (0000000000)" },
+            { value: "X8",  label: "Hex X8 (00000000..ffffffff)" },
+        ],
+        gen: (part) => {
+            const format = part.format || "X8";
+            if (format === "D10") return cryptoRandomString({ length: 10, type: "numeric" });
+            return cryptoRandomString({ length: 8, type: "hex" });
+        },
+        example: (part) => (part.format === "D10" ? "3812405791" : "7af2c01b"),
+    },
+
+    RANDOM6: {
+        label: "6-digit random",
+        help: "A six-digit random number.",
+        formatHelp: "Fixed length decimal.",
+        formats: [{ value: "D6", label: "Decimal D6 (000000)" }],
+        gen: () => cryptoRandomString({ length: 6, type: "numeric" }),
+        example: () => "013245",
+    },
+
+    RANDOM9: {
+        label: "9-digit random",
+        help: "A nine-digit random number.",
+        formatHelp: "Fixed length decimal.",
+        formats: [{ value: "D9", label: "Decimal D9 (000000000)" }],
+        gen: () => cryptoRandomString({ length: 9, type: "numeric" }),
+        example: () => "123456789",
+    },
+
+    GUID: {
+        label: "GUID",
+        help: "Automatically generated UUID v4.",
+        formatHelp: "No format is required.",
+        formats: null,
+        gen: () =>
+            typeof crypto?.randomUUID === "function"
+                ? crypto.randomUUID()
+                : cryptoRandomString({ length: 32, type: "hex" }).replace(/^(.{8})(.{4})(.{4})(.{4})(.{12}).*$/, "$1-$2-$3-$4-$5"),
+        example: () => "91d2b6a0-f3c2-4f99-9245-fdb517b83af8",
+    },
+
+    DATETIME: {
+        label: "Date/time",
+        help: "An item creation date/time.",
+        formatHelp: "Pick a common pattern or use a custom one.",
+        formats: [
+            { value: "YYYY",           label: "YYYY" },
+            { value: "YYYYMM",         label: "YYYYMM" },
+            { value: "YYYYMMDD",       label: "YYYYMMDD" },
+            { value: "YYYYMMDD-HHmm",  label: "YYYYMMDD-HHmm" },
+            { value: "YYYYMMDD-HHmmss",label: "YYYYMMDD-HHmmss" },
+        ],
+        gen: (part) => dayjs().format(part.format || "YYYYMMDD"),
+        example: (part) => dayjs("2025-01-23T13:45:00").format(part.format || "YYYYMMDD"),
+    },
+
+    SEQUENCE: {
+        label: "Sequence (+1)",
+        help: "A sequential index. E.g., with leading zeros (D4) or without (D).",
+        formatHelp: "Choose width: D, D2, D3, D4…",
+        formats: [
+            { value: "D",  label: "No padding (1,2,3)" },
+            { value: "D2", label: "01, 02, 03" },
+            { value: "D3", label: "001, 002, 003" },
+            { value: "D4", label: "0001, 0002, 0003" },
+        ],
+        gen: (part, index = 0) => {
+            const n = index + 1;
+            const f = part.format || "D3";
+            if (f === "D")  return String(n);
+            const width = Number(f.replace(/\D+/g, "")) || 3;
+            return String(n).padStart(width, "0");
+        },
+        example: (part) => {
+            const f = part.format || "D3";
+            if (f === "D") return "1";
+            const width = Number(f.replace(/\D+/g, "")) || 3;
+            return String(3).padStart(width, "0"); // демонстрационный «D3_»
+        },
+    },
 };
