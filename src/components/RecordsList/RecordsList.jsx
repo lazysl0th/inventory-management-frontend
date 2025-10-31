@@ -13,7 +13,7 @@ import {
 import parse from 'html-react-parser'
 import './RecordsList.css'
 import IndeterminateCheckbox from '../IndeterminateCheckbox/IndeterminateCheckbox';
-import Record from '../Record/Record';
+import Record from './Record/Record';
 import { RECORDS_LIST_HEADS } from '../../utils/constants'
 
 

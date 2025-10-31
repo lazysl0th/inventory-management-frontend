@@ -33,36 +33,6 @@ function InventoryView({
         customIdFormat: {},
     })
 
-
-    const cidparts = {
-  parts: [
-    {
-      id: "91a4a3f8-62c7-4b60-a341-1b3a1dfc7cb8",
-      type: "TEXT",
-      format: null,
-      value: "INV-",
-      position: "prefix",
-      order: 0
-    },
-    {
-      id: "b21d3f54-12df-4e1d-b381-25fa2473f1d1",
-      type: "DATETIME",
-      format: "YYYYMMDD",
-      value: "-",
-      position: "suffix",
-      order: 1
-    },
-    {
-      id: "88e7e5a0-cab5-4f4f-b2d2-f0b8c36450ce",
-      type: "SEQUENCE",
-      format: "D4",
-      value: "",
-      position: "prefix",
-      order: 2
-    }
-  ]
-    }
-
     const [loadInventory, { data, loading, error, reset }] = useLazyQuery(GET_INVENTORY_TAB[activeTab]);
 
     useEffect(() => {
@@ -73,6 +43,8 @@ function InventoryView({
     const inventoryPart = data?.inventory || {}
     
     const handlerChangeInventory = ((name, value) => {
+        //console.log(name);
+        //console.log(value);
         setInventory(prev => ({ ...prev,
             [name]: value,
         }));
@@ -80,11 +52,14 @@ function InventoryView({
 
     useEffect(() => {
         for(let key in inventoryPart) {
-            key === 'owner' ? handlerChangeInventory(key, inventoryPart[key].name) : handlerChangeInventory(key, inventoryPart[key]);
-            (key === 'createdAt' || key === 'updatedAt') && new Date(+inventoryPart[key]).toLocaleString()
+            //console.log(inventoryPart?.[key]);
+            (key === 'owner')
+                ? handlerChangeInventory(key, inventoryPart[key].name) 
+                : (key === 'createdAt' || key === 'updatedAt')
+                    ? handlerChangeInventory(key, new Date(+inventoryPart[key]).toLocaleString())
+                    : handlerChangeInventory(key, inventoryPart[key])
         }
     }, [loading]);
-
 
 
     const handleCloseView = () => {
@@ -95,17 +70,17 @@ function InventoryView({
     }
 
     const handleImageFileSelect = (file) => {
-        console.log("Выбран файл:", file.name);
+        //console.log("Выбран файл:", file.name);
     };
 
 
     const handleCreateInventory = (e) => {
-        console.log(e);
-        console.log(inventory);
+        //console.log(e);
+        //console.log(inventory);
         handlerCreateInventory(inventory);
     }
 
-
+    const fields = []
     //console.log(inventory?.__typename)
     //console.log(inventory);
 
@@ -126,37 +101,43 @@ function InventoryView({
             </Modal.Header>
             <Modal.Body className={(loading || error) && "align-self-center"}>
                 <Tabs
-                    id={inventory?.__typename}
+                    id='inventory-tabs'
                     className="mb-3"
                     activeKey={activeTab}
                     onSelect={setActiveTab}
                     fill
                 >
                     <Tab eventKey='details' title='Details'>
-                        {loading
-                            ? <Spinner animation="border"/>
-                            : error
-                                ? <Alert variant="danger">{error.message}</Alert>
-                                : <InventoryDetailsTab
+                        {<InventoryDetailsTab
                                     categories={categories}
                                     details={inventory}
                                     handlerChangeDetails={handlerChangeInventory}
                                     onImageFileSelect={handleImageFileSelect}
-                                /> }
+                                />/*loading
+                            ? <Spinner animation="border"/>
+                            : error
+                                ? <Alert variant="danger">{error.message}</Alert>
+                                :  */}
                     </Tab>
                     <Tab eventKey="customId" title="Custom ID">
                         {loading 
                             ? <Spinner animation="border" className="align-self-center"/>
                             : error
                                 ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
-                                : <CustomIdTab parts={cidparts.parts} /> }
+                                : <CustomIdTab
+                                    customIdFormat={inventory?.customIdFormat}
+                                    handlerChangeCustomIdFormat={handlerChangeInventory}
+                                /> }
                     </Tab>
                     <Tab eventKey="fields" title="Fields">
                         {loading 
                             ? <Spinner animation="border" className="align-self-center"/>
                             : error
                                 ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
-                                : <FieldsTab fields={inventory.fields} /> }
+                                : <FieldsTab
+                                    itemFields={inventory.fields}
+                                    handlerChangeFields={handlerChangeInventory}
+                                /> }
                     </Tab>
                     <Tab eventKey="access" title="Access">
                         {loading

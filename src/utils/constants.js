@@ -211,7 +211,15 @@ export const PART_DEFINITIONS = {
             const f = part.format || "D3";
             if (f === "D") return "1";
             const width = Number(f.replace(/\D+/g, "")) || 3;
-            return String(3).padStart(width, "0"); // демонстрационный «D3_»
+            return String(3).padStart(width, "0");
         },
     },
+};
+
+export const FIELD_TYPES = {
+    TEXT: { label: "Однострочный текст", limit: 3 },
+    LONGTEXT: { label: "Многострочный текст", limit: 3 },
+    NUMBER: { label: "Число", limit: 3 },
+    FILE: { label: "Документ / Изображение", limit: 3 },
+    BOOLEAN: { label: "Истина / Ложь", limit: 3 },
 };

@@ -105,9 +105,12 @@ export const GET_INVENTORY_TAB = {
                 ...InventoryBase
                 customIdFormat {
                     parts {
+                        guid
                         type
                         value
                         format
+                        position
+                        order
                         digits
                     }
                     summary

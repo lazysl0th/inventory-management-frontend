@@ -1,15 +1,56 @@
-import { Table, Badge, Alert, OverlayTrigger, Tooltip } from "react-bootstrap";
-import RecordsList from "../../RecordsList/RecordsList";
+import { Alert } from "react-bootstrap";
+import DndForm from "../../DndForm/DndForm";
+import DndFormField from "../../DndForm/DndFormField/DndFormField";
+import ItemFieldsForm from '../../ItemFieldsForm/ItemFieldsForm';
+import { hasOrderChanged } from "../../../utils/utils";
+import { FIELD_TYPES } from '../../../utils/constants'
 
-export default function FieldsTab({ fields = [] }) {
+export default function FieldsTab({ itemFields = [], handlerChangeFields }) {
+    
+function createNewField(fields, type = "TEXT") {
+  const countOfType = fields.filter(f => f.type === type).length;
+  const limit = FIELD_TYPES[type]?.limit ?? Infinity;
 
-    console.log(fields)
+  if (countOfType >= limit) {
+    alert(`Нельзя добавить больше полей типа "${FIELD_TYPES[type].label}" (лимит ${limit}).`);
+    return null;
+  }
+
+  return {
+    guid: crypto.randomUUID(),
+    type,
+    title: "",
+    description: "",
+    showInTable: false,
+    order: fields.length,
+  };
+}
+
+    const handlerChange = (updatedFields) => {
+        console.log(updatedFields);
+        //console.log(customIdFormat.parts)
+        handlerChangeFields('fields', hasOrderChanged(itemFields, updatedFields) ? updatedFields.map((field, i) => ({ ...field, order: i })) : updatedFields )
+        //console.log(customIdFormat)
+    }
+
 
     return (
         <div className="p-3">
-            { (!fields || fields.length === 0)
+            { false
                 ? <Alert variant="secondary" className="m-3">No custom fields defined for this inventory.</Alert>
-                : <RecordsList records={fields}/> }
+                : ( <DndForm
+                        title="Настраиваемые поля"
+                        fields={itemFields}
+                        onChange={handlerChange}
+                        createNewItem={createNewField}
+                        addLabel="Добавить поле"
+                        renderItem={({ field, index, total, onUpdate, onMove }) => {
+                            return (
+                                <DndFormField id={field.guid}>
+                                    <ItemFieldsForm field={field} index={index} total={total} onUpdate={onUpdate} onMove={onMove} />
+                                </DndFormField>);
+                        }}
+                    />)}
         </div>
     );
 }

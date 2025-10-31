@@ -31,20 +31,42 @@ export class SafeTouchSensor extends TouchSensor {
 export const getAvailableParts = (partsDefinitions) => (Object.entries(partsDefinitions).map(([type, def]) => ({ type, label: def.label })));
 
 export const IdGenerator = {
-    generatePart(partDefinition, part, index = 0) {
-        const def = partDefinition[part.type];
-        if (!def || typeof def.gen !== "function") return "";
+  /**
+   * 🔹 Генерация отдельной части идентификатора
+   * Используется и в preview, и при сборке полного примера summary
+   */
+  generatePart(partDefinitions, part) {
+    if (!part) return "";
 
-        const main = def.gen(part, index) || "";
-        const val = part.value || "";
-        const pos = part.position || "prefix";
+    const def = partDefinitions?.[part?.type];
+    if (!def || typeof def.gen !== "function") return "";
 
-        if (part.type === "TEXT") return main;
+    const main = def.gen(part) || "";
+    const val = part.value || "";
+    const pos = part.position || "prefix";
 
-        return pos === "suffix" ? main + val : val + main;
-    },
+    // TEXT возвращает только собственное значение
+    if (part.type === "TEXT") return val;
 
-    generateFromParts(parts = []) {
-        return parts.map((p, i) => IdGenerator.generatePart(p, i)).filter(Boolean).join("");
-    },
+    // Остальные — склейка в зависимости от позиции
+    return pos === "suffix" ? main + val : val + main;
+  },
+
+  /**
+   * 🔹 Генерация образца (summary) без инкремента, для сохранения в БД
+   * Используется при изменении частей CustomIdForm
+   */
+  generateFromParts(parts = [], partDefinitions) {
+    return parts
+      .map((p) => IdGenerator.generatePart(partDefinitions, p))
+      .filter(Boolean)
+      .join("");
+  },
 };
+
+
+
+export const hasOrderChanged = (prev, current) => {
+    if (prev.length !== current.length) return true;
+    return prev.some((item, i) => item.order !== current[i].order);
+}
