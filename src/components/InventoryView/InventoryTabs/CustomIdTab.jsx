@@ -8,24 +8,23 @@ import { PART_DEFINITIONS } from "../../../utils/constants";
 export default function CustomIdTab({ customIdFormat, handlerChangeCustomIdFormat}) {
 
     //console.log(customIdFormat)
-    const addPart = () => ({
+const createNewPart = () => ({
         guid: crypto.randomUUID(),
         type: "TEXT",
         format: "",
         value: "",
         position: "prefix",
     });
-
     //const summary = useMemo(() => { (IdGenerator.generateFromParts(customIdFormat?.parts)) }, [customIdFormat?.parts]);
 
 
 
     const handlerChange = (updatedParts) => {
-        //console.log(updatedParts)
-        //console.log(customIdFormat.parts)
+        console.log(updatedParts)
+        console.log(customIdFormat?.parts)
         handlerChangeCustomIdFormat('customIdFormat', {
             ...customIdFormat,
-            parts: hasOrderChanged(customIdFormat.parts, updatedParts) ? updatedParts.map((part, i) => ({ ...part, order: i })) : updatedParts,
+            parts: hasOrderChanged(customIdFormat?.parts, updatedParts) ? updatedParts.map((part, i) => ({ ...part, order: i })) : updatedParts,
             summary: IdGenerator.generateFromParts(updatedParts, PART_DEFINITIONS)
         })
         //console.log(customIdFormat)
@@ -40,7 +39,7 @@ export default function CustomIdTab({ customIdFormat, handlerChangeCustomIdForma
                         title="Формат идентификатора"
                         fields={customIdFormat?.parts}
                         fullId={customIdFormat?.summary}
-                        createNewItem={addPart}
+                        createNewItem={createNewPart}
                         addLabel="Добавить элемент"
                         onChange={handlerChange}
                         renderItem={({ field, index, total, onUpdate, onMove }) => {

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useLazyQuery, } from '@apollo/client/react';
 import { Modal, Button, Spinner, Alert, Tabs, Tab, } from 'react-bootstrap';
 
-import { GET_INVENTORY_TAB } from '../../graphql/queries';
+import { GET_INVENTORY, GET_INVENTORY_TAB } from '../../graphql/queries';
 import InventoryDetailsTab from './InventoryTabs/InventoryDetailsTab';
 import CustomIdTab from './InventoryTabs/CustomIdTab';
 import FieldsTab from './InventoryTabs/FieldsTab';
@@ -21,8 +21,6 @@ function InventoryView({
     handlerClickRecord,
     handlerCreateInventory
 }) {
-
-    const [activeTab, setActiveTab] = useState('details');
     const [inventory, setInventory] = useState({
         title: '',
         description: '',
@@ -31,31 +29,33 @@ function InventoryView({
         owner: '',
         createdAt: new Date().toLocaleString(),
         updatedAt: new Date().toLocaleString(),
-        customIdFormat: {},
+        customIdFormat: { parts: [], },
         isPunblic: false,
-        allowedUsers: []
+        allowedUsers: [],
+        fields: []
     })
+    const [activeTab, setActiveTab] = useState('details');
 
-    const [loadInventory, { data, loading, error, reset }] = useLazyQuery(GET_INVENTORY_TAB[activeTab]);
-
+    const [loadInventory, { data, loading, error, reset }] = useLazyQuery(GET_INVENTORY);
+    const inventoryData = data?.inventory || {}
+    
     useEffect(() => {
-        if (inventoryId) loadInventory({ variables: { id: inventoryId } })
+        if (inventoryId) {loadInventory({ variables: { id: inventoryId } }) 
+        for(let key in inventoryData) {
+            //console.log(inventoryPart?.[key]);
+            (key === 'owner')
+                ? handlerChangeInventory(key, inventoryData[key].name) 
+                : (key === 'createdAt' || key === 'updatedAt')
+                    ? handlerChangeInventory(key, new Date(+inventoryData[key]).toLocaleString())
+                    : handlerChangeInventory(key, inventoryData[key])
+        }
+        
+        
+        }
         if (['items', 'chat'].includes(activeTab)) loadInventory({ variables: { inventoryId: inventoryId } })
-    }, [activeTab, isOpen]);
+    }, [inventoryId, loading]);
 
-    
-
-    const inventoryPart = data?.inventory || {}
-    
-    const handlerChangeInventory = ((name, value) => {
-        //console.log(name);
-        //console.log(value);
-        setInventory(prev => ({ ...prev,
-            [name]: value,
-        }));
-    });
-
-    useEffect(() => {
+    /*useEffect(() => {
         for(let key in inventoryPart) {
             //console.log(inventoryPart?.[key]);
             (key === 'owner')
@@ -64,13 +64,35 @@ function InventoryView({
                     ? handlerChangeInventory(key, new Date(+inventoryPart[key]).toLocaleString())
                     : handlerChangeInventory(key, inventoryPart[key])
         }
-    }, [inventoryId]);
+    }, [loading]);*/
+
+    const handlerChangeInventory = ((name, value) => {
+        //console.log(name);
+        //console.log(value);
+        setInventory(prev => ({ ...prev,
+            [name]: value,
+        }));
+    });
+
+
 
 
     const handleCloseView = () => {
         handlerCloseView();
         reset?.();
-        setInventory({ title: '', description: '', category: '', image: '', owner: '', createdAt: new Date().toLocaleString(), updatedAt: new Date().toLocaleString() });
+        setInventory({ 
+            title: '',
+            description: '',
+            category: '',
+            image: '',
+            owner: '',
+            createdAt: new Date().toLocaleString(),
+            updatedAt: new Date().toLocaleString(),
+            customIdFormat: { parts: [], },
+            isPunblic: false,
+            allowedUsers: [],
+            fields: []
+        });
         setActiveTab('details');
     }
 
@@ -159,7 +181,7 @@ function InventoryView({
                             ? <Spinner animation="border" className="align-self-center"/>
                             : error
                                 ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
-                                : <RecordsList nameRecordList={nameList.ITEMS} records={inventoryPart.items} handlerClickRecord={handlerClickRecord} /> }
+                                : <RecordsList nameRecordList={nameList.ITEMS} records={inventoryData.items} handlerClickRecord={handlerClickRecord} /> }
                     </Tab>
                     <Tab eventKey="chat" title="Chat">
                         {loading

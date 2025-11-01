@@ -26,7 +26,6 @@ export default function RecordsList({
     onChangeRecordList,
     onAdd,
     onRefetch,
-    renderRow
 }) {
     const [rowSelection, setRowSelection] = useState({});
     const [editingCell, setEditingCell] = useState(null);
@@ -78,9 +77,8 @@ export default function RecordsList({
         const handleAddRecord = () => {
         const newAllowedUser = {
             id: crypto.randomUUID(),
-            name: "",
+            name: '',
             email: '',
-            isNew: true,
             __typename: "User"
         };
             const updated = [newAllowedUser, ...(records ?? [])];
@@ -89,21 +87,8 @@ export default function RecordsList({
         };
 
 
-    const createEditableCell = (info, col) => {
-    return (
-        <EditableCell
-            isEditing={editingCell?.id === String(info.row.original.id) && editingCell?.field === col.id}
-            column={col}
-            value={info.getValue()}
-            onStartEdit={() => setEditingCell({ id: String(info.row.original.id), field: col.id})}
-            onEndEdit={() => setEditingCell(null)}
-            onChange={(newValue) => handleChangeCell(info.row.original.id, { [col.id]: newValue } )}
-        />);
-    }
-
     const cellRenderer = (info, col) => {
         if (info.row.original[col.highlightKey]) return parse(info.row.original[col.highlightKey])
-        //if (type === 'User') return createEditableCell(info, col);
         return info.getValue();
     }
 
@@ -260,13 +245,8 @@ export default function RecordsList({
                             ? (<EditableCell 
                                     key={row.id}
                                     record={row}
-
-                                    //isEditing={editingCell?.id === String(info.row.original.id) && editingCell?.field === col.id}
-                                    //column={col}
-                                    //value={info.getValue()}
-                                    //onStartEdit={() => setEditingCell({ id: String(info.row.original.id), field: col.id})}
-                                    //onEndEdit={() => setEditingCell(null)}
-                                    //onChange={(newValue) => handleChangeCell(info.row.original.id, { [col.id]: newValue } )}
+                                    render={flexRender}
+                                    onChange={handleChangeCell}
                                 />)
                             : (<Record
                                     key={row.id} 

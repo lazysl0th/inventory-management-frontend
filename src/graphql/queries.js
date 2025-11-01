@@ -81,6 +81,50 @@ export const SEARCH_INVENTORIES = gql`
     }
 `
 
+export const GET_INVENTORY = gql`
+        query GetInventoryAndCategory($id: Int!) {
+            inventory(id: $id) {
+                ...InventoryBase
+                image
+                createdAt
+                updatedAt
+                customIdFormat {
+                    parts {
+                        guid
+                        type
+                        value
+                        format
+                        position
+                        order
+                        digits
+                    }
+                    summary
+                }
+                fields {
+                    id
+                    title
+                    type
+                    description
+                    showInTable
+                    order
+                    isDeleted
+                }
+                isPublic
+                allowedUsers {
+                    ...UserBase
+                }
+            }
+            categories: __type(name: "Category") {
+                name
+                enumValues {
+                    name
+                }
+            }
+        }
+        ${USER_BASE_FRAGMENT}
+        ${INVENTORY_BASE_FRAGMENT}
+`;
+
 export const GET_INVENTORY_TAB = {
     details: gql`
         query GetInventoryAndCategory($id: Int!) {

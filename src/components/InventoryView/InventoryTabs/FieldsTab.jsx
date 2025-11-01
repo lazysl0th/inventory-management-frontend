@@ -5,7 +5,7 @@ import ItemFieldsForm from '../../ItemFieldsForm/ItemFieldsForm';
 import { hasOrderChanged } from "../../../utils/utils";
 import { FIELD_TYPES } from '../../../utils/constants'
 
-export default function FieldsTab({ itemFields = [], handlerChangeFields }) {
+export default function FieldsTab({ itemFields, handlerChangeFields }) {
     
 function createNewField(fields, type = "TEXT") {
   const countOfType = fields.filter(f => f.type === type).length;
@@ -18,9 +18,10 @@ function createNewField(fields, type = "TEXT") {
 
   return {
     guid: crypto.randomUUID(),
+    id: '',
     type,
-    title: "",
-    description: "",
+    title: '',
+    description: '',
     showInTable: false,
     order: fields.length,
   };
@@ -28,7 +29,7 @@ function createNewField(fields, type = "TEXT") {
 
     const handlerChange = (updatedFields) => {
         console.log(updatedFields);
-        //console.log(customIdFormat.parts)
+        console.log(itemFields)
         handlerChangeFields('fields', hasOrderChanged(itemFields, updatedFields) ? updatedFields.map((field, i) => ({ ...field, order: i })) : updatedFields )
         //console.log(customIdFormat)
     }

@@ -54,13 +54,13 @@ export default function DndForm({
       const rect = formRef.current?.getBoundingClientRect();
 
       if (rect && (Math.abs(delta.y) > rect.height / 2 || Math.abs(delta.x) > rect.width / 2)) {
-        onChange(fields.filter((it) => it.id !== active.id));
+        onChange(fields.filter((field) => field.guid !== active.id));
         return;
       }
 
       if (over && active.id !== over.id) {
-        const oldIndex = fields.findIndex((i) => i.id === active.id);
-        const newIndex = fields.findIndex((i) => i.id === over.id);
+        const oldIndex = fields.findIndex((field) => field.guid === active.id);
+        const newIndex = fields.findIndex((field) => field.guid === over.id);
         onChange(arrayMove(fields, oldIndex, newIndex));
       }
     },
@@ -73,9 +73,9 @@ export default function DndForm({
 
             <div ref={formRef}>
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                    <SortableContext items={fields.map(field => field?.id).filter(Boolean)} strategy={verticalListSortingStrategy}>
+                    <SortableContext items={fields.map(field => field?.guid).filter(Boolean)} strategy={verticalListSortingStrategy}>
                         {fields.filter(Boolean).map((field, index) => (
-                            <div key={field.id || field.guid}>
+                            <div key={field.guid}>
                                 {renderItem({
                                     field,
                                     index,

@@ -1,163 +1,116 @@
 import { useState } from "react";
 import AsyncSelect from "react-select/async";
-import { useLazyQuery } from '@apollo/client/react';
-import { SEARCH_USERS } from '../../../graphql/queries';
+import { useLazyQuery } from "@apollo/client/react";
+import { SEARCH_USERS } from "../../../graphql/queries";
 
+export default function EditableRecord({ record, render, onChange }) {
+  const [editingCell, setEditingCell] = useState(null); // "name" | "email"
+  const [tempValue, setTempValue] = useState("");       // текст в инпуте select'a
+  const [searchUsers] = useLazyQuery(SEARCH_USERS, { fetchPolicy: "no-cache" });
 
-export default function EditableCell ({ record, onChange }) {
-    const [editing, setEditing] = useState(false);
-    console.log(record);
-    const user = record.original; 
-    const [searchUsers] = useLazyQuery(SEARCH_USERS, { fetchPolicy: 'no-cache' });
-    
-    const loadOptions = async (value) => {
-        const by = column?.id === "email" ? "EMAIL" : "NAME";
-        const { data } = await searchUsers({ variables: { searchQuery: value, by } });
-        return (
-            data?.searchUsers?.map((u) => ({
-                label: `${u.name} (${u.email})`,
-                value: column?.id === "email" ? u.email : u.name,
-            })) ?? []
-        );
-    }
-    
-    const handleSelectOption = (option) => {
-        if (!option) return;
-        onChange(option.value);
-    };
+  const row = record.original;
 
-      const handleClick = () => setEditing(true);
-
-  const handleBlur = () => setTimeout(() => setEditing(false), 150);
-    
-    //const handleChange = (val, meta) => { if (meta.action === "input-change") onChange(val); }
-/*
-    const handleBlur = () => {
-        onEndEdit();
-    }
-
-    const stop = (e) => e.stopPropagation();
-
-    const editHandle = (e) => {
-        stop(e);
-        onStartEdit()
-    }
-    */    
-
+  const loadOptions = async (inputValue, columnId) => {
+    const by = columnId === "email" ? "EMAIL" : "NAME";
+    const { data } = await searchUsers({ variables: { searchQuery: inputValue, by } });
     return (
-<tr>
-      {editing ? (
-        <td colSpan={2}>
-          <AsyncSelect
-            autoFocus
-            cacheOptions
-            defaultOptions={false}
-            loadOptions={loadOptions}
-            onChange={handleSelectOption}
-            onBlur={handleBlur}
-            placeholder="Введите имя или email..."
-            noOptionsMessage={() => "Нет совпадений"}
-            menuPortalTarget={document.body}
-            menuPlacement="auto"
-            components={{ DropdownIndicator: null, IndicatorSeparator: null }}
-            styles={{
-              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-              menu: (base) => ({ ...base, zIndex: 9999 }),
-              control: (base) => ({
-                ...base,
-                minHeight: "28px",
-                height: "28px",
-                border: "1px solid #ddd",
-                fontSize: "0.875rem",
-              }),
-              valueContainer: (base) => ({
-                ...base,
-                padding: "0 4px",
-              }),
+      data?.searchUsers?.map((u) => ({
+        label: `${u.name} (${u.email})`,
+        value: u.id,
+        data: u,
+      })) ?? []
+    );
+  };
+
+  const handleSelectOption = (option, columnId) => {
+    if (!option || !option.data) {
+      // отмена/клик мимо — просто закрыть
+      setEditingCell(null);
+      return;
+    }
+
+    const u = option.data;
+
+    // выбрали того же пользователя — ничего не меняем
+    if (u.name === row.name && u.email === row.email) {
+      setEditingCell(null);
+      return;
+    }
+
+    // обновляем всю строку
+    onChange(row.id, {
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      __typename: "User",
+    });
+
+    setEditingCell(null);
+  };
+
+  const handleBlur = () => {
+    // закрыть без обнулений
+    requestAnimationFrame(() => setEditingCell(null));
+  };
+
+  const handleKeyDown = (e, columnId) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const next = tempValue.trim();
+      const curr = String(row[columnId] ?? "");
+      if (next && next !== curr) {
+        onChange(row.id, { [columnId]: next });
+      }
+      setEditingCell(null);
+    }
+  };
+
+  return (
+    <tr>
+      {record.getVisibleCells().map((cell) => {
+        const colId = cell.column.id;
+        const isEditing = editingCell === colId;
+        const value = row[colId]; // показываем ИСКЛЮЧИТЕЛЬНО из родителя
+
+        return (
+          <td
+            key={cell.id}
+            className={colId === "select" ? "text-center" : "text-start"}
+            style={{ cursor: colId === "select" ? "default" : "pointer", verticalAlign: "middle" }}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (colId === "name" || colId === "email") {
+                setEditingCell(colId);
+                setTempValue(String(value ?? "")); // инициализация инпута
+              }
             }}
-          />
-        </td>
-      ) : (
-        <>
-          <td onClick={handleClick} style={{ cursor: "pointer" }}>
-            {user.name || <em className="text-muted">Имя</em>}
-          </td>
-          <td onClick={handleClick} style={{ cursor: "pointer" }}>
-            {user.email || <em className="text-muted">Email</em>}
-          </td>
-        </>
-      )}
-    </tr>
-        /*isEditing ? (
-          <AsyncSelect
-            cacheOptions
-            defaultOptions={false}
-            loadOptions={loadOptions}
-            placeholder="Введите имя или email..."
-            onChange={handleSelectOption}
-            onBlur={handleBlur}
-            noOptionsMessage={() => "Нет совпадений"}
-            menuPortalTarget={document.body}
-            menuPlacement="auto"
-            components={{ DropdownIndicator: null, IndicatorSeparator: null }}
-            styles={{
-              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-              menu: (base) => ({ ...base, zIndex: 9999 }),
-              control: (base) => ({
-                ...base,
-                minHeight: "28px",
-                height: "28px",
-                border: "1px solid #ddd",
-                fontSize: "0.875rem",
-              }),
-              valueContainer: (base) => ({
-                ...base,
-                padding: "0 4px",
-              }),
-            }}
-          />
-        ) : (
-          <div
-            style={{
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              height: "28px",
-              padding: "0 4px",
-              borderRadius: 4,
-              background: "transparent",
-              fontSize: "0.875rem",
-            }}
-            onClick={handleCellClick}
           >
-            <span>
-              {record.name ? `${record.name}` : <em className="text-muted">Имя</em>}{" "}
-              {record.email ? `(${record.email})` : ""}
-            </span>
-            <span style={{ color: "#999", fontSize: 12 }}>✏️</span>
-          </div>
-        )}
-      </td>
-    </tr>
-  );*/
-     /* { isEd
-                ? (<AsyncSelect
-                        ref={selectRef}
-                        value={value ? { label: value, value } : null}
-                        autoFocus
-                        loadOptions={loadOptions}
-                        defaultOptions={false}
-                        onChange={handleSelectOption}
-                        onBlur={handleBlur}
-                        placeholder={column.header}
-                    
-                        menuPortalTarget={document.body}
-                        defaultInputValue={value ?? ""}
-                        menuPlacement="auto"
-                        components={{ DropdownIndicator: null, IndicatorSeparator: null }}
-                        noOptionsMessage={() => "Нет совпадений"}
-                        styles={{
+            {colId === "select" ? (
+              render(cell.column.columnDef.cell, cell.getContext())
+            ) : isEditing ? (
+              <AsyncSelect
+                autoFocus
+                cacheOptions
+                defaultOptions={false}
+                loadOptions={(txt) => loadOptions(txt, colId)}
+                onChange={(opt) => handleSelectOption(opt, colId)}
+                // 👇 Критично: НЕ обновляем tempValue, когда react-select сам чистит инпут
+                onInputChange={(val, meta) => {
+                  if (meta.action === "input-change") setTempValue(val);
+                }}
+                inputValue={tempValue}
+                onBlur={handleBlur}
+                onKeyDown={(e) => handleKeyDown(e, colId)}
+                isClearable={false}
+                backspaceRemovesValue={false}
+                closeMenuOnSelect
+                blurInputOnSelect
+                placeholder={`Введите ${colId === "email" ? "email" : "имя"}...`}
+                noOptionsMessage={() => "Нет совпадений"}
+                menuPortalTarget={document.body}
+                menuPlacement="auto"
+                components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+                styles={{
             menuPortal: base => ({ ...base, zIndex: 9999 }),
   menu: base => ({ ...base, zIndex: 9999 }),
   control: base => ({ ...base,
@@ -188,24 +141,29 @@ export default function EditableCell ({ record, onChange }) {
     ...base,
     display: "none", // убираем стрелку и иконки, чтобы не влияли на высоту
   }),
-
-                   }}
-                    />) 
-                : ( <span 
-                        style={{
-    cursor: "text",
-    display: "block",
-    height: 26,
-    lineHeight: "26px",
-    padding: "0 2px",
-    overflow: "hidden",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-  }}
-                        onClick={editHandle}
-                    >
-                        {value || <em className="text-muted">—</em>}
-                    </span>
-                )}
-        </>)
-        }*/)}
+                }}
+              />
+            ) : (
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "100%",
+                  height: "28px",
+                  lineHeight: "28px",
+                  padding: "0 4px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  color: value ? "#212529" : "#999",
+                  fontStyle: value ? "normal" : "italic",
+                }}
+              >
+                {value || (colId === "name" ? "Имя" : "Email")}
+              </span>
+            )}
+          </td>
+        );
+      })}
+    </tr>
+  );
+}
