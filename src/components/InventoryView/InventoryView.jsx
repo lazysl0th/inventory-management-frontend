@@ -10,6 +10,7 @@ import AccessTab from "./InventoryTabs/AccessTab";
 import ChatTab from "../ChatTab/ChatTab";
 import StatsTab from "./InventoryTabs/StatsTab";
 import RecordsList from '../RecordsList/RecordsList';
+import { nameList } from '../../utils/constants';
 
 
 function InventoryView({
@@ -31,6 +32,8 @@ function InventoryView({
         createdAt: new Date().toLocaleString(),
         updatedAt: new Date().toLocaleString(),
         customIdFormat: {},
+        isPunblic: false,
+        allowedUsers: []
     })
 
     const [loadInventory, { data, loading, error, reset }] = useLazyQuery(GET_INVENTORY_TAB[activeTab]);
@@ -38,7 +41,9 @@ function InventoryView({
     useEffect(() => {
         if (inventoryId) loadInventory({ variables: { id: inventoryId } })
         if (['items', 'chat'].includes(activeTab)) loadInventory({ variables: { inventoryId: inventoryId } })
-    }, [inventoryId, activeTab, isOpen]);
+    }, [activeTab, isOpen]);
+
+    
 
     const inventoryPart = data?.inventory || {}
     
@@ -59,7 +64,7 @@ function InventoryView({
                     ? handlerChangeInventory(key, new Date(+inventoryPart[key]).toLocaleString())
                     : handlerChangeInventory(key, inventoryPart[key])
         }
-    }, [loading]);
+    }, [inventoryId]);
 
 
     const handleCloseView = () => {
@@ -82,7 +87,7 @@ function InventoryView({
 
     const fields = []
     //console.log(inventory?.__typename)
-    //console.log(inventory);
+    console.log(inventory);
 
     //console.log(inventoryId)
     //console.log(inventoryDetails);
@@ -144,14 +149,17 @@ function InventoryView({
                             ? <Spinner animation="border" className="align-self-center"/>
                             : error
                                 ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
-                                : <AccessTab inventory={inventory} /> }
+                                : <AccessTab
+                                    inventory={inventory}
+                                    handlerChangeAllowedUsers={handlerChangeInventory}
+                                /> }
                     </Tab>
                     <Tab eventKey="items" title="Items">
                         {loading
                             ? <Spinner animation="border" className="align-self-center"/>
                             : error
                                 ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
-                                : <RecordsList records={inventoryPart.items} handlerClickRecord={handlerClickRecord} /> }
+                                : <RecordsList nameRecordList={nameList.ITEMS} records={inventoryPart.items} handlerClickRecord={handlerClickRecord} /> }
                     </Tab>
                     <Tab eventKey="chat" title="Chat">
                         {loading

@@ -261,3 +261,13 @@ export const CREATE_INVENTORY = gql`
         }
     }
 `;
+
+export const SEARCH_USERS = gql`
+  query SearchUsers($searchQuery: String!, $by: SearchBy!) {
+    searchUsers(searchQuery: $searchQuery, by: $by) {
+      id
+      name
+      email
+    }
+  }
+`;

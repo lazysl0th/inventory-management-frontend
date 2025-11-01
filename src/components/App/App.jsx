@@ -17,6 +17,7 @@ import ItemView from '../ItemView/ItemView';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import { titleInfoTooltip, messageInfoTooltip } from '../../utils/constants';
 import { isOwner, hasAdminRole, hasAccess } from '../../utils/utils';
+import AsyncSelect from "react-select/async";
 
 
 
@@ -121,7 +122,7 @@ function App() {
     const hendleDeleteInventories = async (rowSelection) => {
         try {
             const selectedIds = Object.keys(rowSelection).map(Number);
-            deleteInventories({ variables: { ids: selectedIds } });
+            await deleteInventories({ variables: { ids: selectedIds } });
             openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORDS_DELETE)
         } catch (e) {
             console.error(e);

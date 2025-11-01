@@ -10,44 +10,30 @@ import {
     getSortedRowModel,
     flexRender,
 } from '@tanstack/react-table';
-import parse from 'html-react-parser'
-import './RecordsList.css'
+import parse from 'html-react-parser';
+import './RecordsList.css';
+import EditableCell from './EditableCell/EditableCell';
 import IndeterminateCheckbox from '../IndeterminateCheckbox/IndeterminateCheckbox';
 import Record from './Record/Record';
-import { RECORDS_LIST_HEADS } from '../../utils/constants'
+import { nameList, RECORDS_LIST_HEADS } from '../../utils/constants';
 
 
 export default function RecordsList({
     records,
-    nameList,
+    nameRecordList,
     handlerClickRecord,
     handlerDeleteRecords,
+    onChangeRecordList,
     onAdd,
     onRefetch,
+    renderRow
 }) {
     const [rowSelection, setRowSelection] = useState({});
+    const [editingCell, setEditingCell] = useState(null);
     const [globalFilter, setGlobalFilter] = useState('');
     const [sorting, setSorting] = useState([]);
-
     const type = records?.find(record => record.__typename)?.__typename;
-    //console.log(records)
     const columnHelper = createColumnHelper();
-
-    const handleBlock = () => {
-        onBlock(rowSelection);
-        setRowSelection({});
-    };
-
-    const handleDelete = async () => {
-        console.log(rowSelection)
-        //const usersId = Object.keys(rowSelection);
-        //const selectedIds = table.getRowModel().rows[Number(52)]?.original.id;
-        //table.getRowModel().rows[Number(key)].original.id
-        await handlerDeleteRecords(rowSelection);
-        await onRefetch();
-        setRowSelection({});
-    };
-
     const onDisabled = () => Object.values(rowSelection).some(Boolean)
 
     const getUniqIdValue = (row) => {
@@ -55,30 +41,91 @@ export default function RecordsList({
         return Object.values(row).map(value => (value !== null && value !== undefined ? value.toString() : "")).join("_");
     };
 
-    const cellRenderer = (info, col) => {
-        if (info.row.original[col.highlightKey]) return parse(info.row.original[col.highlightKey]);
-        return info.getValue();
+    const handleBlock = () => {
+        onBlock(rowSelection);
+        setRowSelection({});
+    };
+
+    //console.log(type)
+
+    const handleDeleteRecord = async () => {
+        await handlerDeleteRecords(rowSelection);
+        await onRefetch();
+        setRowSelection({});
+    };
+
+    const handleDeleteRow = () => {
+        const deleteRecordIds = Object.keys(rowSelection).filter(id => rowSelection[id]);
+        const updatedRecords = records.filter((record) => !deleteRecordIds.includes(String(record.id)));
+        onChangeRecordList([...updatedRecords]);
+        setRowSelection({});
+    setEditingCell(null);
+    };
+
+
+
+    const handleDelete = () => { 
+        type === 'Inventory' ? handleDeleteRecord() : handleDeleteRow()
+    } 
+
+
+    const handleChangeCell = ((id, changes) => {
+        const updatedRecords = records.map((record) => (record.id === id ? { ...record, ...changes } : record));
+        onChangeRecordList(updatedRecords);
+    });
+
+
+        const handleAddRecord = () => {
+        const newAllowedUser = {
+            id: crypto.randomUUID(),
+            name: "",
+            email: '',
+            isNew: true,
+            __typename: "User"
+        };
+            const updated = [newAllowedUser, ...(records ?? [])];
+            setEditingCell({ id: newAllowedUser.id, field: "name" });
+            onChangeRecordList(updated);
+        };
+
+
+    const createEditableCell = (info, col) => {
+    return (
+        <EditableCell
+            isEditing={editingCell?.id === String(info.row.original.id) && editingCell?.field === col.id}
+            column={col}
+            value={info.getValue()}
+            onStartEdit={() => setEditingCell({ id: String(info.row.original.id), field: col.id})}
+            onEndEdit={() => setEditingCell(null)}
+            onChange={(newValue) => handleChangeCell(info.row.original.id, { [col.id]: newValue } )}
+        />);
     }
 
-    const collectColumn = (records, config) => {
-        const colemn = records.find(record => record.values.length > 0)?.values?.map((value) => ({
-            id: value.field[config.fieldIdKey], 
-            header: value.field[config.fieldTitleKey],
-            order: value.field.order
-        })).sort((a, b) => a.order - b.order)
-        return colemn;
+    const cellRenderer = (info, col) => {
+        if (info.row.original[col.highlightKey]) return parse(info.row.original[col.highlightKey])
+        //if (type === 'User') return createEditableCell(info, col);
+        return info.getValue();
     }
 
     const getRowValue = (row, col, config) => row.values.find(v => v.field.id === col.id)?.[config.fieldValueKey]
 
-    const buildColumns = (records, config) => {
-        const columnSchema = Array.isArray(config)
-            ? { columns: config, accessorFn: (row, col) => (col.accessor ? col.accessor(row[col.id], row) : row[col.id]) }
+    const collectColumn = (records, config) => {
+        const column = records.find(record => record.values.length > 0)?.values?.map((value) => ({
+            id: value.field[config.fieldIdKey], 
+            header: value.field[config.fieldTitleKey],
+            order: value.field.order
+        })).sort((a, b) => a.order - b.order)
+        return column;
+    }
+
+    const buildColumns = (records, type) => {
+        const columnSchema = Array.isArray(RECORDS_LIST_HEADS[type])
+            ? { columns: RECORDS_LIST_HEADS[type], accessorFn: (row, col) => (col.accessor ? col.accessor(row[col.id], row) : row[col.id]) }
             : { columns: collectColumn(records, config), accessorFn: (row, col) => getRowValue(row, col, config) };
-        return columnSchema?.columns.map(column => columnHelper.accessor(row => columnSchema.accessorFn(row, column, config), {
+        return columnSchema?.columns.map(column => columnHelper.accessor(row => columnSchema.accessorFn(row, column, RECORDS_LIST_HEADS[type]), {
             id: column.id,
             header: column.header,
-            cell: info => cellRenderer(info, column),
+            cell: info => cellRenderer(info, column, type),
         }))
     };
 
@@ -104,7 +151,7 @@ export default function RecordsList({
 
     const getColumnsByType = (type) => {
         if (!RECORDS_LIST_HEADS[type]) return [];
-        const columns = buildColumns(records, RECORDS_LIST_HEADS[type]);
+        const columns = buildColumns(records, type);
         const checkboxColumn = createCheckboxColumn();
         return [ checkboxColumn, ...columns ]
     };
@@ -120,7 +167,7 @@ export default function RecordsList({
     const handelFilterChange = (e) => setGlobalFilter(e.target.value)
   
  
-    const columns = useMemo(() => getColumnsByType(type) || [], [type])
+    const columns = useMemo(() => getColumnsByType(type) || [], [type, editingCell])
 
     const table = useReactTable({
         data: useMemo(() => records || [], [records]),
@@ -139,37 +186,38 @@ export default function RecordsList({
 
     return (
         <Container>
-            {nameList && <h3 className='mb-4 mt-4'>{nameList}</h3>}
-            { location.pathname === '/profile'
-                ? (<Row className="mb-3 align-items-center">
-                    <Col md="auto" className="d-flex gap-2">
-                        <OverlayTrigger
-                            key='add'
-                            placement='top'
-                            overlay={ <Tooltip id={`tooltip-add`}> Add </Tooltip> }
-                        >
-                            <Button 
-                                variant="outline-success" 
-                                onClick={onAdd}
+            {nameRecordList && <h3 className='mb-4 mt-4'>{nameRecordList}</h3>}
+                <Row className="mb-3 align-items-center">
+                    { (location.pathname === '/profile' && nameRecordList === nameList.OWNER) || (nameRecordList === nameList.ACCESS) || (nameRecordList === nameList.ITEMS)
+                        ? (<Col md="auto" className="d-flex gap-2">
+                            <OverlayTrigger
+                                key='add'
+                                placement='top'
+                                overlay={ <Tooltip id={`tooltip-add`}> Add </Tooltip> }
                             >
-                                <VscAdd/> 
-                            </Button>
-                        </OverlayTrigger>
-                        
-                        <OverlayTrigger
-                            key='delete'
-                            placement='top'
-                            overlay={ <Tooltip id={`tooltip-delete`}> Delete </Tooltip> }
-                        >
-                            <Button 
-                                variant="outline-danger"
-                                onClick={handleDelete} 
-                                disabled={!onDisabled()}
+                                <Button 
+                                    variant="outline-success" 
+                                    onClick={onAdd ?? handleAddRecord}
+                                >
+                                    <VscAdd/> 
+                                </Button>
+                            </OverlayTrigger>
+                            
+                            <OverlayTrigger
+                                key='delete'
+                                placement='top'
+                                overlay={ <Tooltip id={`tooltip-delete`}> Delete </Tooltip> }
                             >
-                                <BsFillTrashFill />
-                            </Button>
-                        </OverlayTrigger>
-                    </Col>
+                                <Button 
+                                    variant="outline-danger"
+                                    onClick={handleDelete} 
+                                    disabled={!onDisabled()}
+                                >
+                                    <BsFillTrashFill />
+                                </Button>
+                            </OverlayTrigger>
+                        </Col>)
+                    : (<></>) }
                     <Col md className="d-flex justify-content-end" >
                         <Form.Control
                             type="text"
@@ -179,8 +227,7 @@ export default function RecordsList({
                             style={{ width: '200px' }}
                         />
                     </Col>
-                </Row>)
-                : (<></>) }
+                </Row>
             <div className='table-scroll-container'>
                 <Table className='mb-0'  hover>
                 <thead>
@@ -207,13 +254,26 @@ export default function RecordsList({
                     ))}
                 </thead>
                 <tbody>
+                    {}
                     {table.getRowModel().rows.map((row) => (
-                        <Record
-                            key={row.id} 
-                            record={row}
-                            render={flexRender}
-                            onClick={handlerClickRecord?.[type]}
-                        />))}
+                        type === 'User'
+                            ? (<EditableCell 
+                                    key={row.id}
+                                    record={row}
+
+                                    //isEditing={editingCell?.id === String(info.row.original.id) && editingCell?.field === col.id}
+                                    //column={col}
+                                    //value={info.getValue()}
+                                    //onStartEdit={() => setEditingCell({ id: String(info.row.original.id), field: col.id})}
+                                    //onEndEdit={() => setEditingCell(null)}
+                                    //onChange={(newValue) => handleChangeCell(info.row.original.id, { [col.id]: newValue } )}
+                                />)
+                            : (<Record
+                                    key={row.id} 
+                                    record={row}
+                                    render={flexRender}
+                                    onClick={handlerClickRecord?.[type]}
+                            />)))}
                 </tbody>
                 </Table>
                 </div>

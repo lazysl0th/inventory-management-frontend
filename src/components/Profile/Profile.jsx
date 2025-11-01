@@ -85,7 +85,7 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
             <Row className="mb-5">
                 <Col>
                 <RecordsList 
-                    nameList={nameList.OWNER}
+                    nameRecordList={nameList.OWNER}
                     records={myInventories?.inventories}
                     handlerClickRecord={handlerClickRecord}
                     onAdd={handlerAddRecords}
@@ -97,7 +97,7 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
             <Row>
                 <Col>
                     <RecordsList
-                        nameList={nameList.WRITE_ACCESS}
+                        nameRecordList={nameList.WRITE_ACCESS}
                         records={editableInventories?.inventories} />
                 </Col>
             </Row>

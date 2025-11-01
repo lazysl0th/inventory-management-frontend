@@ -20,7 +20,7 @@ export default function CustomIdForm({ part, index, total, onUpdate, onMove }) {
             onUpdate((partId), { 
                 [name]: value, 
                 value: "", 
-                format: PART_DEFINITIONS[value].defaultFormat || PART_DEFINITIONS[value].formats?.[0]?.value || "" } )
+                format: PART_DEFINITIONS?.[value].defaultFormat || PART_DEFINITIONS?.[value].formats?.[0]?.value || "" } )
             break;
             case "format":
                 onUpdate(partId, { [name]: value });

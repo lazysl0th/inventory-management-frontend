@@ -58,7 +58,9 @@ export const nameList = {
     TOP_ITEMS: 'Top 5 by number of items',
     SEARCH: 'Search result',
     OWNER: 'My inventories',
-    WRITE_ACCESS: 'Inventories with write access'
+    WRITE_ACCESS: 'Inventories with write access',
+    ACCESS: 'Users with write access',
+    ITEMS: 'Items'
 }
 
 export const TAGS_CLOUD_SOLOR = {

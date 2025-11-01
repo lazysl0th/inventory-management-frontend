@@ -15,6 +15,8 @@ export default function InventoryDetailsTab({
 
     //console.log(categories);
 
+    //console.log(details)
+
 
     const handleChange = (e) => {
         const { name, value } = e.target

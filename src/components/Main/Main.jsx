@@ -36,7 +36,7 @@ export default function Main({ handlerClickRecord }) {
                         : latestInventoriesError
                             ? <Alert variant="danger" className="align-self-center">{latestInventoriesError.message}</Alert>
                             : <RecordsList
-                                nameList={nameList.LATEST}
+                                nameRecordList={nameList.LATEST}
                                 records={latestInventories.inventories}
                                 handlerClickRecord={handlerClickRecord} /> }
 
@@ -45,7 +45,7 @@ export default function Main({ handlerClickRecord }) {
                         : topInventoriestopError
                             ? <Alert variant="danger" className="align-self-center">{topInventoriestopError.message}</Alert>
                             : <RecordsList 
-                                nameList={nameList.TOP_ITEMS}
+                                nameRecordList={nameList.TOP_ITEMS}
                                 records={topInventories.inventories} 
                                 handlerClickRecord={handlerClickRecord} /> }
                 </Col>

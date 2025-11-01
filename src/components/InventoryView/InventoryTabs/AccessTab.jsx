@@ -1,21 +1,44 @@
-import { Table, Badge, Alert, Card } from "react-bootstrap";
+import { Col, Form, Alert, Card } from "react-bootstrap";
 import RecordsList from "../../RecordsList/RecordsList";
+import { nameList } from "../../../utils/constants";
 
-export default function AccessTab({ inventory }) {
+export default function AccessTab({ inventory, handlerChangeAllowedUsers }) {
 
     //console.log(inventory)
-
     const { isPublic, allowedUsers = [] } = inventory;
+
+    const handlerChange = (updatedAllowedUsers) => {
+        console.log(updatedAllowedUsers);
+        console.log(allowedUsers)
+        handlerChangeAllowedUsers('allowedUsers', updatedAllowedUsers)
+        console.log(allowedUsers)
+    }
+
+    const handleRefetch = async () => {
+        // заглушка; позже подключим real refetch
+    };
+
+    const handleChange = (e) => {
+        const { name, value, checked} = e.target;
+        handlerChangeAllowedUsers(name, checked);
+    }
+
+
+    const recordsKey = allowedUsers.map(u => u.id || u.email || "").join("|");
 
     return (
         <div className="p-3">
             <Card className="mb-4">
                 <Card.Body className="d-flex align-items-center justify-content-between">
-                    <div>
-                        <strong>Public Access:</strong>{" "}
-                        { isPublic
-                            ? (<Badge bg="success">Public</Badge>)
-                            : (<Badge bg="secondary">Private</Badge>) }
+                    <div className="d-flex gap-1 no-wrap">
+                        <strong>Public Access:</strong>
+                        <Form.Check
+                        className="m-0"
+                            type="checkbox"
+                            name='isPublic'
+                            checked={isPublic || false}
+                            onChange={handleChange}
+                        />
                     </div>
                     <div className="text-muted small">
                         { isPublic
@@ -25,11 +48,13 @@ export default function AccessTab({ inventory }) {
                 </Card.Body>
             </Card>
 
-            <h6 className="mb-3">Users with Write Access</h6>
-
-            {allowedUsers.length === 0
+            {false
                 ? (<Alert variant="light" className="border">No users have been granted write access.</Alert>)
-                : (<RecordsList records={allowedUsers}/>
+                : ( <RecordsList
+                        records={inventory.allowedUsers}
+                        nameRecordList={nameList.ACCESS}
+                        onChangeRecordList={handlerChange}
+                    />
 
             )}
         </div>
