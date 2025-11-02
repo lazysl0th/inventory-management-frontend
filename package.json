@@ -21,6 +21,7 @@
     "formik": "^2.4.6",
     "graphql": "^16.11.0",
     "html-react-parser": "^5.2.7",
+    "lodash.debounce": "^4.0.8",
     "react": "^19.1.1",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.1",

@@ -11,6 +11,7 @@ const ProtectedRoute = ({ isLoading, children }) => {
         : currentUser.loggedIn 
             ? children 
             : <Navigate to='/sign-in' replace /> );
+            
 };
 
 export default ProtectedRoute;

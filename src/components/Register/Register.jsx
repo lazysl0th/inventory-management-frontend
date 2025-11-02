@@ -139,7 +139,7 @@ export default function Register ({ onReg }) {
                 <Col xs={6} md={3}>
                     <span>
                         Account already exist?{' '}
-                        <a href={link.SINGIN} className='text-decoration-underline text-primary fw-normal text-dark'>
+                        <a href={link.SIGNIN} className='text-decoration-underline text-primary fw-normal text-dark'>
                             Sign{'\u00A0'}in
                         </a>
                     </span>

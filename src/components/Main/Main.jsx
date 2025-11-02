@@ -1,11 +1,12 @@
+import { useEffect } from "react";
 import { useQuery } from "@apollo/client/react";
 import { TagCloud } from 'react-tagcloud';
-import { GET_INVENTORIES, GET_TAGS } from '../../graphql/queries';
+import { GET_INVENTORIES } from '../../graphql/queries';
 import { Spinner, Alert, Container, Row, Col } from 'react-bootstrap';
 import RecordsList from '../RecordsList/RecordsList';
 import { queryParams, nameList, TAGS_CLOUD_SOLOR } from '../../utils/constants';
 
-export default function Main({ handlerClickRecord }) {
+export default function Main({ handlerClickRecord, loadTags, resultTags }) {
 
     const { data: latestInventories, loading: latestInventoriesLoading, error: latestInventoriesError } = useQuery(GET_INVENTORIES, {
         variables: {
@@ -23,9 +24,8 @@ export default function Main({ handlerClickRecord }) {
         },
     });
 
-
-    const { data: tags, loading: tagsLoading, error: tagsError } = useQuery(GET_TAGS);
-    const cloudTagData = tags?.tags.map((tag) => ({ value: tag.name, count: tag.inventoriesCount })) || []
+    useEffect(() => { loadTags() }, []);
+    
 
     return (
         <Container className="d-flex flex-column gap-4" >
@@ -53,7 +53,7 @@ export default function Main({ handlerClickRecord }) {
                     <TagCloud
                         minSize={12}
                         maxSize={35}
-                        tags={cloudTagData}
+                        tags={resultTags?.data?.tags?.map((tag) => ({ value: tag.name, count: tag.inventoriesCount })) || []}
                         colorOptions={TAGS_CLOUD_SOLOR}
                     />
                 </Col>

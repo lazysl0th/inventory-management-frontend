@@ -16,7 +16,7 @@ function Header({ onLog }) {
     const [initialValues] = useState({ searchQuery: '' })
     const [expanded, setExpanded] = useState(false);
 
-    const isAuthPage = [link.SINGIN, link.SIGNUP].includes(location.pathname);
+    const isAuthPage = [link.SIGNIN, link.SIGNUP].includes(location.pathname);
 
     const expandedHadle = () => setExpanded(false);
 
@@ -86,11 +86,11 @@ function Header({ onLog }) {
                                             Email: <a href={`mailto:${currentUser?.email}`}>{currentUser?.email}</a>
                                         </Navbar.Text>
                                     </> )}
-                                        <Nav.Link className='text-dark' href='/' onClick={hadleLogout}>
+                                        <Nav.Link as="button" className='text-dark' onClick={hadleLogout}>
                                             Sign&nbsp;Out
                                         </Nav.Link>
                                     </> )
-                            : (currentUser?.loggedIn || (location.pathname === '/signup' || location.pathname ==='/signin'))
+                            : (currentUser?.loggedIn)
                                 ? (<></>)
                                 : ( <>
                                         <Nav.Link 

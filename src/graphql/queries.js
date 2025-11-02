@@ -6,7 +6,7 @@ const INVENTORY_BASE_FRAGMENT = gql`
         title
         description
         category
-        owner { name }
+        owner { id name }
         itemsCount
     }
 `
@@ -64,7 +64,19 @@ export const GET_TAGS = gql`
         tags {
             id
             name
+            inventories {
+                id
+            }
             inventoriesCount
+        }
+    }
+`;
+
+export const SEARCH_TAGS = gql`
+    query SearchTags($searchQuery: String!) {
+        searchTags(searchQuery: $searchQuery) {
+            id
+            name
         }
     }
 `;
@@ -298,10 +310,13 @@ export const GET_CATEGORIES = gql`
 export const CREATE_INVENTORY = gql`
     mutation createInventory($input: CreateInventoryInput!) {
         createInventory(input: $input) {
+            id
             title
             description
             category
-            createdAt
+            image
+            isPublic
+            title
         }
     }
 `;

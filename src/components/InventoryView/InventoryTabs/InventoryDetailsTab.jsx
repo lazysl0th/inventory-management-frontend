@@ -1,32 +1,78 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useLazyQuery, } from '@apollo/client/react';
+import AsyncCreatableSelect from 'react-select/async-creatable';
 import { Form, Row, Col, Image } from "react-bootstrap";
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
+import { SEARCH_TAGS } from '../../../graphql/queries';
+
+
+
 
 export default function InventoryDetailsTab({
+    formikValues,
     categories,
+    inventoryTags,
     details,
+    formikHandlerChange,
+    formikErrors,
+    formikBlur,
+    formikTouched,
     handlerChangeDetails,
-    onImageFileSelect,
     readOnly
 }) {
-    //console.log(details);
-    const currentUser = useContext(CurrentUserContext);
 
 
-    //console.log(categories);
-
-    //console.log(details)
+    const [searchTags] = useLazyQuery(SEARCH_TAGS, { fetchPolicy: "no-cache" });
 
 
-    const handleChange = (e) => {
-        const { name, value } = e.target
-        handlerChangeDetails(name, value);
+      const [preview, setPreview] = useState(null);
+
+
+
+    const loadOptions = async (inputValue, callback) => {
+        const { data } = await searchTags({ variables: { searchQuery: inputValue } });
+        const selectedIds = new Set(inventoryTags?.map((tag) => tag.id));
+        const options = data?.searchTags?.filter((tag) => !selectedIds.has(tag.id)).map((tag) => ({ value: tag.id, label: tag.name })) ?? [];
+        callback(options);
+    };
+
+    const handleFormikChange = (e) => {
+        formikHandlerChange(e);
+        handlerChangeDetails(e.target.name, e.target.value);
+    };
+
+    const handleChange = (options) => {
+        if (options?.map) handlerChangeDetails('tags', (options).map((o) => ({ id: o.value, name: o.label })));
+        else if (options.target.files?.[0]) handlerChangeImage(options);
+        else handleFormikChange(options);
     }
+
+        const handlerChangeImage = (e) => {
+            console.log(e.target.name, e.target.files[0])
+        if (!e.target.files[0]) return;
+        const reader = new FileReader();
+        reader.onloadend = () => setPreview(reader.result);
+        reader.readAsDataURL(e.target.files[0]);
+        handlerChangeDetails(e.target.name, e.target.files[0]);
+    };
+
+    const handleAddTag = (inputValue) => {
+        const name = inputValue.trim();
+        if (!name) return;
+        const newTag = {
+            guid: crypto.randomUUID(),
+            id: '',
+            name: name,
+        };
+        handlerChangeDetails('tags', [...inventoryTags || [], newTag]);
+    };
+
+
     
     
     //const [image, setImage] = useRef();
     
-
+//console.log(inventoryTags?.map(tag => ({id: tag.id,  label: tag.name})))
 
     
     //console.log(categories);
@@ -46,36 +92,26 @@ export default function InventoryDetailsTab({
         };
     }, [localPreview]);
 
-    // ✅ Стандартный onChange, никакого кастомного event handler в DOM
-    const handleFileChange = (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        const blobUrl = URL.createObjectURL(file);
-        setLocalPreview((prev) => {
-            if (prev && prev.startsWith("blob:")) URL.revokeObjectURL(prev);
-            return blobUrl;
-        });
-
-        // вызываем кастомный проп — он не идёт в DOM
-        if (onImageFileSelect) onImageFileSelect(file);
-    };
-
 
     return (
         <Form>
             <Row className="g-3">
                 <Col xs={12}>
                     <Form.Group controlId="title">
-                        <Form.Label>Title</Form.Label>
+                        <Form.Label className="required">Title</Form.Label>
                         <Form.Control
                             type="text"
                             name="title"
-                            value={details.title}
-                            onChange={handleChange}
+                            value={formikValues.title}
+                            onChange={handleFormikChange}
                             placeholder="Enter title..."
                             disabled={readOnly}
+                            onBlur={formikBlur}
+                            isInvalid={formikTouched?.title && !!formikErrors?.title}
                         />
+                        <Form.Control.Feedback type='invalid'>
+                            {formikErrors?.title}
+                        </Form.Control.Feedback>
                     </Form.Group>
                 </Col>
                 <Col xs={12} md={8}>
@@ -95,12 +131,13 @@ export default function InventoryDetailsTab({
 
                 <Col xs={12} md={4}>
                     <Form.Group controlId="category">
-                        <Form.Label>Category</Form.Label>
+                        <Form.Label className="required">Category</Form.Label>
                         <Form.Select
-                            value={details.category}
-                            onChange={handleChange}
+                            value={formikValues.category}
+                            onChange={handleFormikChange}
                             disabled={readOnly}
                             name="category"
+                            isInvalid={formikTouched?.category && !!formikErrors?.category}
                         >
                             <option value="" disabled> Select category… </option>
                             { categories?.enumValues.map((category) => ( 
@@ -109,6 +146,9 @@ export default function InventoryDetailsTab({
                         <Form.Text className="text-muted">
                             Value definition develop (enum).
                         </Form.Text>
+                        <Form.Control.Feedback type='invalid'>
+                            {formikErrors?.category}
+                        </Form.Control.Feedback>
                     </Form.Group>
                 </Col>
 
@@ -116,12 +156,14 @@ export default function InventoryDetailsTab({
                     <Form.Group controlId="image">
                         <Form.Label>Image</Form.Label>
                         <div className="d-flex flex-column gap-2">
-                            {'previewSrc' ? (
+                            {preview ? (
                                 <Image
-                                    src={'previewSrc'}
+                                    ref={imageRef}
+                                    src={preview}
                                     alt="Preview"
                                     thumbnail
                                     style={{ maxHeight: 160, objectFit: "cover" }}
+
                                 />
                             ) : (
                                 <div
@@ -131,9 +173,9 @@ export default function InventoryDetailsTab({
 
                             <Form.Control
                                 type="file"
-                                name="imgae"
+                                name="image"
                                 accept="image/*"
-                                onChange={handleFileChange}
+                                onChange={handleChange}
                                 disabled={readOnly}
                             />
                         </div>
@@ -144,11 +186,33 @@ export default function InventoryDetailsTab({
                     <Row className="g-3">
                         <Col xs={12} md={6}>
                             <Form.Group controlId="owner">
+                                <Form.Label>Tags</Form.Label>
+                                <AsyncCreatableSelect
+                                    isMulti
+                                    cacheOptions
+                                    defaultOptions
+                                    loadOptions={loadOptions}
+                                    onChange={handleChange}
+                                    onCreateOption={handleAddTag}
+                                    value={inventoryTags?.map(tag => ({ value: tag.id, label: tag.name }))}
+                                    placeholder={'Tags'}
+                                    styles={{
+                                        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                    }}
+                                    noOptionsMessage={({ inputValue }) =>
+                                        inputValue ? "Ничего не найдено" : "Начните ввод для поиска"
+                                    }
+                                />
+                            </Form.Group>
+                        </Col>
+
+                        <Col xs={12} md={6}>
+                            <Form.Group controlId="owner">
                                 <Form.Label>Owner</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="owner"
-                                    value={details.owner ? details.owner : currentUser.name}
+                                    value={details?.owner?.name ?? ''}
                                     readOnly
                                     disabled
                                 />
@@ -161,7 +225,7 @@ export default function InventoryDetailsTab({
                                     <Form.Control
                                         type="text"
                                         name="createdAt"
-                                        value={details.createdAt}
+                                        value={details?.createdAt ?? ''}
                                         readOnly
                                         disabled
                                     />
@@ -174,7 +238,7 @@ export default function InventoryDetailsTab({
                                     <Form.Control
                                         type="text"
                                         name="updateAt"
-                                        value={details.updatedAt}
+                                        value={details?.updatedAt ?? ''}
                                         readOnly
                                         disabled
                                     />

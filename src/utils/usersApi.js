@@ -37,7 +37,7 @@ export const checkToken = async () => {
         method: 'GET',
         headers: apiConfig.headers(),
     });
-  return await checkResponse(res);
+    return await checkResponse(res);
 }
 
 

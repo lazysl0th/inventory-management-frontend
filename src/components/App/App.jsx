@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useLazyQuery, useMutation } from '@apollo/client/react';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { Routes, Route, useNavigate, useSearchParams } from 'react-router-dom';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import './App.css'
-import { GET_ITEM_TAB, DELETE_INVENTORY, GET_CATEGORIES, CREATE_INVENTORY } from '../../graphql/queries';
+import { GET_ITEM_TAB, DELETE_INVENTORY, GET_CATEGORIES, CREATE_INVENTORY, GET_TAGS } from '../../graphql/queries';
 import { register, login, checkToken } from '../../utils/usersApi';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
@@ -17,9 +17,6 @@ import ItemView from '../ItemView/ItemView';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import { titleInfoTooltip, messageInfoTooltip } from '../../utils/constants';
 import { isOwner, hasAdminRole, hasAccess } from '../../utils/utils';
-import AsyncSelect from "react-select/async";
-
-
 
 function App() {
     const navigate = useNavigate();
@@ -45,9 +42,9 @@ function App() {
         reset: resetItem
     }] = useLazyQuery(GET_ITEM_TAB[activeItemTab]);
 
-    const [loadCategories, { data: dataCategories, loading, error, reset }] = useLazyQuery(GET_CATEGORIES);
+    const { data: dataCategories, loading: categoriesLoading, error: categoriesError,} = useQuery(GET_CATEGORIES);
 
-    useEffect(() => { loadCategories() }, []);
+    const [loadTags, resultTags] = useLazyQuery(GET_TAGS);
 
     useEffect(() => {
         if (selectedItem?.id) {
@@ -59,14 +56,13 @@ function App() {
     }, [activeItemTab, selectedItem.id]);
 
 
-    const [createInventory, { loading: creating, error: errorCreate }] = useMutation(CREATE_INVENTORY);
+    const [createInventory, { data: inventory, loading: creating, error: errorCreate }] = useMutation(CREATE_INVENTORY);
 
     const [deleteInventories, { loading: deleting }] = useMutation(DELETE_INVENTORY);
 
     const categories = dataCategories?.categories || {}
     const item = dataItem?.item || {}
     
-    //console.log(inventory);
     //console.log(categories);
     
     const openInfoTooltip = (title, message) => {
@@ -130,8 +126,20 @@ function App() {
         }
     }
 
-    const handlerCreateInventory = (inventory) => {
-        createInventory({ variables: { input: inventory } });
+    const handlerCreateInventory = async (newInventory) => {
+        try {
+            const { data } = await createInventory({ variables: { input: newInventory } });
+            if (data.createInventory.id) {
+                setSelectedInventoryId(data.createInventory.id)
+                openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.INVENTORY.CREATE);
+            } else {
+                openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.INVENTORY.ERROR);
+            }
+        } catch(e) {
+            console.log(e)
+            openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.INVENTORY.ERROR);
+
+        }
     }
 
     const hendleDeleteItems = async (selectedIds) => {
@@ -153,9 +161,10 @@ function App() {
             if (Object.keys(userData).length) setCurrentUser({ ...userData, loggedIn: true })
             else {
                 setCurrentUser({ loggedIn: false })
-                (<Redirect to='/sign-in' />)
+                navigate('/sign-in')
             }
         } catch (e) {
+            setCurrentUser({ loggedIn: false });
             console.log(e)
         } finally {
             setIsVerifyCurrentUser(false);
@@ -197,8 +206,8 @@ function App() {
 
     const handlerSignOut = () => {
         localStorage.removeItem('token');
-        setCurrentUser({ loggedIn: false, });
-        navigate('/');
+        setCurrentUser({ loggedIn: false });
+        navigate('/sign-in', { replace: true });
     }
 
     const handlerCheckPermissionInventory = (inventories, user, requiredRoles) => {
@@ -215,10 +224,10 @@ function App() {
         <CurrentUserContext.Provider value={currentUser}>
             <Header onLog={handlerSignOut}/>
             <Routes>
-                <Route path="/" element={ <Main handlerClickRecord={handlerClickRecord}/> } />
+                <Route path="/" element={ <Main handlerClickRecord={handlerClickRecord} loadTags={loadTags} resultTags={resultTags}/> } />
                 <Route path="/search" element={<SearchPage handlerClickRecord={handlerClickRecord}/>} />
-                <Route path="/sign-up" element={<Register onReg={handlerSignUpSubmit}/>} />
                 <Route path="/sign-in" element={<Login onAuth={handlerSignInSubmit}/>} />
+                <Route path="/sign-up" element={<Register onReg={handlerSignUpSubmit}/>} />
                 <Route
                     path="/profile"
                     element={
@@ -233,6 +242,8 @@ function App() {
             <InventoryView 
                 isOpen={isInventoryViewOpen}
                 categories={categories}
+                loadTags={loadTags}
+                resultTags={resultTags}
                 inventoryId={selectedInventoryId}
                 handlerCloseView={handlerCloseRecordView.Inventory}
                 handlerClickRecord={handlerClickRecord}

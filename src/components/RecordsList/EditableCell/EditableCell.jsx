@@ -22,7 +22,7 @@ export default function EditableRecord({ record, render, onChange }) {
     );
   };
 
-  const handleSelectOption = (option, columnId) => {
+  const handleSelectOption = (option) => {
     if (!option || !option.data) {
       // отмена/клик мимо — просто закрыть
       setEditingCell(null);
@@ -51,18 +51,6 @@ export default function EditableRecord({ record, render, onChange }) {
   const handleBlur = () => {
     // закрыть без обнулений
     requestAnimationFrame(() => setEditingCell(null));
-  };
-
-  const handleKeyDown = (e, columnId) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const next = tempValue.trim();
-      const curr = String(row[columnId] ?? "");
-      if (next && next !== curr) {
-        onChange(row.id, { [columnId]: next });
-      }
-      setEditingCell(null);
-    }
   };
 
   return (

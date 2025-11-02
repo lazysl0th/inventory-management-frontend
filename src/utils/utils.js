@@ -64,8 +64,6 @@ export const IdGenerator = {
   },
 };
 
-
-
 export const hasOrderChanged = (prev, current) => {
     if (prev.length !== current.length) return true;
     return prev.some((item, i) => item.order !== current[i].order);

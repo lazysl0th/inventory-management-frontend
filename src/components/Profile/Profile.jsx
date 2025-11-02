@@ -46,13 +46,13 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
                                     <Form.Label>Name</Form.Label>
                                     <Form.Control type="text" placeholder="Enter name" />
                                 </Form.Group>
-                                <Form.Group as={Col} controlId="formProfilePassword">
+                                <Form.Group as={Col} controlId="formProfileEmail">
                                     <Form.Label>Email</Form.Label>
                                     <Form.Control type="email" placeholder="Enter email" />
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">
-                                <Form.Group as={Col} controlId="formProfileInterface">
+                                <Form.Group as={Col}>
                                     <Form.Label>Interface</Form.Label>
                                     <Button className="w-100"
                                         variant={theme === "light" ? "outline-dark" : "outline-light"}
