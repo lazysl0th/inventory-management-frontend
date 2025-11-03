@@ -22,7 +22,7 @@ export default function  RecordsList({
     nameRecordList,
     handlerClickRecord,
     handlerDeleteRecords,
-    onChangeRecordList,
+    onChangeRecordList = () => {},
     handlerAddRecords,
 }) {
     const [rowSelection, setRowSelection] = useState({});
