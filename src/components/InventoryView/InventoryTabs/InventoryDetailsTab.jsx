@@ -114,7 +114,7 @@ export default function InventoryDetailsTab({
                             isInvalid={formikTouched?.category && !!formikErrors?.category}
                         >
                             <option value="" disabled> Select category… </option>
-                            { categories?.enumValues.map((category) => ( 
+                            { categories?.enumValues?.map((category) => ( 
                                 <option key={category.name} value={category.name}> {category.name} </option>)) }
                         </Form.Select>
                         <Form.Text className="text-muted">
