@@ -131,7 +131,9 @@ function App() {
         Item: closeItem
     };
 
-    const addInventory = () => setIsInventoryViewOpen(true)
+    const addInventory = () => {
+        setIsInventoryViewOpen(true)
+    }
 
     const handlerAddRecord = {
         Inventory: addInventory
