@@ -1,27 +1,23 @@
-// components/ItemFieldsForm/ItemFieldsForm.jsx
 import { Row, Col, Form, Button, Badge, ButtonGroup } from "react-bootstrap";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa6";
 import { FIELD_TYPES } from "../../utils/constants";
 
 export default function ItemFieldsForm({ field, index, total, onUpdate, onMove }) {
-    //console.log(field)
-
-        const handleChange = (fieldGuid, index) => (e) => {
-            const { name, value, checked} = e.target;
-            switch (name) {
-                case 'showInTable':
-                    onUpdate(fieldGuid, { [name]: checked });
-                    break;
-                case "order":
-                    value === 'up' ? onMove(index, --index) : onMove(index, ++index)
-                    break;
-                default:
-                    onUpdate(fieldGuid, { [name]: value });
-                    break;
-            }
+    const handleChange = (fieldGuid, index) => (e) => {
+        const { name, value, checked} = e.target;
+        switch (name) {
+            case 'showInTable':
+                onUpdate(fieldGuid, { [name]: checked });
+                break;
+            case "order":
+                value === 'up' ? onMove(index, --index) : onMove(index, ++index)
+                break;
+            default:
+                onUpdate(fieldGuid, { [name]: value });
+                break;
         }
-
-
+    }
+    
     const stop = (e) => e.stopPropagation();
     
     return (
@@ -94,7 +90,7 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove }
                         value='up'
                         disabled={field?.order === 0}
                         onMouseDown={stop}
-                        onClick={handleChange(field.guid, index)}
+                        onClick={handleChange(field?.guid || field?.id, index)}
                     >
                         <FaChevronUp />
                     </Button>
@@ -104,7 +100,7 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove }
                         value='down'
                         disabled={field?.order === total - 1}
                         onMouseDown={stop}
-                        onClick={handleChange(field.guid, index)}
+                        onClick={handleChange(field?.guid || field?.id, index)}
                     >
                         <FaChevronDown />
                     </Button>

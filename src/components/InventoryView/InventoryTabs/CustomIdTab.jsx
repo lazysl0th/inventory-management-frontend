@@ -7,17 +7,13 @@ import { PART_DEFINITIONS } from "../../../utils/constants";
 
 export default function CustomIdTab({ customIdFormat, handlerChangeCustomIdFormat}) {
 
-    //console.log(customIdFormat)
-const createNewPart = () => ({
+    const createNewPart = () => ({
         guid: crypto.randomUUID(),
         type: "TEXT",
         format: "",
         value: "",
         position: "prefix",
     });
-    //const summary = useMemo(() => { (IdGenerator.generateFromParts(customIdFormat?.parts)) }, [customIdFormat?.parts]);
-
-
 
     const handlerChange = (updatedParts) => {
         console.log(updatedParts)
@@ -27,10 +23,8 @@ const createNewPart = () => ({
             parts: hasOrderChanged(customIdFormat?.parts, updatedParts) ? updatedParts.map((part, i) => ({ ...part, order: i })) : updatedParts,
             summary: IdGenerator.generateFromParts(updatedParts, PART_DEFINITIONS)
         })
-        //console.log(customIdFormat)
     }
-
-    //console.log(customIdFormat)
+    
     return (
         <div className="p-3">
             {customIdFormat?.part?.length === 0 

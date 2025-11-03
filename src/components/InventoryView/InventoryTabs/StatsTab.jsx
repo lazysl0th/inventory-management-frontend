@@ -1,9 +1,7 @@
 import { Card, Table, Badge, Alert } from "react-bootstrap";
 
 export default function StatsTab({ inventory }) {
-    //console.log(inventory)
     const { itemsCount, stats } = inventory;
-    //console.log(stats)
 
     if (!stats) return (<Alert variant="secondary" className="m-3"> Statistics not available for this inventory. </Alert>);
 
@@ -18,7 +16,6 @@ export default function StatsTab({ inventory }) {
                 </Card.Body>
             </Card>
 
-            {/* Числовые поля */}
             {stats.numericStats?.length > 0 && (
                 <Card>
                     <Card.Header>Numeric fields</Card.Header>
@@ -26,20 +23,20 @@ export default function StatsTab({ inventory }) {
                         <Table bordered hover responsive size="sm" className="align-middle">
                         <thead>
                             <tr>
-                            <th>Field</th>
-                            <th>Average</th>
-                            <th>Min</th>
-                            <th>Max</th>
+                                <th>Field</th>
+                                <th>Average</th>
+                                <th>Min</th>
+                                <th>Max</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {stats.numericStats.map((f) => (
-                            <tr key={f.field}>
-                                <td>{f.field}</td>
-                                <td>{f.average?.toFixed(2) ?? "—"}</td>
-                                <td>{f.min ?? "—"}</td>
-                                <td>{f.max ?? "—"}</td>
-                            </tr>
+                            {stats.numericStats.map((field) => (
+                                <tr key={field.field}>
+                                    <td>{field.field}</td>
+                                    <td>{field.average?.toFixed(2) ?? "—"}</td>
+                                    <td>{field.min ?? "—"}</td>
+                                    <td>{field.max ?? "—"}</td>
+                                </tr>
                             ))}
                         </tbody>
                         </Table>
@@ -47,36 +44,31 @@ export default function StatsTab({ inventory }) {
                 </Card>
             )}
 
-            {/* Текстовые поля */}
             {stats.textStats?.length > 0 && (
                 <Card>
                     <Card.Header>Most common values</Card.Header>
                     <Card.Body>
-                        {stats.textStats.map((f) => (
-                        <div key={f.field} className="mb-3">
-                            <strong>{f.field}</strong>
+                        {stats.textStats.map((field) => (
+                        <div key={field.field} className="mb-3">
+                            <strong>{field.field}</strong>
                             <Table bordered size="sm" className="mt-2">
-                            <thead>
-                                <tr>
-                                <th>Value</th>
-                                <th>Count</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {f.topValues.map((v, i) => (
-                                <tr key={i}>
-                                    <td>{v.value || <em>—</em>}</td>
-                                    <td>{v.count}</td>
-                                </tr>
-                                ))}
-                            </tbody>
+                                <thead>
+                                    <tr>
+                                        <th>Value</th>
+                                        <th>Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {field.topValues.map((value, index) => (
+                                        <tr key={index}>
+                                            <td>{value.value || <em>—</em>}</td>
+                                            <td>{value.count}</td>
+                                        </tr>))}
+                                </tbody>
                             </Table>
-                        </div>
-                        ))}
+                        </div>))}
                     </Card.Body>
-                </Card>
-            )}
-
+                </Card>)}
             {(!stats.numericStats?.length && !stats.textStats?.length) &&
             (<Alert variant="light" className="border">No aggregated data available yet.</Alert>)}
         </div>

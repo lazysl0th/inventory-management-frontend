@@ -88,7 +88,7 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
                     nameRecordList={nameList.OWNER}
                     records={myInventories?.inventories}
                     handlerClickRecord={handlerClickRecord}
-                    onAdd={handlerAddRecords}
+                    handlerAddRecords={handlerAddRecords}
                     handlerDeleteRecords={handlerDeleteRecords}
                     onRefetch={refetch} />
                 </Col>

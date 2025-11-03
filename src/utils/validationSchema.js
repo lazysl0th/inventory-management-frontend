@@ -23,4 +23,3 @@ export const InventorySchema = Yup.object({
     title: Yup.string().required("Please enter title inventory"),
     category: Yup.string().required('Select category').oneOf(['Furniture', 'Equipment', 'Book', 'Other'], 'Invalid category'),
 })
-        

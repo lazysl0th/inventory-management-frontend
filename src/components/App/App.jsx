@@ -3,7 +3,7 @@ import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { Routes, Route, useNavigate, useSearchParams } from 'react-router-dom';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import './App.css'
-import { GET_ITEM_TAB, DELETE_INVENTORY, GET_CATEGORIES, CREATE_INVENTORY, GET_TAGS } from '../../graphql/queries';
+import { GET_ITEM_TAB, DELETE_INVENTORY, GET_CATEGORIES, CREATE_INVENTORY, GET_TAGS, GET_INVENTORIES } from '../../graphql/queries';
 import { register, login, checkToken } from '../../utils/usersApi';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
@@ -15,7 +15,8 @@ import Profile from '../Profile/Profile';
 import InventoryView from '../InventoryView/InventoryView';
 import ItemView from '../ItemView/ItemView';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
-import { titleInfoTooltip, messageInfoTooltip } from '../../utils/constants';
+import LiveBlock from '../LiveBlock/LiveBlock';
+import { titleInfoTooltip, messageInfoTooltip, queryParams } from '../../utils/constants';
 import { isOwner, hasAdminRole, hasAccess } from '../../utils/utils';
 
 function App() {
@@ -55,15 +56,36 @@ function App() {
         }
     }, [activeItemTab, selectedItem.id]);
 
+    const refetchQueries = [
+        { query: GET_INVENTORIES, variables: { ownerId: currentUser.id } },
+        { query: GET_INVENTORIES, variables: {
+            isPublic: queryParams.GET_EDITABLE_INVENTORIES.isPublic,
+            allowedUser: currentUser.id,
+            logic: queryParams.GET_EDITABLE_INVENTORIES.logic }},
+        { query: GET_INVENTORIES, variables: {
+            sortName: queryParams.GET_LATEST_INVENTORIES.sortName,
+            order: queryParams.GET_LATEST_INVENTORIES.order,
+            take: queryParams.GET_LATEST_INVENTORIES.take,
+        }},
+        { query: GET_INVENTORIES, variables: {
+            sortName: queryParams.GET_TOP_INVENTORIES.sortName,
+            order: queryParams.GET_TOP_INVENTORIES.order,
+            take: queryParams.GET_TOP_INVENTORIES.take,
+        }}
+    ]
 
-    const [createInventory, { data: inventory, loading: creating, error: errorCreate }] = useMutation(CREATE_INVENTORY);
+    const [createInventory, { data: inventory, loading: creating, error: errorCreate }] = useMutation(CREATE_INVENTORY, {
+        refetchQueries: refetchQueries,
+        awaitRefetchQueries: true,
+    });
 
-    const [deleteInventories, { loading: deleting }] = useMutation(DELETE_INVENTORY);
+    const [deleteInventories, { loading: deleting }] = useMutation(DELETE_INVENTORY, {
+        refetchQueries: refetchQueries,
+        awaitRefetchQueries: true,
+    });
 
     const categories = dataCategories?.categories || {}
     const item = dataItem?.item || {}
-    
-    //console.log(categories);
     
     const openInfoTooltip = (title, message) => {
         setInfoTooltipTitle(title);
@@ -114,18 +136,7 @@ function App() {
     const handlerAddRecord = {
         Inventory: addInventory
     }
-
-    const hendleDeleteInventories = async (rowSelection) => {
-        try {
-            const selectedIds = Object.keys(rowSelection).map(Number);
-            await deleteInventories({ variables: { ids: selectedIds } });
-            openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORDS_DELETE)
-        } catch (e) {
-            console.error(e);
-            openInfoTooltip(titleInfoTooltip.ERROR, e.message)
-        }
-    }
-
+    
     const handlerCreateInventory = async (newInventory) => {
         try {
             const { data } = await createInventory({ variables: { input: newInventory } });
@@ -141,6 +152,19 @@ function App() {
 
         }
     }
+
+    const hendleDeleteInventories = async (rowSelection) => {
+        try {
+            const selectedIds = Object.keys(rowSelection).map(Number);
+            await deleteInventories({ variables: { ids: selectedIds } });
+            openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORDS_DELETE)
+        } catch (e) {
+            console.log(e);
+            openInfoTooltip(titleInfoTooltip.ERROR, e.message)
+        }
+    }
+
+
 
     const hendleDeleteItems = async (selectedIds) => {
 
@@ -188,7 +212,6 @@ function App() {
     const handlerSignInSubmit = async (values) => {
         try {
             const data = await login(values);
-            //const token = searchParams.get('token');
             if (data.user) {
                 localStorage.setItem('token', data.token);
                 setCurrentUser(() => ({
@@ -239,16 +262,19 @@ function App() {
                         </ProtectedRoute>
                     }/>
             </Routes>
-            <InventoryView 
-                isOpen={isInventoryViewOpen}
-                categories={categories}
-                loadTags={loadTags}
-                resultTags={resultTags}
-                inventoryId={selectedInventoryId}
-                handlerCloseView={handlerCloseRecordView.Inventory}
-                handlerClickRecord={handlerClickRecord}
-                handlerCreateInventory={handlerCreateInventory}
-            />
+                <LiveBlock inventoryId={selectedInventoryId}>
+                    <InventoryView 
+                        isOpen={isInventoryViewOpen}
+                        categories={categories}
+                        loadTags={loadTags}
+                        resultTags={resultTags}
+                        inventoryId={selectedInventoryId}
+                        handlerCloseView={handlerCloseRecordView.Inventory}
+                        handlerClickRecord={handlerClickRecord}
+                        handlerCreateInventory={handlerCreateInventory}
+                    />
+                </LiveBlock>
+                
             <ItemView
                 isOpen={isItemViewOpen}
                 activeTab={activeItemTab}

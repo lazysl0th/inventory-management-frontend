@@ -3,8 +3,6 @@ import { Card, Form, Button, Alert, ListGroup } from "react-bootstrap";
 
 export default function ChatTab({ comments=[], onAddComment }) {
 
-    //console.log(comments)
-
     const [text, setText] = useState("");
     const [sending, setSending] = useState(false);
 
@@ -13,7 +11,7 @@ export default function ChatTab({ comments=[], onAddComment }) {
         if (!text.trim()) return;
             try {
                 setSending(true);
-                await onAddComment?.(text); // 🔹 вызывает проп из родителя (GraphQL mutation)
+                await onAddComment?.(text);
                 setText("");
             } catch (err) {
                 console.error("Failed to add comment:", err);

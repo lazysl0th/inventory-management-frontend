@@ -83,10 +83,14 @@ export const SEARCH_TAGS = gql`
 
 export const SEARCH_INVENTORIES = gql`
     query SearchInventories($searchQuery: String! $orderBy: String!) {
-        inventories(searchQuery: $searchQuery, orderBy: $orderBy) {
+        searchInventories(searchQuery: $searchQuery, orderBy: $orderBy) {
             id
-            category
-            owner { name }
+            title
+            description
+            owner {
+                id
+                name
+            }
             highlightedTitle
             highlightedDescription
         }
@@ -125,6 +129,7 @@ export const GET_INVENTORY = gql`
                 allowedUsers {
                     ...UserBase
                 }
+                version
             }
             categories: __type(name: "Category") {
                 name
@@ -327,6 +332,74 @@ export const SEARCH_USERS = gql`
       id
       name
       email
+    }
+  }
+`;
+
+export const INVENTORY_CORE = gql`
+    fragment InventoryCore on Inventory {
+        id
+        title
+        description
+        category
+        image
+        isPublic
+        owner { id name }
+        createdAt
+        updatedAt
+        version
+        tags { id name }
+        fields {
+            id
+            title
+            type
+            description
+            showInTable
+            order
+            isDeleted
+        }
+        customIdFormat {
+            summary
+            parts { guid type value format position order digits }
+        }
+        itemsCount
+  }
+`;
+
+export const GET_INVENTORY_NEW = gql`
+  query GetInventory($id: Int!) {
+    inventory(id: $id) {
+      ...InventoryCore
+    }
+  }
+  ${INVENTORY_CORE}
+`;
+
+export const UPDATE_INVENTORY = gql`
+  mutation UpdateInventory($id: Int!, $input: CreateInventoryInput!) {
+    updateInventory(id: $id, input: $input) {
+      ...InventoryCore
+    }
+  }
+  ${INVENTORY_CORE}
+`;
+
+export const UPDATE_INVENTORY_NEW = gql`
+  mutation UpdateInventory($id: Int!, $input: CreateInventoryInput!, $expectedVersion: Int!) {
+    updateInventory(id: $id, input: $input, expectedVersion: $expectedVersion) {
+      id
+      title
+      version
+      updatedAt
+      tags {
+        id
+        name
+      }
+      fields {
+        id
+        title
+        order
+      }
     }
   }
 `;

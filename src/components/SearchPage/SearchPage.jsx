@@ -6,7 +6,7 @@ import RecordsList from '../RecordsList/RecordsList';
 import { messageInfoTooltip, nameList, queryParams } from '../../utils/constants';
 
 
-export default function SearchPage({ handlerRecordClick }) {
+export default function SearchPage({ handlerClickRecord }) {
     const [searchParams] = useSearchParams();
     const searchQuery = searchParams.get('q');
 

@@ -4,7 +4,6 @@ import { nameList } from "../../../utils/constants";
 
 export default function AccessTab({ inventory, handlerChangeAllowedUsers }) {
 
-    //console.log(inventory)
     const { isPublic, allowedUsers = [] } = inventory;
 
     const handlerChange = (updatedAllowedUsers) => {
@@ -13,10 +12,6 @@ export default function AccessTab({ inventory, handlerChangeAllowedUsers }) {
         handlerChangeAllowedUsers('allowedUsers', updatedAllowedUsers)
         console.log(allowedUsers)
     }
-
-    const handleRefetch = async () => {
-        // заглушка; позже подключим real refetch
-    };
 
     const handleChange = (e) => {
         const { name, value, checked} = e.target;

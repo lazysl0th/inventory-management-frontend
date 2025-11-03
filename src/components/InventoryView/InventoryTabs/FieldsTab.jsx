@@ -6,32 +6,28 @@ import { hasOrderChanged } from "../../../utils/utils";
 import { FIELD_TYPES } from '../../../utils/constants'
 
 export default function FieldsTab({ itemFields, handlerChangeFields }) {
-    
-function createNewField(fields, type = "TEXT") {
-  const countOfType = fields.filter(f => f.type === type).length;
-  const limit = FIELD_TYPES[type]?.limit ?? Infinity;
 
-  if (countOfType >= limit) {
-    alert(`Нельзя добавить больше полей типа "${FIELD_TYPES[type].label}" (лимит ${limit}).`);
-    return null;
-  }
+    function createNewField(fields, type = "TEXT") {
+        const countOfType = fields.filter(field => field.type === type).length;
+        const limit = FIELD_TYPES[type]?.limit ?? Infinity;
+        if (countOfType >= limit) {
+            alert(`Нельзя добавить больше полей типа "${FIELD_TYPES[type].label}" (лимит ${limit}).`);
+        return null;
+        }
 
-  return {
-    guid: crypto.randomUUID(),
-    id: '',
-    type,
-    title: '',
-    description: '',
-    showInTable: false,
-    order: fields.length,
-  };
-}
+        return {
+            guid: crypto.randomUUID(),
+            id: null,
+            type,
+            title: '',
+            description: '',
+            showInTable: false,
+            order: fields.length,
+        };
+    }
 
     const handlerChange = (updatedFields) => {
-        console.log(updatedFields);
-        console.log(itemFields)
         handlerChangeFields('fields', hasOrderChanged(itemFields, updatedFields) ? updatedFields.map((field, i) => ({ ...field, order: i })) : updatedFields )
-        //console.log(customIdFormat)
     }
 
 
@@ -47,7 +43,7 @@ function createNewField(fields, type = "TEXT") {
                         addLabel="Добавить поле"
                         renderItem={({ field, index, total, onUpdate, onMove }) => {
                             return (
-                                <DndFormField id={field.guid}>
+                                <DndFormField id={field.guid || field.id}>
                                     <ItemFieldsForm field={field} index={index} total={total} onUpdate={onUpdate} onMove={onMove} />
                                 </DndFormField>);
                         }}

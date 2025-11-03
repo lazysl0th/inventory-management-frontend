@@ -1,12 +1,9 @@
-import { useContext, useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useContext, useState, useEffect, } from 'react';
 import { useLazyQuery, } from '@apollo/client/react';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { Form, Row, Col, Image } from "react-bootstrap";
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
 import { SEARCH_TAGS } from '../../../graphql/queries';
-
-
-
 
 export default function InventoryDetailsTab({
     formikValues,
@@ -20,14 +17,9 @@ export default function InventoryDetailsTab({
     handlerChangeDetails,
     readOnly
 }) {
-
-
+    const currentUser = useContext(CurrentUserContext);
     const [searchTags] = useLazyQuery(SEARCH_TAGS, { fetchPolicy: "no-cache" });
-
-
-      const [preview, setPreview] = useState(null);
-
-
+    const [preview, setPreview] = useState(null);
 
     const loadOptions = async (inputValue, callback) => {
         const { data } = await searchTags({ variables: { searchQuery: inputValue } });
@@ -47,8 +39,7 @@ export default function InventoryDetailsTab({
         else handleFormikChange(options);
     }
 
-        const handlerChangeImage = (e) => {
-            console.log(e.target.name, e.target.files[0])
+    const handlerChangeImage = (e) => {
         if (!e.target.files[0]) return;
         const reader = new FileReader();
         reader.onloadend = () => setPreview(reader.result);
@@ -61,29 +52,14 @@ export default function InventoryDetailsTab({
         if (!name) return;
         const newTag = {
             guid: crypto.randomUUID(),
-            id: '',
+            id: null,
             name: name,
         };
         handlerChangeDetails('tags', [...inventoryTags || [], newTag]);
     };
 
-
-    
-    
-    //const [image, setImage] = useRef();
-    
-//console.log(inventoryTags?.map(tag => ({id: tag.id,  label: tag.name})))
-
-    
-    //console.log(categories);
     const [localPreview, setLocalPreview] = useState(null);
 
-    // 🖼️ Вычисляем источник для превью
-    /*const previewSrc = useMemo(() => {
-        return localPreview ?? value?.imageUrl ?? null;
-    }, [localPreview, value?.imageUrl]);*/
-
-    // Очистка blob-ссылок при размонтировании
     useEffect(() => {
         return () => {
             if (localPreview && localPreview.startsWith("blob:")) {
@@ -91,7 +67,6 @@ export default function InventoryDetailsTab({
             }
         };
     }, [localPreview]);
-
 
     return (
         <Form>
@@ -124,7 +99,6 @@ export default function InventoryDetailsTab({
                             value={details.description}
                             onChange={handleChange}
                             placeholder="Description…"
-                            disabled={readOnly}
                         />
                     </Form.Group>
                 </Col>

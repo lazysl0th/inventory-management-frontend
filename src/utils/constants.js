@@ -79,6 +79,12 @@ export const RECORDS_LIST_HEADS = {
         { id: 'category', header: 'Category' },
         { id: 'owner', header: 'Owner', accessor: value => value?.name },
     ],
+    'InventorySearchResult': [
+        { id: 'title', header: 'Title', highlightKey: 'highlightedTitle' },
+        { id: 'description', header: 'Description', highlightKey: 'highlightedDescription' },
+        { id: 'category', header: 'Category' },
+        { id: 'owner', header: 'Owner', accessor: value => value?.name },
+    ],
     'Item': { fieldIdKey: 'id', fieldTitleKey: 'title', fieldValueKey: 'value' },
     'CustomIdPart': [
         { id: 'type', header: 'Type' },

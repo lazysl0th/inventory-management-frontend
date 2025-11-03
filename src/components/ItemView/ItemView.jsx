@@ -4,8 +4,6 @@ import ChatTab from '../ChatTab/ChatTab';
 
 function ItemView({ isOpen, item, activeTab, onSelectTab, status, onClose }) {
 
-    //console.log(item);
-
     const handleImageFileSelect = (file) => {
         console.log("Выбран файл:", file.name);
     };
