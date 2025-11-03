@@ -258,7 +258,7 @@ function App() {
                             <Profile 
                                 handlerClickRecord={handlerClickRecord}
                                 handlerDeleteRecords={handlerDeleteRecords.Inventory}
-                                handlerAddRecords={handlerAddRecord.Inventory} />
+                                handlerAddRecords={addInventory} />
                         </ProtectedRoute>
                     }/>
             </Routes>
