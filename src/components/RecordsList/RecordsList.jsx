@@ -87,9 +87,11 @@ export default function  RecordsList({
         onChangeRecordList(updated);
     };
 
-  const handleAdd = async () => (type === "Inventory" || type === "Item") ? await handlerAddRecords() : handleAddRow();
+    const handleAdd = () => {
+        (type === "Inventory" || type === "Item") ? handlerAddRecords() : handleAddRow();
+    }
 
-  const cellRenderer = (info, col) => {
+    const cellRenderer = (info, col) => {
         if (info.row.original[col.highlightKey])
             return parse(info.row.original[col.highlightKey]);
         return info.getValue();
