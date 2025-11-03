@@ -18,18 +18,18 @@ import Record from "./Record/Record";
 import { nameList, RECORDS_LIST_HEADS } from "../../utils/constants";
 
 export default function  RecordsList({
+    type,
     records,
     nameRecordList,
     handlerClickRecord,
     handlerDeleteRecords,
-    onChangeRecordList = () => {},
+    onChangeRecordList,
     handlerAddRecords,
 }) {
     const [rowSelection, setRowSelection] = useState({});
     const [editingCell, setEditingCell] = useState(null);
     const [globalFilter, setGlobalFilter] = useState("");
     const [sorting, setSorting] = useState([]);
-    const type = records?.find((record) => record.__typename)?.__typename;
     const columnHelper = createColumnHelper();
 
     const onDisabled = () => Object.values(rowSelection).some(Boolean);
@@ -87,9 +87,7 @@ export default function  RecordsList({
         onChangeRecordList(updated);
     };
 
-    const handleAdd = () => {
-        (type === "Inventory" || type === "Item") ? handlerAddRecords() : handleAddRow();
-    }
+    const handleAdd = () => (type === "Inventory" || type === "Item") ? handlerAddRecords() : handleAddRow();
 
     const cellRenderer = (info, col) => {
         if (info.row.original[col.highlightKey])
@@ -100,7 +98,7 @@ export default function  RecordsList({
     const getRowValue = (row, col, config) => row.values.find((v) => v.field.id === col.id)?.[config.fieldValueKey];
 
     const collectColumn = (records, config) => {
-        const column = records.find((record) => record.values.length > 0)?.values?.map((value) => ({
+        const column = records?.find((record) => record.values.length > 0)?.values?.map((value) => ({
             id: value.field[config.fieldIdKey],
             header: value.field[config.fieldTitleKey],
             order: value.field.order
@@ -116,10 +114,10 @@ export default function  RecordsList({
                     col.accessor ? col.accessor(row[col.id], row) : row[col.id]
             }
             : {
-                columns: collectColumn(records, config),
-                accessorFn: (row, col) => getRowValue(row, col, config)
+                columns: collectColumn(records, RECORDS_LIST_HEADS[type]),
+                accessorFn: (row, col) => getRowValue(row, col, RECORDS_LIST_HEADS[type])
             };
-        return columnSchema?.columns.map((column) =>
+        return columnSchema?.columns?.map((column) =>
             columnHelper.accessor(
                 (row) => columnSchema.accessorFn(row, column, RECORDS_LIST_HEADS[type]), {
                     id: column.id,
@@ -152,7 +150,7 @@ export default function  RecordsList({
 
     const getColumnsByType = (type) => {
         if (!RECORDS_LIST_HEADS[type]) return [];
-        const columns = buildColumns(records, type);
+        const columns = buildColumns(records, type) ?? [];
         const checkboxColumn = createCheckboxColumn();
         return [checkboxColumn, ...columns];
     };

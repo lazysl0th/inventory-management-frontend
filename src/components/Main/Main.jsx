@@ -36,6 +36,7 @@ export default function Main({ handlerClickRecord, loadTags, resultTags }) {
                         : latestInventoriesError
                             ? <Alert variant="danger" className="align-self-center">{latestInventoriesError.message}</Alert>
                             : <RecordsList
+                                type='Inventory'
                                 nameRecordList={nameList.LATEST}
                                 records={latestInventories.inventories}
                                 handlerClickRecord={handlerClickRecord} /> }
@@ -44,7 +45,8 @@ export default function Main({ handlerClickRecord, loadTags, resultTags }) {
                         ? <Spinner animation="border" className="align-self-center"/>
                         : topInventoriestopError
                             ? <Alert variant="danger" className="align-self-center">{topInventoriestopError.message}</Alert>
-                            : <RecordsList 
+                            : <RecordsList
+                                type='Inventory'
                                 nameRecordList={nameList.TOP_ITEMS}
                                 records={topInventories.inventories} 
                                 handlerClickRecord={handlerClickRecord} /> }

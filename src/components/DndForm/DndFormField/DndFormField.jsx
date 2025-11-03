@@ -18,7 +18,7 @@ export default function DndFormField({ id, children, }) {
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners} className={className}>
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
             {children}
         </div>
     );

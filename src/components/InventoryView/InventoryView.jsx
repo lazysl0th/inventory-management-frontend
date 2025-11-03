@@ -228,7 +228,7 @@ function InventoryView({
                                     ? <Spinner animation="border" className="align-self-center"/>
                                     : error
                                         ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
-                                        : <RecordsList nameRecordList={nameList.ITEMS} records={inventoryData.items} handlerClickRecord={handlerClickRecord} /> }
+                                        : <RecordsList type='Item' nameRecordList={nameList.ITEMS} records={inventoryData.items} handlerClickRecord={handlerClickRecord} /> }
                             </Tab>
                             <Tab eventKey="chat" title="Chat">
                                 {loading

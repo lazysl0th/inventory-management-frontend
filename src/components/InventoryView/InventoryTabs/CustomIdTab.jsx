@@ -16,8 +16,6 @@ export default function CustomIdTab({ customIdFormat, handlerChangeCustomIdForma
     });
 
     const handlerChange = (updatedParts) => {
-        console.log(updatedParts)
-        console.log(customIdFormat?.parts)
         handlerChangeCustomIdFormat('customIdFormat', {
             ...customIdFormat,
             parts: hasOrderChanged(customIdFormat?.parts, updatedParts) ? updatedParts.map((part, i) => ({ ...part, order: i })) : updatedParts,

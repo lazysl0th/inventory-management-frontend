@@ -6,12 +6,7 @@ export default function AccessTab({ inventory, handlerChangeAllowedUsers }) {
 
     const { isPublic, allowedUsers = [] } = inventory;
 
-    const handlerChange = (updatedAllowedUsers) => {
-        console.log(updatedAllowedUsers);
-        console.log(allowedUsers)
-        handlerChangeAllowedUsers('allowedUsers', updatedAllowedUsers)
-        console.log(allowedUsers)
-    }
+    const handlerChange = (updatedAllowedUsers) => handlerChangeAllowedUsers('allowedUsers', updatedAllowedUsers)
 
     const handleChange = (e) => {
         const { name, value, checked} = e.target;
@@ -46,6 +41,7 @@ export default function AccessTab({ inventory, handlerChangeAllowedUsers }) {
             {false
                 ? (<Alert variant="light" className="border">No users have been granted write access.</Alert>)
                 : ( <RecordsList
+                        type='User'
                         records={inventory.allowedUsers}
                         nameRecordList={nameList.ACCESS}
                         onChangeRecordList={handlerChange}

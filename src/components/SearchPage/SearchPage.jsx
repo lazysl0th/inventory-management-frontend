@@ -23,6 +23,7 @@ export default function SearchPage({ handlerClickRecord }) {
                     : data.searchInventories.length === 0 
                         ? <h2 className="align-self-center">{messageInfoTooltip.RESULT_SEARCH.prefix}<em>{searchQuery}</em>{messageInfoTooltip.RESULT_SEARCH.suffix}</h2>
                         : <RecordsList 
+                            type='Inventory'
                             nameList={nameList.SEARCH}
                             records={data.searchInventories}
                             handlerClickRecord={handlerClickRecord} /> }
