@@ -7,23 +7,33 @@ export const titleInfoTooltip = {
 }
 
 export const messageInfoTooltip = {
-    PASSWORD_RESET: 'Password reset request completed successfully',
-    PASSWORD_UPDATE: 'The password has been updated successfully',
-    REGISTRATION: {
-        success: 'Registration completed successfully!',
-    },
     ERROR: 'Something went wrong! Try again.',
-    RECORDS_DELETE: 'Records deleted success',
-    USER_BLOCKED: 'User blocked success',
-    USER_UNBLOCKED: 'User unblocked success',
+    RECORDS: {
+        DELETE: 'Records deleted success',
+        INVENTORY: {
+            CREATE: 'Inventory successfully created!',
+            ERROR: 'An error occurred while creating inventory.',
+        }
+    },
+    USER: {
+        BLOCKED: 'User blocked success',
+        UNBLOCKED: 'User unblocked success',
+        REGISTRATION: {
+            success: 'Registration completed successfully!',
+        },
+        PERMISSION: {
+            GRANT: 'User(s) have been granted administrator privileges',
+            REVOKE: 'User(s) have been revoked administrator privileges',
+        },
+        PASSWORD: {
+            RESET: 'Password reset request completed successfully',
+            UPDATE: 'The password has been updated successfully',
+        }
+    },
     RESULT_SEARCH: {
         prefix: 'No results found for ',
         suffix: '. Try another search term.'
     },
-    INVENTORY: {
-        ERROR: 'An error occurred while creating inventory.',
-        CREATE: 'Inventory successfully created!'
-    }
 }
 
 export const link = {
@@ -64,7 +74,9 @@ export const nameList = {
     OWNER: 'My inventories',
     WRITE_ACCESS: 'Inventories with write access',
     ACCESS: 'Users with write access',
-    ITEMS: 'Items'
+    ITEMS: 'Items',
+    USERS: 'Users',
+    INVENTORIES: 'Inventories'
 }
 
 export const TAGS_CLOUD_SOLOR = {
@@ -103,8 +115,19 @@ export const RECORDS_LIST_HEADS = {
     'User': [
         { id: 'name', header: 'Name' },
         { id: 'email', header: 'Email' },
+    ],
+    'AdminUser': [
+        { id: 'name', header: 'Name' },
+        { id: 'email', header: 'Email' },
+        { id: 'status', header: 'Status' },
+        { id: 'roles', header: 'Roles', accessor: value => value?.map(role => role.role?.name).join(', ') || '-' },
     ]
 };
+
+export const roles = {
+    USER: 'User',
+    ADMIN: 'Admin'
+}
 
 export const PART_DEFINITIONS = {
     TEXT: {

@@ -7,14 +7,6 @@ import apolloClient from "./apollo/client";
 import './index.css'
 import App from './components/App/App.jsx'
 
-window.addEventListener('error', (event) => {
-  console.error('🔥 Global Error:', event.message, event.filename, event.lineno, event.error);
-});
-
-window.addEventListener('unhandledrejection', (event) => {
-  console.error('💥 Unhandled Promise Rejection:', event.reason);
-});
-
 createRoot(document.getElementById('root')).render(
     <StrictMode>
         <BrowserRouter>

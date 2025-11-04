@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
 import { Table, Container, Row, Col, OverlayTrigger, Tooltip, Button, Form } from "react-bootstrap";
+import { CiLock, CiUnlock } from "react-icons/ci";
 import { BsSortDown, BsSortUp, BsFillTrashFill } from "react-icons/bs";
 import { VscAdd } from "react-icons/vsc";
+import { MdOutlineAdminPanelSettings, MdAdminPanelSettings } from "react-icons/md";
 import {
     createColumnHelper,
     useReactTable,
@@ -17,7 +19,7 @@ import IndeterminateCheckbox from "../IndeterminateCheckbox/IndeterminateCheckbo
 import Record from "./Record/Record";
 import { nameList, RECORDS_LIST_HEADS } from "../../utils/constants";
 
-export default function  RecordsList({
+export default function RecordsList({
     type,
     records,
     nameRecordList,
@@ -25,6 +27,8 @@ export default function  RecordsList({
     handlerDeleteRecords,
     onChangeRecordList,
     handlerAddRecords,
+    handlerChangeUsersStatus,
+    handlerChangeAccessUsers,
 }) {
     const [rowSelection, setRowSelection] = useState({});
     const [editingCell, setEditingCell] = useState(null);
@@ -37,7 +41,7 @@ export default function  RecordsList({
     const getUniqIdValue = (row) => row.guid ? String(row.guid) : String(row.id);
 
     const handleDeleteRecord = async () => {
-        await handlerDeleteRecords(rowSelection);
+        await handlerDeleteRecords(rowSelection)
         setRowSelection({});
     };
 
@@ -49,7 +53,17 @@ export default function  RecordsList({
         setEditingCell(null);
     };
 
-  const handleDelete = () => type === "Inventory" ? handleDeleteRecord() : handleDeleteRow();
+    const handleChangeUserStatus = (e) => {
+        handlerChangeUsersStatus(rowSelection, e.currentTarget.value);
+        setRowSelection({});
+    };
+
+    const handleChangeAccessUsers = (e) => {
+        handlerChangeAccessUsers(rowSelection, e.currentTarget.value);
+        setRowSelection({});
+    }
+
+    const handleDelete = () => (type === "Inventory" || nameRecordList == nameList.USERS) ? handleDeleteRecord() : handleDeleteRow();
 
     const handleChangeCell = (rowKey, changes) => {
         if (Object.prototype.hasOwnProperty.call(changes, "id") && changes.id != null) {
@@ -71,7 +85,7 @@ export default function  RecordsList({
 
     const handleAddRow = () => {
         const existingEmpty = (records ?? []).find((record) => {
-            !record.id && (!record.name || record.name.trim() === "") && (!record.email || record.email.trim() === "")
+            return !record.id && (!record.name || record.name.trim() === "") && (!record.email || record.email.trim() === "")
         });
         if (existingEmpty) return;
 
@@ -170,7 +184,7 @@ export default function  RecordsList({
             rowSelection,
             globalFilter,
             sorting,
-            columnVisibility: { select: location.pathname === "/profile" }
+            columnVisibility: { select: [nameList.OWNER, nameList.ACCESS, nameList.INVENTORIES].includes(nameRecordList) }
         },
         onRowSelectionChange: setRowSelection,
         onGlobalFilterChange: setGlobalFilter,
@@ -183,20 +197,60 @@ export default function  RecordsList({
 
     return (
         <Container>
-                {nameRecordList && <h3 className="mb-4 mt-4">{nameRecordList}</h3>}
+                {nameRecordList && <h3 className="mb2 mt-4">{nameRecordList}</h3>}
                 <Row className="mb-3 align-items-center">
-                    {((location.pathname === "/profile" && nameRecordList === nameList.OWNER)
+                    {(nameRecordList === nameList.OWNER
                         || nameRecordList === nameList.ACCESS 
-                        || nameRecordList === nameList.ITEMS) 
+                        || nameRecordList === nameList.ITEMS
+                        || location.pathname === "/admin") 
                         && ( <Col md="auto" className="d-flex gap-2">
-                                <OverlayTrigger
-                                    placement="top"
-                                    overlay={<Tooltip id="tooltip-add">Add</Tooltip>}
-                                >
-                                    <Button variant="outline-success" onClick={handleAdd}>
-                                        <VscAdd />
-                                    </Button>
-                                </OverlayTrigger>
+                                {(nameRecordList === nameList.USERS )
+                                ? (<>
+                                    <OverlayTrigger
+                                        placement="top"
+                                        overlay={<Tooltip id="tooltip-add">Block</Tooltip>}
+                                    >
+                                        <Button variant="outline-dark" value="Blocked" onClick={handleChangeUserStatus} disabled={!onDisabled()}>
+                                            <CiLock />
+                                        </Button>
+                                    </OverlayTrigger>
+
+                                    <OverlayTrigger
+                                        placement="top"
+                                        overlay={<Tooltip id="tooltip-add">Unblock</Tooltip>}
+                                    >
+                                        <Button variant="outline-dark" value="Active" onClick={handleChangeUserStatus} disabled={!onDisabled()}>
+                                            <CiUnlock />
+                                        </Button>
+                                    </OverlayTrigger>
+
+                                    <OverlayTrigger
+                                        placement="top"
+                                        overlay={<Tooltip id="tooltip-grant">Grant Acces</Tooltip>}
+                                    >
+                                        <Button variant="outline-success" name="Grant" value="1" onClick={handleChangeAccessUsers} disabled={!onDisabled()}>
+                                            <MdOutlineAdminPanelSettings />
+                                        </Button>
+                                    </OverlayTrigger>
+
+                                    <OverlayTrigger
+                                        placement="top"
+                                        overlay={<Tooltip id="tooltip-revoke">Revoke Access</Tooltip>}
+                                    >
+                                        <Button variant="outline-danger" name="Revoke" value='' onClick={handleChangeAccessUsers} disabled={!onDisabled()}>
+                                            <MdAdminPanelSettings />
+                                        </Button>
+                                    </OverlayTrigger>
+                                </>)
+
+                                : (<OverlayTrigger
+                                        placement="top"
+                                        overlay={<Tooltip id="tooltip-add">Add</Tooltip>}
+                                    >
+                                        <Button variant="outline-success" onClick={handleAdd}>
+                                            <VscAdd />
+                                        </Button>
+                                    </OverlayTrigger>)}
 
                                 <OverlayTrigger
                                     placement="top"
@@ -208,15 +262,17 @@ export default function  RecordsList({
                                 </OverlayTrigger>
                             </Col>
                         )}
-                        <Col md className="d-flex justify-content-end">
-                            <Form.Control
-                                type="text"
-                                placeholder="Filter..."
-                                value={globalFilter}
-                                onChange={handelFilterChange}
-                                style={{ width: "200px" }}
-                            />
-                        </Col>
+                        {records?.length == 0
+                            ? (<></>)
+                            : (<Col md className="d-flex justify-content-end">
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Filter..."
+                                    value={globalFilter}
+                                    onChange={handelFilterChange}
+                                    style={{ width: "200px" }}
+                                />
+                            </Col>)}
                 </Row>
 
             <div className="table-scroll-container">
@@ -247,22 +303,23 @@ export default function  RecordsList({
                             const isEditing = editingCell?.id === rowKey;
                             const editingField = editingCell?.field;
 
-                            return type === "User" 
-                                ? (<EditableCell
-                                        key={row.id}
-                                        record={row}
-                                        render={flexRender}
-                                        isEditing={isEditing}
-                                        editingField={editingField}
-                                        setEditingCell={setEditingCell}
-                                        onChange={handleChangeCell}
-                                    />)
-                                : (<Record
-                                        key={row.id}
-                                        record={row}
-                                        render={flexRender}
-                                        onClick={handlerClickRecord?.[type]}
-                                    />);
+                            return ( 
+                                (type === "User")
+                                    ? (<EditableCell
+                                            key={row.id}
+                                            record={row}
+                                            render={flexRender}
+                                            isEditing={isEditing}
+                                            editingField={editingField}
+                                            setEditingCell={setEditingCell}
+                                            onChange={handleChangeCell}
+                                        />)
+                                    : (<Record
+                                            key={row.id}
+                                            record={row}
+                                            render={flexRender}
+                                            onClick={handlerClickRecord?.[type]}
+                                        />));
                         })}
                     </tbody>
                 </Table>

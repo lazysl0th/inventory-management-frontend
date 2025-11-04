@@ -12,6 +12,7 @@ import Register from '../Register/Register';
 import Login from '../Login/Login';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import Profile from '../Profile/Profile';
+import AdminPage from '../AdminPage/AdminPage'
 import InventoryView from '../InventoryView/InventoryView';
 import ItemView from '../ItemView/ItemView';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
@@ -71,7 +72,8 @@ function App() {
             sortName: queryParams.GET_TOP_INVENTORIES.sortName,
             order: queryParams.GET_TOP_INVENTORIES.order,
             take: queryParams.GET_TOP_INVENTORIES.take,
-        }}
+        }},
+        { query: GET_INVENTORIES }
     ]
 
     const [createInventory, { data: inventory, loading: creating, error: errorCreate }] = useMutation(CREATE_INVENTORY, {
@@ -142,22 +144,22 @@ function App() {
             const { data } = await createInventory({ variables: { input: newInventory } });
             if (data.createInventory.id) {
                 setSelectedInventoryId(data.createInventory.id)
-                openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.INVENTORY.CREATE);
+                openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORDS.INVENTORY.CREATE);
             } else {
-                openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.INVENTORY.ERROR);
+                openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORDS.INVENTORY.ERROR);
             }
         } catch(e) {
             console.log(e)
-            openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.INVENTORY.ERROR);
+            openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORDS.INVENTORY.ERROR);
 
         }
     }
 
-    const hendleDeleteInventories = async (rowSelection) => {
+    const hendlerDeleteInventories = async (rowSelection) => {
         try {
             const selectedIds = Object.keys(rowSelection).map(Number);
             await deleteInventories({ variables: { ids: selectedIds } });
-            openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORDS_DELETE)
+            openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORDS.DELETE)
         } catch (e) {
             console.log(e);
             openInfoTooltip(titleInfoTooltip.ERROR, e.message)
@@ -171,7 +173,7 @@ function App() {
     }
     
     const handlerDeleteRecords = {
-        Inventory: hendleDeleteInventories,
+        Inventory: hendlerDeleteInventories,
         Item: hendleDeleteItems,
     }
 
@@ -259,6 +261,19 @@ function App() {
                                 handlerClickRecord={handlerClickRecord}
                                 handlerDeleteRecords={handlerDeleteRecords.Inventory}
                                 handlerAddRecords={addInventory} />
+                        </ProtectedRoute>
+                    }/>
+                <Route
+                    path="/admin"
+                    element={
+                        <ProtectedRoute isLoading={isVerifyCurrentUser} >
+                            <AdminPage
+                                onOpenTooltip={openInfoTooltip}
+                                onCheckCurrentUser={handleVerifyUser}
+                                handlerClickRecord={handlerClickRecord}
+                                handlerAddRecords={addInventory}
+                                handlerDeleteRecords={handlerDeleteRecords.Inventory}
+                            />
                         </ProtectedRoute>
                     }/>
             </Routes>

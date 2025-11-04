@@ -5,7 +5,8 @@ import { CurrentUserContext } from '../../context/CurrentUserContext';
 import { FaSearch } from 'react-icons/fa';
 import FormValidation from '../FormValidator/FormValidator';
 import { searchSchema } from '../../utils/validationSchema';
-import { link } from '../../utils/constants'
+import { link, roles } from '../../utils/constants';
+import { hasAdminRole } from '../../utils/utils';
 import './Header.css';
 
 function Header({ onLog }) {
@@ -29,7 +30,7 @@ function Header({ onLog }) {
     if (isAuthPage) return null
 
     return (
-        <Navbar variant='light' expand='md' expanded={expanded} onToggle={setExpanded} className='py-5'>
+        <Navbar variant='light' expand='md' expanded={expanded} onToggle={setExpanded} className='pt-5 pb-3'>
             <Container>
                 <Navbar.Brand href='/' className='text-wrap flex-grow-1 flex-md-basis-0'>Inventory Management</Navbar.Brand>
                 <Navbar.Toggle aria-controls='main-navbar-nav' />
@@ -76,36 +77,40 @@ function Header({ onLog }) {
                             ) }
                         </FormValidation>
                         {(currentUser?.loggedIn) 
-                            ? ( <> 
-                                { location.pathname !== '/profile' && 
-                                    ( <>
+                            ? <>{ (location.pathname !== '/profile')
+                                    ? ( <>
                                         <Navbar.Text className='ps-2'>
                                             Signed in as: <a href="/profile">{currentUser?.name}</a>
                                         </Navbar.Text>
                                         <Navbar.Text className='ps-2'>
                                             Email: <a href={`mailto:${currentUser?.email}`}>{currentUser?.email}</a>
                                         </Navbar.Text>
-                                    </> )}
-                                        <Nav.Link as="button" className='text-dark' onClick={hadleLogout}>
-                                            Sign&nbsp;Out
-                                        </Nav.Link>
                                     </> )
-                            : (currentUser?.loggedIn)
-                                ? (<></>)
-                                : ( <>
-                                        <Nav.Link 
-                                            className='align-self-end text-dark' 
-                                            href='/sign-in' 
-                                            onClick={expandedHadle}>
-                                                Sign In
-                                        </Nav.Link>
-                                        <Nav.Link
-                                            className='align-self-end text-dark'
-                                            href='/sign-up'
-                                            onClick={expandedHadle}>
-                                                Sign Up
-                                        </Nav.Link>
-                                    </>) }
+                                    : (hasAdminRole([roles.ADMIN], currentUser)
+                                        && (<Nav.Link 
+                                                className='text-dark ms-2' 
+                                                href='/admin' 
+                                                onClick={expandedHadle}>
+                                               Admin panel
+                                            </Nav.Link> ))}
+                                <Nav.Link as="button" className='text-dark' onClick={hadleLogout}>
+                                    Sign&nbsp;Out
+                                </Nav.Link>
+                                </>
+                            : ( <>
+                                    <Nav.Link 
+                                        className='align-self-end text-dark' 
+                                        href='/sign-in' 
+                                        onClick={expandedHadle}>
+                                            Sign In
+                                    </Nav.Link>
+                                    <Nav.Link
+                                        className='align-self-end text-dark'
+                                        href='/sign-up'
+                                        onClick={expandedHadle}>
+                                            Sign Up
+                                    </Nav.Link>
+                                </>) }
                     </Nav>
                 </Navbar.Collapse>
             </Container>

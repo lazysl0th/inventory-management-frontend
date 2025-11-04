@@ -40,15 +40,41 @@ export const checkToken = async () => {
     return await checkResponse(res);
 }
 
-
-
-export function logout() {
-  return fetch(`${apiConfig.baseUrl}/signout`, {
-    method: 'GET',
-    credentials: 'include',
-  })
-    .then((res) => (checkResponse(res)))
+export const getUsers = async() => {
+    const res = await fetch(`${apiConfig.baseUrl}/users`, {
+        headers: apiConfig.headers()
+    });
+    return await checkResponse(res);
 }
+
+export const changeUsersStatus = async(usersIds, status) => {
+    const res = await fetch(`${apiConfig.baseUrl}/users/status`, {
+        method: 'PATCH',
+        headers: apiConfig.headers(),
+        body: JSON.stringify({ usersIds: usersIds, status: status })
+    });
+    return await checkResponse(res);
+}
+
+export const deleteUsers = async(usersIds) => {
+    const res = await fetch(`${apiConfig.baseUrl}/users/`, {
+        method: 'DELETE',
+        headers: apiConfig.headers(),
+        body: JSON.stringify({ usersIds: usersIds })
+    });
+    return await checkResponse(res);
+}
+
+export const changeAccess = async(usersIds, roleIds) => {
+    const res = await fetch(`${apiConfig.baseUrl}/users/roles/`, {
+        method: 'PATCH',
+        headers: apiConfig.headers(),
+        body: JSON.stringify({ usersIds: usersIds, rolesIds: roleIds })
+    });
+    return await checkResponse(res);
+}
+
+
 
 export function updateProfile({ name, email }) {
   return fetch(`${apiConfig.baseUrl}/users/me`, {
@@ -60,54 +86,4 @@ export function updateProfile({ name, email }) {
     .then((res) => checkResponse(res))
 }
 
-export function getSavedMovies() {
-  return fetch(`${apiConfig.baseUrl}/movies`, {
-    method: 'GET',
-    credentials: 'include',
-  })
-    .then((res) => checkResponse(res))
-}
 
-export function saveMovie({
-  country,
-  director,
-  duration,
-  year,
-  description,
-  image,
-  trailer,
-  thumbnail,
-  movieId,
-  nameRU,
-  nameEN
-}) {
-
-  return fetch(`${apiConfig.baseUrl}/movies`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: apiConfig.headers,
-    body: JSON.stringify({
-      country,
-      director,
-      duration,
-      year,
-      description,
-      image,
-      trailer,
-      thumbnail,
-      movieId,
-      nameRU,
-      nameEN,
-    })
-  })
-    .then((res) => checkResponse(res))
-}
-
-export function deleteSavedMovie(movieId) {
-  return fetch(`${apiConfig.baseUrl}/movies/${movieId}`, {
-    method: 'DELETE',
-    credentials: 'include',
-    headers: apiConfig.headers,
-  })
-    .then((res) => checkResponse(res));
-}

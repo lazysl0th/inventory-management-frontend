@@ -13,7 +13,6 @@ export default function AccessTab({ inventory, handlerChangeAllowedUsers }) {
         handlerChangeAllowedUsers(name, checked);
     }
 
-
     const recordsKey = allowedUsers.map(u => u.id || u.email || "").join("|");
 
     return (

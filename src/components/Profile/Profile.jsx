@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { useQuery } from "@apollo/client/react";
-import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
+import { Container, Row, Col, Button, Form, Spinner, Alert} from "react-bootstrap";
 import { GET_INVENTORIES } from '../../graphql/queries';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import RecordsList from "../RecordsList/RecordsList";
@@ -82,25 +82,34 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
                         </Form>
                 </Col>
             </Row>
-            <Row className="mb-5">
-                <Col>
-                <RecordsList
-                    type='Inventory'
-                    nameRecordList={nameList.OWNER}
-                    records={myInventories?.inventories}
-                    handlerClickRecord={handlerClickRecord}
-                    handlerAddRecords={handlerAddRecords}
-                    handlerDeleteRecords={handlerDeleteRecords}
-                    onRefetch={refetch} />
+            <Row className="mb-5 mt-3">
+                <Col className="d-flex flex-column gap-4" >
+                    { myInventoriesLoading 
+                        ? <Spinner animation="border" className="align-self-center"/>
+                        : myInventoriesError
+                            ? <Alert variant="danger" className="align-self-center">{myInventoriesError.message}</Alert>
+                            : <RecordsList
+                                type='Inventory'
+                                nameRecordList={nameList.OWNER}
+                                records={myInventories?.inventories}
+                                handlerClickRecord={handlerClickRecord}
+                                handlerAddRecords={handlerAddRecords}
+                                handlerDeleteRecords={handlerDeleteRecords}
+                            />}
                 </Col>
             </Row>
 
             <Row>
-                <Col>
-                    <RecordsList
-                        type='Inventory'
-                        nameRecordList={nameList.WRITE_ACCESS}
-                        records={editableInventories?.inventories} />
+                <Col className="d-flex flex-column gap-4" >
+                    { editableInventoriesLoading 
+                        ? <Spinner animation="border" className="align-self-center"/>
+                        : editableInventoriestopError
+                            ? <Alert variant="danger" className="align-self-center">{editableInventoriestopError.message}</Alert>
+                            : <RecordsList
+                                type='Inventory'
+                                nameRecordList={nameList.WRITE_ACCESS}
+                                records={editableInventories?.inventories} 
+                            />}
                 </Col>
             </Row>
         </Container>
