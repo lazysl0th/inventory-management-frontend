@@ -26,6 +26,7 @@ import InventoryView from '../InventoryView/InventoryView';
 import ItemView from '../ItemView/ItemView';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import PageDeleteUserData from '../PageDeleteUserData/PageDeleteUserData';
+import PagePrivacy from '../PagePrivacy/PagePrivacy'
 import PageNotFound from '../PageNotFound/PageNotFound';
 import LiveBlock from '../LiveBlock/LiveBlock';
 import { titleInfoTooltip, messageInfoTooltip, queryParams } from '../../utils/constants';
@@ -281,6 +282,7 @@ function App() {
                 <Route path="/sign-in" element={<Login onAuth={handlerSignInSubmit}/>} />
                 <Route path="/sign-up" element={<Register onReg={handlerSignUpSubmit}/>} />
                 <Route path="/delete-user-data" element={<PageDeleteUserData />} />
+                <Route path="/privacy" element={<PagePrivacy />} />
                 <Route
                     path="/profile"
                     element={
