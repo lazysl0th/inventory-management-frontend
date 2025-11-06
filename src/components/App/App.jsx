@@ -25,6 +25,7 @@ import AdminPage from '../AdminPage/AdminPage'
 import InventoryView from '../InventoryView/InventoryView';
 import ItemView from '../ItemView/ItemView';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
+import InfoToast from '../InfoToast/InfoToast';
 import PageDeleteUserData from '../PageDeleteUserData/PageDeleteUserData';
 import PagePrivacy from '../PagePrivacy/PagePrivacy'
 import PageNotFound from '../PageNotFound/PageNotFound';
@@ -39,6 +40,9 @@ function App() {
     const [infoTooltipTitle, setInfoTooltipTitle] = useState('');
     const [infoTooltipMessage, setInfoTooltipMessage] = useState('');
     const [isInfoTooltipOpen,  setIsInfoTooltipOpen] = useState(false);
+    const [isInfoToastShow, setIsInfoToastShow] = useState(false);
+    const [infoToastPosition, setInfoToastPosition] = useState('')
+    const [infoToastMessage, setInfoToastMessage] = useState('');
     const [isInventoryViewOpen, setIsInventoryViewOpen] = useState(false);
     const [isItemViewOpen, setIsItemViewOpen] = useState(false);
     const [selectedInventoryId, setSelectedInventoryId] = useState(null);
@@ -102,6 +106,17 @@ function App() {
         setIsInfoTooltipOpen(false);
         setInfoTooltipTitle('');
         setInfoTooltipMessage('');
+    }
+
+    const showInfoToats = (message, position) => {
+        setInfoToastMessage(message);
+        setInfoToastPosition(position);
+        setIsInfoToastShow(true);
+    }
+
+    const handlerCloseInfoToast = () => {
+        setIsInfoToastShow(false);
+        setInfoToastMessage('')
     }
 
     const openInventory = (record) => {
@@ -308,7 +323,6 @@ function App() {
                     }/>
                 <Route path="*" element={<PageNotFound />} />
             </Routes>
-            
                 <LiveBlock inventoryId={selectedInventoryId}>
                     <InventoryView 
                         isOpen={isInventoryViewOpen}
@@ -321,21 +335,23 @@ function App() {
                         handlerCreateInventory={handlerCreateInventory}
                         handlerAddRecord={handlerAddRecord.Item}
                         handlerDeleteRecords={handlerDeleteRecords.Item}
+                        onShowToast={showInfoToats}
                     />
                 </LiveBlock>
-                
             <ItemView
                 isOpen={isItemViewOpen}
                 inventoryId={selectedInventoryId}
                 itemId={selectedItemId}
                 handlerCloseView={handlerCloseRecordView.Item}
-                handlerCreateItem={handlerCreateItem} />
+                handlerCreateItem={handlerCreateItem}
+                onShowToast={showInfoToats}/>
             <InfoTooltip
                 isOpen={isInfoTooltipOpen}
                 onClose={handlerCloseInfoTooltip}
                 title={infoTooltipTitle}
                 message={infoTooltipMessage}
             />
+            <InfoToast isShow={isInfoToastShow} onClose={handlerCloseInfoToast} message={infoToastMessage} position={infoToastPosition}/>
         </CurrentUserContext.Provider>
     )
 }

@@ -25,7 +25,8 @@ function InventoryView({
     handlerClickRecord,
     handlerCreateInventory,
     handlerAddRecord,
-    handlerDeleteRecords
+    handlerDeleteRecords,
+    onShowToast
 }) {
 
     const currentUser = useContext(CurrentUserContext);
@@ -41,7 +42,7 @@ function InventoryView({
     
     const inventoryData = dataInventory?.inventory || {}
     const itemsData = dataItems?.items || []
-    //console.log(inventory)
+    
     useEffect(() => {
         if (inventoryId) {
             loadInventory({ variables: { id: inventoryId } })
@@ -66,17 +67,16 @@ function InventoryView({
         if (activeTab === 'chat' && inventoryId) loadItems({ variables: { inventoryId: inventoryId } })
     }, [activeTab, loadingItems]);
 
-
-    const updateInitialInventory = (inventoryData) => {
-        for(let key in inventoryData) {
-                (key === 'createdAt' || key === 'updatedAt')
-                    ? handlerChangeInventory(key, new Date(+inventoryData[key]).toLocaleString())
-                    : (key === 'version') 
-                        ? setVersion(inventoryData[key])
-                        : handlerChangeInventory(key, inventoryData[key])
+    const updateInitialInventory = (itemData) => {
+        const updated = { ...inventory };
+        for (let key in inventoryData) {
+            if (key === 'createdAt' || key === 'updatedAt') updated[key] = new Date(+itemData[key]).toLocaleString();
+            else if (key === 'version') setVersion(itemData[key]);
+            else updated[key] = itemData[key];
         }
-    }
-
+        setInventory(updated);
+    };
+    
     const handlerChangeInventory = ((name, value) => setInventory(prev => ({ ...prev, [name]: value, })));
 
     const handleCloseView = () => {
@@ -92,7 +92,8 @@ function InventoryView({
     const validation = async () => {
         const errors = await formikRef.current.validateForm();
         formikRef.current.setTouched(Object.keys(errors).reduce((acc, key) => ({ ...acc, [key]: true }), {}));
-        if (Object.keys(errors).length === 0) formikRef.current.handleSubmit() 
+        if (Object.keys(errors).length === 0) formikRef.current.handleSubmit()
+        else onShowToast('Заполните обязательные поля', 'bottom-center');
     }
 
     const handleCreateInventory = () => {
@@ -179,9 +180,13 @@ function InventoryView({
                         >
                             <Tab eventKey='details' title='Details'>
                                 {loadingInventory
-                                    ? <Spinner animation="border"/>
+                                    ? (<div className="d-flex justify-content-center align-items-center">
+                                        <Spinner animation="border" className="align-self-center"/>
+                                    </div>)
                                     : errorInventory
-                                        ? <Alert variant="danger">{errorInventory.message}</Alert>
+                                        ? (<div className="d-flex justify-content-center align-items-center">
+                                            <Alert variant="danger">{errorInventory.message}</Alert>
+                                            </div>)
                                         : <InventoryDetailsTab
                                             categories={categories}
                                             formikValues={values}
@@ -197,9 +202,13 @@ function InventoryView({
                             </Tab>
                             <Tab eventKey="customId" title="Custom ID">
                                 {loadingInventory
-                                    ? <Spinner animation="border" className="align-self-center"/>
+                                    ? (<div className="d-flex justify-content-center align-items-center">
+                                        <Spinner animation="border" className="align-self-center"/>
+                                    </div>)
                                     : errorInventory
-                                        ? <Alert variant="danger" className="align-self-center">{errorInventory.message}</Alert>
+                                        ? (<div className="d-flex justify-content-center align-items-center">
+                                            <Alert variant="danger">{errorInventory.message}</Alert>
+                                            </div>)
                                         : <CustomIdTab
                                             customIdFormat={inventory?.customIdFormat}
                                             handlerChangeCustomIdFormat={handlerChangeInventory}
@@ -207,12 +216,17 @@ function InventoryView({
                             </Tab>
                             <Tab eventKey="fields" title="Fields">
                                 {loadingInventory
-                                    ? <Spinner animation="border" className="align-self-center"/>
+                                    ? (<div className="d-flex justify-content-center align-items-center">
+                                        <Spinner animation="border" className="align-self-center"/>
+                                    </div>)
                                     : errorInventory
-                                        ? <Alert variant="danger" className="align-self-center">{errorInventory.message}</Alert>
+                                        ? (<div className="d-flex justify-content-center align-items-center">
+                                            <Alert variant="danger">{errorInventory.message}</Alert>
+                                            </div>)
                                         : <FieldsTab
                                             itemFields={inventory.fields}
                                             handlerChangeFields={handlerChangeInventory}
+                                            onShowToast={onShowToast}
                                         /> }
                             </Tab>
                             <Tab eventKey="access" title="Access">
@@ -227,9 +241,13 @@ function InventoryView({
                             </Tab>
                             <Tab eventKey="items" title="Items">
                                 {loadingItems
-                                    ? <Spinner animation="border" className="align-self-center"/>
+                                    ? (<div className="d-flex justify-content-center align-items-center">
+                                        <Spinner animation="border" className="align-self-center"/>
+                                    </div>)
                                     : errorItems
-                                        ? <Alert variant="danger" className="align-self-center">{errorItems.message}</Alert>
+                                        ? (<div className="d-flex justify-content-center align-items-center">
+                                            <Alert variant="danger">{errorItems.message}</Alert>
+                                            </div>)
                                         : <RecordsList type='Item'
                                             records={itemsData}
                                             handlerAddRecord={handlerAddRecord}
@@ -238,9 +256,13 @@ function InventoryView({
                             </Tab>
                             <Tab eventKey="chat" title="Chat">
                                 {loadingChat
-                                    ? <Spinner animation="border" className="align-self-center"/>
+                                    ? (<div className="d-flex justify-content-center align-items-center">
+                                        <Spinner animation="border" className="align-self-center"/>
+                                    </div>)
                                     : errorChat
-                                        ? <Alert variant="danger" className="align-self-center">{errorChat.message}</Alert>
+                                        ? (<div className="d-flex justify-content-center align-items-center">
+                                            <Alert variant="danger">{errorInventory.message}</Alert>
+                                            </div>)
                                         : <ChatTab
                                             comments={inventory.comments}
                                             onAddComment={async (text) => {
@@ -250,9 +272,13 @@ function InventoryView({
                             </Tab>
                             <Tab eventKey="stats" title="Stats">
                                 {loadingInventory
-                                    ? <Spinner animation="border" className="align-self-center"/>
+                                    ? (<div className="d-flex justify-content-center align-items-center">
+                                        <Spinner animation="border" className="align-self-center"/>
+                                    </div>)
                                     : errorInventory
-                                        ? <Alert variant="danger" className="align-self-center">{errorInventory.message}</Alert>
+                                        ? (<div className="d-flex justify-content-center align-items-center">
+                                            <Alert variant="danger">{errorInventory.message}</Alert>
+                                            </div>)
                                         : <StatsTab inventory={inventory}
                                         /> }
                             </Tab>
@@ -260,16 +286,7 @@ function InventoryView({
                         </Tabs>
                     </Modal.Body>
                     <Modal.Footer>
-                        <OverlayTrigger
-                            key='top'
-                            placement='top'
-                            overlay={(Object.keys(formikRef.current?.errors.length > 0))
-                                ? (<Tooltip id='tooltip-error'> Required </Tooltip>)
-                                : <Tooltip id="tooltip-empty" className="d-none" />
-                            }
-                            >
                         <Button variant="primary" onClick={validation}> { inventoryId ? 'Update' : 'Create' } </Button>
-                        </OverlayTrigger>
                     </Modal.Footer>
                 </>)}
             </FormValidation>

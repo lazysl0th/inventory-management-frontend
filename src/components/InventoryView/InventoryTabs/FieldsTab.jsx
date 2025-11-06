@@ -1,29 +1,19 @@
 import { useState } from "react";
-import { Alert, Toast, ToastContainer } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import DndForm from "../../DndForm/DndForm";
 import DndFormField from "../../DndForm/DndFormField/DndFormField";
 import ItemFieldsForm from '../../ItemFieldsForm/ItemFieldsForm';
+import InfoToast from "../../InfoToast/InfoToast";
 import { hasOrderChanged } from "../../../utils/utils";
 import { FIELD_TYPES } from '../../../utils/constants'
 
 
-export default function FieldsTab({ itemFields, handlerChangeFields }) {
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState('');
-
-    const onShowToast = (message) => {
-        setToastMessage(message)
-        setShowToast(true);
-    }
-    const onClose = () => {
-        setShowToast(false);
-        setToastMessage('')
-    }
+export default function FieldsTab({ itemFields, handlerChangeFields, onShowToast }) {
 
     function createNewField(fields, type = "TEXT") {
         const countOfType = fields.filter(field => field.type === type).length;
         if (countOfType >= FIELD_TYPES[type]?.limit) {
-            onShowToast(`Нельзя добавить больше полей типа "${FIELD_TYPES[type].label}" (лимит ${FIELD_TYPES[type]?.limit})`);
+            onShowToast(`Нельзя добавить больше полей типа "${FIELD_TYPES[type].label}" (лимит ${FIELD_TYPES[type]?.limit})`, 'bottom-center');
         return null;
         }
 
@@ -38,7 +28,7 @@ export default function FieldsTab({ itemFields, handlerChangeFields }) {
         };
     }
 
-    const handlerChange = (updatedFields) => {        
+    const handlerChange = (updatedFields) => {
         handlerChangeFields('fields', updatedFields.map((field, i) => hasOrderChanged(itemFields, updatedFields) ? { ...field, order: i } : { ...field }) )
     }
 
@@ -60,17 +50,7 @@ export default function FieldsTab({ itemFields, handlerChangeFields }) {
                                 </DndFormField>);
                         }}
                     />)}
-            <ToastContainer position="bottom-center" className="p-3">
-                <Toast
-                    show={showToast}
-                    onClose={onClose}
-                    delay={3000}
-                    autohide
-                    bg="warning"
-                >
-                <Toast.Body>{toastMessage}</Toast.Body>
-                </Toast>
-      </ToastContainer>
         </div>
+        
     );
 }

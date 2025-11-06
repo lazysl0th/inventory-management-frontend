@@ -1,13 +1,13 @@
 import { useContext, useState, useEffect } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { Modal, Button, Spinner, Alert, Tabs, Tab, } from 'react-bootstrap';
-import ItemDetailsTab from './ItemTabs.jsx/ItemDetailTab.jsx/ItemDetailTabs';
+import ItemDetailsTab from './ItemTabs/ItemDetailTab/ItemDetailTabs';
 import ChatTab from '../ChatTab/ChatTab';
 import { initialStateItem } from '../../utils/constants';
-import { GET_ITEM, GET_INVENTORY_FIELDS, UPDATE_ITEM } from '../../graphql/queries';
+import { GET_ITEM, GET_INVENTORY_FIELDS, UPDATE_ITEM, TOGGLE_LIKE } from '../../graphql/queries';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 
-function ItemView({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreateItem }) {
+function ItemView({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreateItem, onShowToast }) {
     const currentUser = useContext(CurrentUserContext);
     const [item, setItem] = useState(initialStateItem)
     const [version, setVersion] = useState();
@@ -39,15 +39,15 @@ function ItemView({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreate
     }, [isOpen, loadingItem, loadingInventory, itemId]);
 
     const updateInitialItem = (itemData) => {
-        for(let key in itemData) {
-                (key === 'createdAt' || key === 'updatedAt')
-                    ? handlerChangeItem(key, new Date(+itemData[key]).toLocaleString())
-                    : (key === 'version') 
-                        ? setVersion(itemData[key])
-                        : handlerChangeItem(key, itemData[key]);
+        const updated = { ...item };
+        for (let key in itemData) {
+            if (key === 'createdAt' || key === 'updatedAt') updated[key] = new Date(+itemData[key]).toLocaleString();
+            else if (key === 'version') setVersion(itemData[key]);
+            else updated[key] = itemData[key];
         }
-    }
-    
+        setItem(updated);
+    };
+
     const handlerChangeItem = ((name, value) => setItem(prev => ({ ...prev, [name]: value, })));
 
     const handleCloseView = () => {
@@ -93,13 +93,12 @@ function ItemView({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreate
         <Modal
             show={isOpen}
             onHide={handleCloseView}
-            size="xl"
+            size="lg"
             backdrop="static"
             keyboard={false}
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title>{}</Modal.Title>
             </Modal.Header>
             <Modal.Body className={(loadingItem || error) && "align-self-center"}>
                 <Tabs
@@ -113,17 +112,22 @@ function ItemView({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreate
                         {loadingItem
                             ? <Spinner animation="border"/>
                             : error
-                                ? <Alert variant="danger">{error.message}</Alert>
+                                ? (<div className="d-flex justify-content-center align-items-center">
+                                        <Alert variant="danger">{error.message}</Alert>
+                                    </div>)
                                 : <ItemDetailsTab
                                     item={item}
                                     handlerChangeItem={handlerChangeItem}
+                                    onShowToast={onShowToast}
                                 /> }
                     </Tab>
                     <Tab eventKey="chat" title="Chat">
                         {loadingItem
                             ? <Spinner animation="border" className="align-self-center"/>
                             : error
-                                ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
+                                ? (<div className="d-flex justify-content-center align-items-center">
+                                        <Alert variant="danger">{error.message}</Alert>
+                                    </div>)
                                 : <ChatTab
                                     comments={[]}
                                     onAddComment={async (text) => {

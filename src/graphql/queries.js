@@ -28,6 +28,8 @@ const ITEM_BASE_FRAGMENT = gql`
                 isDeleted
             }
         }
+        likesCount
+        likedByMe
     }
 `;
 
@@ -321,4 +323,15 @@ export const UPDATE_ITEM = gql`
             updatedAt
         }
     }
-    `;
+`;
+
+export const TOGGLE_LIKE = gql`
+    mutation ToggleLikeItem($id: Int!) {
+        toggleLikeItem(id: $id) {
+            id
+            likesCount
+            likedByMe
+            __typename
+        }
+    }
+`;
