@@ -20,20 +20,23 @@ export default function DndForm({
         useSensor(SafeTouchSensor)
     );
 
-    const handleUpdate = useCallback((guid, changes) => {
-        const updated = fields.map((field) => (field.guid === guid ? { ...field, ...changes } : field));
+    const getKey = useCallback((field) => field.guid ?? field.id, []);
+
+    const handleUpdate = useCallback((key, changes) => {
+        const updated = fields.map((field) => (getKey(field) === key ? { ...field, ...changes } : field));
         onChange(updated);
-    }, [fields, onChange]);
+    }, [fields, onChange, getKey]);
 
     const handleAdd = useCallback(() => {
-        if (typeof createNewItem !== "function" && !onChange) return;
         const newItem = createNewItem(fields);
+        if (newItem == null) return;
         onChange([...fields, newItem]);
     }, [fields, createNewItem, onChange]);
 
     const handleMove = useCallback((from, to) => {
         if (!onChange) return;
         if (to < 0 || to >= fields.length) return;
+        console.log(arrayMove(fields, from, to));
         onChange(arrayMove(fields, from, to));
     }, [fields, onChange]);
 
@@ -41,12 +44,12 @@ export default function DndForm({
         if (!onChange) return;
         const rect = formRef.current?.getBoundingClientRect();
         if (rect && (Math.abs(delta.y) > rect.height / 2 || Math.abs(delta.x) > rect.width / 2)) {
-            onChange(fields.filter((field) => field.guid !== active.id));
+            onChange(fields.filter((field) => (getKey(field) !== active.id)));
             return;
         }
         if (over && active.id !== over.id) {
-            const oldIndex = fields.findIndex((field) => field.guid === active.id);
-            const newIndex = fields.findIndex((field) => field.guid === over.id);
+            const oldIndex = fields.findIndex((field) => getKey(field) === active.id);
+            const newIndex = fields.findIndex((field) => getKey(field) === over.id);
             onChange(arrayMove(fields, oldIndex, newIndex));
         }
     }, [fields, onChange]);
@@ -57,9 +60,9 @@ export default function DndForm({
 
             <div ref={formRef}>
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                    <SortableContext items={fields?.map(field => field?.guid)?.filter(Boolean)} strategy={verticalListSortingStrategy}>
-                        {fields?.filter(Boolean).map((field, index) => (
-                            <div key={field.guid || field.id}>
+                    <SortableContext items={fields?.map(getKey)?.filter(Boolean)} strategy={verticalListSortingStrategy}>
+                        {fields?.toSorted((a, b) => a.order - b.order).map((field, index) => (
+                            <div key={getKey(field)}>
                                 {renderItem({
                                     field,
                                     index,

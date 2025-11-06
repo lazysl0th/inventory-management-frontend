@@ -6,7 +6,7 @@ import { nameList, titleInfoTooltip, messageInfoTooltip} from '../../utils/const
 import * as userApi from '../../utils/usersApi';
 import { GET_INVENTORIES } from '../../graphql/queries';
 
-export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerClickRecord, handlerAddRecords, handlerDeleteRecords }) {
+export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerClickRecord, handlerAddRecord, handlerDeleteRecords }) {
     const [users, setUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -59,14 +59,17 @@ export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerCl
             const usersIds = Object.keys(rowSelection).map(id => Number(id));
             const rolesIds = Array.from(roles).map(id => Number(id));
             const accessUsers = await userApi.changeAccess(usersIds, rolesIds);
-            setUsers(prev => prev.map(user => ({ ...user, ...(accessUsers.userRoles.find(userRole => userRole.roleId === user.roles.id) || {}) })));
+            setUsers(prevUsers =>
+                prevUsers.map(user => ({
+                    ...user,
+                    'roles': accessUsers.userRoles.filter(userRole => userRole.userId === user.id).map(userRole => ({ role: userRole.role }))
+                })
+            ))
             onOpenTooltip(titleInfoTooltip.SUCCESS, roles === '1' ? messageInfoTooltip.USER.PERMISSION.GRANT : messageInfoTooltip.USER.PERMISSION.REVOKE)
         } catch (e) {
-            console.log(e);
             onOpenTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.e.message);
         }
     }
-    
 
     return (
         <Container className="d-flex flex-column gap-4" >
@@ -97,7 +100,7 @@ export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerCl
                                 type='Inventory'
                                 nameRecordList={nameList.INVENTORIES}
                                 records={allInventories.inventories} 
-                                handlerAddRecords={handlerAddRecords}
+                                handlerAddRecord={handlerAddRecord}
                                 handlerDeleteRecords={handlerDeleteRecords}
                                 handlerClickRecord={handlerClickRecord}
                             /> }

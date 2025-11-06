@@ -9,22 +9,27 @@ const INVENTORY_BASE_FRAGMENT = gql`
         owner { id name }
         itemsCount
     }
-`
+`;
 
 const ITEM_BASE_FRAGMENT = gql`
     fragment ItemBase on Item {
         id
+        version
+        customId
         values {
             id
             value
             field {
                 id
                 title
+                type
                 order
+                showInTable
+                isDeleted
             }
         }
     }
-`
+`;
 
 const USER_BASE_FRAGMENT = gql`
     fragment UserBase on User {
@@ -32,7 +37,20 @@ const USER_BASE_FRAGMENT = gql`
         name
         email
     }
-`
+`;
+
+export const GET_TAGS = gql`
+    query SelectTags {
+        tags {
+            id
+            name
+            inventories {
+                id
+            }
+            inventoriesCount
+        }
+    }
+`;
 
 export const GET_INVENTORIES = gql`
     query SelectInventories(
@@ -57,19 +75,6 @@ export const GET_INVENTORIES = gql`
         }
     }
     ${INVENTORY_BASE_FRAGMENT}
-`;
-
-export const GET_TAGS = gql`
-    query SelectTags {
-        tags {
-            id
-            name
-            inventories {
-                id
-            }
-            inventoriesCount
-        }
-    }
 `;
 
 export const SEARCH_TAGS = gql`
@@ -104,18 +109,7 @@ export const GET_INVENTORY = gql`
                 image
                 createdAt
                 updatedAt
-                customIdFormat {
-                    parts {
-                        guid
-                        type
-                        value
-                        format
-                        position
-                        order
-                        digits
-                    }
-                    summary
-                }
+                customIdFormat
                 fields {
                     id
                     title
@@ -142,160 +136,78 @@ export const GET_INVENTORY = gql`
         ${INVENTORY_BASE_FRAGMENT}
 `;
 
-export const GET_INVENTORY_TAB = {
-    details: gql`
-        query GetInventoryAndCategory($id: Int!) {
-            inventory(id: $id) {
-                ...InventoryBase
-                image
-                createdAt
-                updatedAt
-            }
-            categories: __type(name: "Category") {
+export const GET_ITEMS = gql`
+    query GetItems($inventoryId: Int!) {
+        items(inventoryId: $inventoryId) {
+            ...ItemBase
+        }
+    }
+    ${ITEM_BASE_FRAGMENT}
+`;
+
+export const GET_COMMENTS = gql`
+    query GetItems($inventoryId: Int!) {
+        items(inventoryId: $inventoryId) {
+            ...ItemBase
+        }
+        inventory(id: $inventoryId) {
+            ...InventoryBase
+        }
+    }
+    ${ITEM_BASE_FRAGMENT}
+    ${INVENTORY_BASE_FRAGMENT}
+`;
+
+export const GET_ITEM = gql`
+    query GetItem($id: Int!) {
+        item(id: $id) {
+            ...ItemBase
+            owner {
+                id
                 name
-                enumValues {
-                    name
-                }
             }
+            createdAt
+            updatedAt
         }
-        ${INVENTORY_BASE_FRAGMENT}
-    `,
-    customId: gql`
-        query GetCustomId($id: Int!) {
-            inventory(id: $id) {
-                ...InventoryBase
-                customIdFormat {
-                    parts {
-                        guid
-                        type
-                        value
-                        format
-                        position
-                        order
-                        digits
-                    }
-                    summary
-                }
-            }
-        }
-        ${INVENTORY_BASE_FRAGMENT}
-    `,
-    fields: gql`
-        query GetInventoryFields($id: Int!) {
-            inventory(id: $id) {
-                ...InventoryBase
-                fields {
-                    id
-                    title
-                    type
-                    description
-                    showInTable
-                    order
-                    isDeleted
-                }
-            }
-        }
-        ${INVENTORY_BASE_FRAGMENT}
-        `,
-    access: gql`
-        query GetInventoryAccess($id: Int!) {
-            inventory(id: $id) {
-                ...InventoryBase
-                isPublic
-                allowedUsers {
-                    ...UserBase
-                }
-            }
-        }
-        ${INVENTORY_BASE_FRAGMENT}
-        ${USER_BASE_FRAGMENT}
-    `,
-    items: gql`
-        query GetItems($inventoryId: Int!) {
-            items(inventoryId: $inventoryId) {
-                ...ItemBase
-            }
-            inventory(id: $inventoryId) {
-                ...InventoryBase
-            }
-        }
-        ${ITEM_BASE_FRAGMENT}
-        ${INVENTORY_BASE_FRAGMENT}
-    `,
-    chat: gql`
-        query GetComments($inventoryId: Int!, $itemId: Int) {
-            inventory(id: $inventoryId) {
-                ...InventoryBase
-            }
-            comments: comments(inventoryId: $inventoryId, itemId: $itemId) {
-                id
-                content
-                createdAt
-                user {
-                    ...UserBase
-                }
-            }
-        }
-        ${USER_BASE_FRAGMENT}
-        ${INVENTORY_BASE_FRAGMENT}
-    `,
-    stats: gql`
-        query GetInventoryStats($id: Int!) {
-            inventory(id: $id) {
-                ...InventoryBase
-                stats {
-                    numStats {
-                        field
-                        average
-                        min
-                        max
-                    }
-                    textStats {
-                        field
-                        topValues {
-                            value
-                            count
-                        }
-                    }
-                }
-            }
-        }
-        ${INVENTORY_BASE_FRAGMENT}
-    `,
-};
+    }
+    ${ITEM_BASE_FRAGMENT}
+`;
 
-export const GET_ITEM_TAB = {
-    details: gql`
-        query GetItem($id: Int!) {
-            item(id: $id) {
-                ...ItemBase
-                owner { name }
-                createdAt
-                updatedAt
-                values { field { type } }
+export const GET_INVENTORY_FIELDS = gql`
+    query GetInventoryFields($id: Int!) {
+        inventory(id: $id) {
+            id
+            fields {
+                id
+                title
+                type
+                showInTable
+                order
+                isDeleted
             }
         }
-        ${ITEM_BASE_FRAGMENT}
-    `,
-    chat: gql`
-        query GetComments($inventoryId: Int, $itemId: Int) {
-            comments: comments(inventoryId: $inventoryId, itemId: $itemId) {
-                id
-                content
-                createdAt
-                user {
-                    ...UserBase
-                }
-                
-            }
-        } 
-        ${USER_BASE_FRAGMENT}
-    `,
-};
+    }
+`;
 
-export const DELETE_INVENTORY = gql`
+export const CREATE_ITEM = gql`
+    mutation createItem($input: CreateItemInput!) {
+        createItem(input: $input) {
+            id
+        }
+    }
+`;
+
+export const DELETE_INVENTORIES = gql`
     mutation DeleteInventories($ids: [Int!]!) {
         deleteInventories(ids: $ids) {
+            id
+        }
+    }
+`;
+
+export const DELETE_ITEMS = gql`
+    mutation DeleteItems($ids: [Int!]!) {
+        deleteItems(ids: $ids) {
             id
         }
     }
@@ -358,10 +270,7 @@ export const INVENTORY_CORE = gql`
             order
             isDeleted
         }
-        customIdFormat {
-            summary
-            parts { guid type value format position order digits }
-        }
+        customIdFormat
         itemsCount
   }
 `;
@@ -385,21 +294,31 @@ export const UPDATE_INVENTORY = gql`
 `;
 
 export const UPDATE_INVENTORY_NEW = gql`
-  mutation UpdateInventory($id: Int!, $input: CreateInventoryInput!, $expectedVersion: Int!) {
-    updateInventory(id: $id, input: $input, expectedVersion: $expectedVersion) {
-      id
-      title
-      version
-      updatedAt
-      tags {
-        id
-        name
-      }
-      fields {
-        id
-        title
-        order
-      }
+    mutation UpdateInventory($id: Int!, $input: CreateInventoryInput!, $expectedVersion: Int!) {
+        updateInventory(id: $id, input: $input, expectedVersion: $expectedVersion) {
+            id
+            title
+            version
+            updatedAt
+            tags {
+                id
+                name
+            }
+            fields {
+                id
+                title
+                order
+            }
+        }
     }
-  }
 `;
+
+export const UPDATE_ITEM = gql`
+    mutation UpdateItem($id: Int!, $input: CreateItemInput!, $expectedVersion: Int!) {
+        updateItem(id: $id, input: $input, expectedVersion: $expectedVersion) {
+            id
+            version
+            updatedAt
+        }
+    }
+    `;

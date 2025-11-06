@@ -3,7 +3,16 @@ import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { Routes, Route, useNavigate, useSearchParams } from 'react-router-dom';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import './App.css'
-import { GET_ITEM_TAB, DELETE_INVENTORY, GET_CATEGORIES, CREATE_INVENTORY, GET_TAGS, GET_INVENTORIES } from '../../graphql/queries';
+import {
+    GET_CATEGORIES,
+    GET_TAGS,
+    GET_INVENTORIES,
+    CREATE_INVENTORY,
+    DELETE_INVENTORIES,
+    CREATE_ITEM,
+    GET_ITEMS,
+    DELETE_ITEMS
+} from '../../graphql/queries';
 import { register, login, checkToken } from '../../utils/usersApi';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
@@ -30,34 +39,17 @@ function App() {
     const [isInventoryViewOpen, setIsInventoryViewOpen] = useState(false);
     const [isItemViewOpen, setIsItemViewOpen] = useState(false);
     const [selectedInventoryId, setSelectedInventoryId] = useState(null);
-    const [selectedItem, setSelectedItem] = useState({});
-    const [activeItemTab, setActiveItemTab] = useState('details');
+    const [selectedItemId, setSelectedItemId] = useState(null);
     const [searchParams] = useSearchParams();
     const [access, setAccess] = useState(true);
 
     useEffect( () => { handleVerifyUser() }, [navigate])
 
-    const [loadItem, { 
-        data: dataItem, 
-        loading: loadingItem, 
-        error: errorItem, 
-        reset: resetItem
-    }] = useLazyQuery(GET_ITEM_TAB[activeItemTab]);
-
     const { data: dataCategories, loading: categoriesLoading, error: categoriesError,} = useQuery(GET_CATEGORIES);
-
     const [loadTags, resultTags] = useLazyQuery(GET_TAGS);
+    const categories = dataCategories?.categories || {}
 
-    useEffect(() => {
-        if (selectedItem?.id) {
-            if (['chat'].includes(activeInventoryTab)) {
-                loadItem({ variables: { [`${selectedItem.__typename.toLowerCase()}Id`]: selectedItem.id } })
-            }
-            else loadItem({ variables: { id: selectedItem.id } })
-        }
-    }, [activeItemTab, selectedItem.id]);
-
-    const refetchQueries = [
+    const refetchQueriesInventory = [
         { query: GET_INVENTORIES, variables: { ownerId: currentUser.id } },
         { query: GET_INVENTORIES, variables: {
             isPublic: queryParams.GET_EDITABLE_INVENTORIES.isPublic,
@@ -73,22 +65,29 @@ function App() {
             order: queryParams.GET_TOP_INVENTORIES.order,
             take: queryParams.GET_TOP_INVENTORIES.take,
         }},
-        { query: GET_INVENTORIES }
+        { query: GET_INVENTORIES },
     ]
 
-    const [createInventory, { data: inventory, loading: creating, error: errorCreate }] = useMutation(CREATE_INVENTORY, {
-        refetchQueries: refetchQueries,
+    const [createInventory, { data: inventory, loading: creatingInventory, error: errorCreateInventory }] = useMutation(CREATE_INVENTORY, {
+        refetchQueries: refetchQueriesInventory,
         awaitRefetchQueries: true,
     });
 
-    const [deleteInventories, { loading: deleting }] = useMutation(DELETE_INVENTORY, {
-        refetchQueries: refetchQueries,
+    const [deleteInventories, { loading: deletingInventories }] = useMutation(DELETE_INVENTORIES, {
+        refetchQueries: refetchQueriesInventory,
         awaitRefetchQueries: true,
     });
 
-    const categories = dataCategories?.categories || {}
-    const item = dataItem?.item || {}
-    
+    const [createItem, { data: item, loading: creatingItem, error: errorCreateItem }] = useMutation(CREATE_ITEM, {
+        refetchQueries: [{ query: GET_ITEMS, variables: { inventoryId: selectedInventoryId } }],
+        awaitRefetchQueries: true,
+    });
+
+    const [deleteItems, { loading: deletingItems }] = useMutation(DELETE_ITEMS, {
+        refetchQueries: [{ query: GET_ITEMS, variables: { inventoryId: selectedInventoryId } }],
+        awaitRefetchQueries: true,
+    });
+
     const openInfoTooltip = (title, message) => {
         setInfoTooltipTitle(title);
         setInfoTooltipMessage(message);
@@ -107,7 +106,7 @@ function App() {
     }
 
     const openItem = (record) => {
-        setSelectedItem(record);
+        setSelectedItemId(record.id);
         setIsItemViewOpen(true);
     }
 
@@ -122,9 +121,7 @@ function App() {
     }
 
     const closeItem = () => {
-        setSelectedItem({});
-        resetItem?.();
-        setActiveItemTab('details');
+        setSelectedItemId(null);
         setIsItemViewOpen(false);
     }
     
@@ -133,10 +130,9 @@ function App() {
         Item: closeItem
     };
 
-    const addInventory = () => setIsInventoryViewOpen(true)
-
     const handlerAddRecord = {
-        Inventory: addInventory
+        Inventory: () => setIsInventoryViewOpen(true),
+        Item: () => setIsItemViewOpen(true)
     }
     
     const handlerCreateInventory = async (newInventory) => {
@@ -144,13 +140,31 @@ function App() {
             const { data } = await createInventory({ variables: { input: newInventory } });
             if (data.createInventory.id) {
                 setSelectedInventoryId(data.createInventory.id)
-                openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORDS.INVENTORY.CREATE);
+                openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORD.CREATE('Inventory'));
             } else {
-                openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORDS.INVENTORY.ERROR);
+                openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORD.ERROR('Inventory'));
             }
         } catch(e) {
             console.log(e)
-            openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORDS.INVENTORY.ERROR);
+            openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORD.ERROR('Inventory'));
+
+        }
+    }
+
+    const handlerCreateItem = async (newItem) => {
+        //console.log(newItem);
+        try {
+            const { data } = await createItem({ variables: { input: newItem } });
+            //console.log(data)
+            if (data.createItem.id) {
+                setSelectedItemId(data.createItem.id)
+                openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORD.CREATE('Item'));
+            } else {
+                openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORD.ERROR('Item'));
+            }
+        } catch(e) {
+            console.log(e)
+            openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORD.ERROR('Item'));
 
         }
     }
@@ -159,26 +173,28 @@ function App() {
         try {
             const selectedIds = Object.keys(rowSelection).map(Number);
             await deleteInventories({ variables: { ids: selectedIds } });
-            openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORDS.DELETE)
+            openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORD.DELETE('Inventory'))
         } catch (e) {
             console.log(e);
             openInfoTooltip(titleInfoTooltip.ERROR, e.message)
         }
     }
 
-
-
-    const hendleDeleteItems = async (selectedIds) => {
-
+    const hendlerDeleteItems = async (rowSelection) => {
+        console.log(rowSelection);
+        try {
+            const selectedIds = Object.keys(rowSelection).map(Number);
+            await deleteItems({ variables: { ids: selectedIds } });
+            openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORD.DELETE('Item'))
+        } catch (e) {
+            console.log(e);
+            openInfoTooltip(titleInfoTooltip.ERROR, e.message)
+        }
     }
     
     const handlerDeleteRecords = {
         Inventory: hendlerDeleteInventories,
-        Item: hendleDeleteItems,
-    }
-
-    const handlerSelectTabs = {
-        Item: setActiveItemTab,
+        Item: hendlerDeleteItems,
     }
 
     const handleVerifyUser = async () => {
@@ -260,7 +276,7 @@ function App() {
                             <Profile 
                                 handlerClickRecord={handlerClickRecord}
                                 handlerDeleteRecords={handlerDeleteRecords.Inventory}
-                                handlerAddRecords={addInventory} />
+                                handlerAddRecord={handlerAddRecord.Inventory} />
                         </ProtectedRoute>
                     }/>
                 <Route
@@ -271,7 +287,7 @@ function App() {
                                 onOpenTooltip={openInfoTooltip}
                                 onCheckCurrentUser={handleVerifyUser}
                                 handlerClickRecord={handlerClickRecord}
-                                handlerAddRecords={addInventory}
+                                handlerAddRecord={handlerAddRecord.Inventory}
                                 handlerDeleteRecords={handlerDeleteRecords.Inventory}
                             />
                         </ProtectedRoute>
@@ -287,16 +303,19 @@ function App() {
                         handlerCloseView={handlerCloseRecordView.Inventory}
                         handlerClickRecord={handlerClickRecord}
                         handlerCreateInventory={handlerCreateInventory}
+                        handlerAddRecord={handlerAddRecord.Item}
+                        handlerDeleteRecords={handlerDeleteRecords.Item}
                     />
                 </LiveBlock>
                 
             <ItemView
                 isOpen={isItemViewOpen}
-                activeTab={activeItemTab}
-                item={item}
-                status={{loadingItem, errorItem}}
-                onSelectTab={handlerSelectTabs.Item}
-                onClose={handlerCloseRecordView.Item}/>
+                inventoryId={selectedInventoryId}
+                itemId={selectedItemId}
+                //status={{loadingItem, errorItem}}
+                //onSelectTab={handlerSelectTabs.Item}
+                handlerCloseView={handlerCloseRecordView.Item}
+                handlerCreateItem={handlerCreateItem} />
             <InfoTooltip
                 isOpen={isInfoTooltipOpen}
                 onClose={handlerCloseInfoTooltip}

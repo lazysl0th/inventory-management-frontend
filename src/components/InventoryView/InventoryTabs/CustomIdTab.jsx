@@ -9,13 +9,17 @@ export default function CustomIdTab({ customIdFormat, handlerChangeCustomIdForma
 
     const createNewPart = () => ({
         guid: crypto.randomUUID(),
-        type: "TEXT",
-        format: "",
-        value: "",
-        position: "prefix",
+        type: 'TEXT',
+        format: '',
+        separator: '',
+        currentSequence: '',
+        value: '',
+        position: 'prefix',
     });
 
     const handlerChange = (updatedParts) => {
+        //console.log(updatedParts);
+        //console.log(hasOrderChanged(customIdFormat?.parts, updatedParts))
         handlerChangeCustomIdFormat('customIdFormat', {
             ...customIdFormat,
             parts: hasOrderChanged(customIdFormat?.parts, updatedParts) ? updatedParts.map((part, i) => ({ ...part, order: i })) : updatedParts,

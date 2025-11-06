@@ -3,14 +3,16 @@ import { FaChevronUp, FaChevronDown } from "react-icons/fa6";
 import { FIELD_TYPES } from "../../utils/constants";
 
 export default function ItemFieldsForm({ field, index, total, onUpdate, onMove }) {
+    
+    
     const handleChange = (fieldGuid, index) => (e) => {
-        const { name, value, checked} = e.target;
+        const { name, value, checked} = e.currentTarget;
         switch (name) {
             case 'showInTable':
                 onUpdate(fieldGuid, { [name]: checked });
                 break;
             case "order":
-                value === 'up' ? onMove(index, --index) : onMove(index, ++index)
+                value === 'up' ? onMove(index, index - 1) : onMove(index, index + 1)
                 break;
             default:
                 onUpdate(fieldGuid, { [name]: value });
@@ -31,7 +33,7 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove }
                         value={field?.title || ""}
                         placeholder="Введите заголовок"
                         onMouseDown={stop}
-                        onChange={handleChange(field.guid)}
+                        onChange={handleChange(field?.guid || field?.id)}
                     />
                 </Form.Group>
             </Col>
@@ -46,7 +48,7 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove }
                         value={field.description || ""}
                         placeholder="Описание (опционально)"
                         onMouseDown={stop}
-                        onChange={handleChange(field.guid)}
+                        onChange={handleChange(field?.guid || field?.id)}
                     />
                 </Form.Group>
             </Col>
@@ -58,7 +60,7 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove }
                         value={field.type}
                         onMouseDown={stop}
                         name='type'
-                        onChange={handleChange(field.guid)}
+                        onChange={handleChange(field?.guid || field?.id)}
                     >
                         {Object.entries(FIELD_TYPES).map(([key, cfg]) => (
                             <option key={key} value={key}>
@@ -73,22 +75,22 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove }
                     type="checkbox"
                     name='showInTable'
                     label="Показывать в таблице"
-                    checked={field?.showInTable}
+                    checked={!!field?.showInTable}
                     onMouseDown={stop}
-                    onChange={handleChange(field.guid)}
+                    onChange={handleChange(field?.guid || field?.id)}
                 />
             </Col>
 
             <Col xs={12} sm={3} className="d-flex flex-column align-items-center align-self-center justify-content-between">
                 <Badge bg="light" text="dark" className="mb-2 w-100 text-center">
-                    Position {field.order}
+                    Position {index}
                 </Badge>
                 <ButtonGroup size="sm">
                     <Button
                         variant="outline-secondary"
                         name='order'
                         value='up'
-                        disabled={field?.order === 0}
+                        disabled={index === 0}
                         onMouseDown={stop}
                         onClick={handleChange(field?.guid || field?.id, index)}
                     >
@@ -98,7 +100,7 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove }
                         variant="outline-secondary"
                         name='order'
                         value='down'
-                        disabled={field?.order === total - 1}
+                        disabled={index === total - 1}
                         onMouseDown={stop}
                         onClick={handleChange(field?.guid || field?.id, index)}
                     >

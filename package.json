@@ -20,6 +20,7 @@
     "bootstrap": "^5.3.8",
     "crypto-random-string": "^5.0.0",
     "dayjs": "^1.11.18",
+    "emoji-picker-react": "^4.15.0",
     "formik": "^2.4.6",
     "graphql": "^16.12.0",
     "graphql-ws": "^6.0.6",

@@ -36,12 +36,13 @@ export const IdGenerator = {
         const def = partDefinitions?.[part?.type];
         if (!def || typeof def.gen !== "function") return "";
 
-        const main = def.gen(part) || "";
-        const val = part.value || "";
+        const main = def.gen(part, part.value) || "";
+        //console.log(main);
+        //console.log(def);
+        const sep = part.separator || "";
         const pos = part.position || "prefix";
 
-        if (part.type === "TEXT") return val;
-        return pos === "suffix" ? main + val : val + main;
+        return pos === "suffix" ? main + sep : sep + main;
     },
     generateFromParts(parts = [], partDefinitions) {
         return parts.map((p) => IdGenerator.generatePart(partDefinitions, p)).filter(Boolean).join("");

@@ -7,7 +7,7 @@ import RecordsList from "../RecordsList/RecordsList";
 import { queryParams, nameList } from '../../utils/constants';
 
 
-export default function Profile ({ handlerClickRecord, handlerDeleteRecords, handlerAddRecords }) {
+export default function Profile ({ handlerClickRecord, handlerDeleteRecords, handlerAddRecord }) {
     const currentUser = useContext(CurrentUserContext);
 
     const { data: myInventories, loading: myInventoriesLoading, error: myInventoriesError, refetch } = useQuery(GET_INVENTORIES, {
@@ -93,7 +93,7 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
                                 nameRecordList={nameList.OWNER}
                                 records={myInventories?.inventories}
                                 handlerClickRecord={handlerClickRecord}
-                                handlerAddRecords={handlerAddRecords}
+                                handlerAddRecord={handlerAddRecord}
                                 handlerDeleteRecords={handlerDeleteRecords}
                             />}
                 </Col>

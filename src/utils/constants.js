@@ -1,6 +1,30 @@
 import dayjs from "dayjs";
 import cryptoRandomString from "crypto-random-string";
 
+export const initialStateInventory = {
+    title: '',
+    description: '',
+    category: '',
+    image: '',
+    owner: {id: '', name: ''},
+    createdAt: new Date().toLocaleString(),
+    updatedAt: new Date().toLocaleString(),
+    customIdFormat: { parts: [], },
+    isPublic: false,
+    allowedUsers: [],
+    fields: [],
+    tags: [],
+}
+
+export const initialStateItem = {
+    values: [],
+    owner: {id: '', name: ''},
+    customId: '',
+    createdAt: new Date().toLocaleString(),
+    updatedAt: new Date().toLocaleString(),
+}
+
+
 export const titleInfoTooltip = {
     SUCCESS: 'Success!',
     ERROR: 'Error',
@@ -8,12 +32,10 @@ export const titleInfoTooltip = {
 
 export const messageInfoTooltip = {
     ERROR: 'Something went wrong! Try again.',
-    RECORDS: {
-        DELETE: 'Records deleted success',
-        INVENTORY: {
-            CREATE: 'Inventory successfully created!',
-            ERROR: 'An error occurred while creating inventory.',
-        }
+    RECORD: {
+        DELETE: (recordType) => (`${recordType}(s) deleted success`),
+        CREATE: (recordType) => (`${recordType} successfully created!`),
+        ERROR: (recordType) => (`An error occurred while creating ${recordType}.`),
     },
     USER: {
         BLOCKED: 'User blocked success',
@@ -97,7 +119,7 @@ export const RECORDS_LIST_HEADS = {
         { id: 'category', header: 'Category' },
         { id: 'owner', header: 'Owner', accessor: value => value?.name },
     ],
-    'Item': { fieldIdKey: 'id', fieldTitleKey: 'title', fieldValueKey: 'value' },
+    'Item': { fieldIdKey: 'id', fieldTitleKey: 'title', fieldValueKey: 'value', fieldCustomIdKey: 'Custom ID'},
     'CustomIdPart': [
         { id: 'type', header: 'Type' },
         { id: 'value', header: 'Value' },
@@ -135,8 +157,8 @@ export const PART_DEFINITIONS = {
         help: "A piece of unchanging text. You can use Unicode or emoji.",
         formatHelp: "Optional. Leave empty, value will be used as-is.",
         formats: null,
-        gen: (part) => String(part.value ?? ""),
-        example: (part) => String(part.value ?? ""),
+        gen: (part) => String(part.format ?? ""),
+        example: (part) => String(part.format ?? ""),
     },
 
     RANDOM20: {
@@ -230,31 +252,26 @@ export const PART_DEFINITIONS = {
         help: "A sequential index. E.g., with leading zeros (D4) or without (D).",
         formatHelp: "Choose width: D, D2, D3, D4…",
         formats: [
-            { value: "D",  label: "No padding (1,2,3)" },
+            { value: "D1",  label: "1, 2, 3" },
             { value: "D2", label: "01, 02, 03" },
             { value: "D3", label: "001, 002, 003" },
             { value: "D4", label: "0001, 0002, 0003" },
         ],
-        gen: (part, index = 0) => {
-            const n = index + 1;
-            const f = part.format || "D3";
-            if (f === "D")  return String(n);
-            const width = Number(f.replace(/\D+/g, "")) || 3;
-            return String(n).padStart(width, "0");
+        gen: (part, value = 0) => {
+            const len = parseInt(part.format.slice(1), 10);
+            return String(value).length < len ? String(value).padStart(len, '0') : value;
         },
         example: (part) => {
-            const f = part.format || "D3";
-            if (f === "D") return "1";
-            const width = Number(f.replace(/\D+/g, "")) || 3;
-            return String(3).padStart(width, "0");
+            const len = parseInt(part.format.slice(1), 10);
+            return String(value).length < len ? String(value).padStart(len, '0') : value;
         },
     },
 };
 
 export const FIELD_TYPES = {
-    TEXT: { label: "Однострочный текст", limit: 3 },
-    LONGTEXT: { label: "Многострочный текст", limit: 3 },
-    NUMBER: { label: "Число", limit: 3 },
-    FILE: { label: "Документ / Изображение", limit: 3 },
-    BOOLEAN: { label: "Истина / Ложь", limit: 3 },
+    TEXT: { label: "Single-line text", limit: 3, },
+    LONGTEXT: { label: "Multi-line text", limit: 3,},
+    NUMBER: { label: "Numeric", limit: 3, },
+    FILE: { label: "File / Image Link", limit: 3, },
+    BOOLEAN: { label: "True / False", limit: 3, },
 };
