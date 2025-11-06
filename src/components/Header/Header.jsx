@@ -17,7 +17,7 @@ function Header({ onLog }) {
     const [initialValues] = useState({ searchQuery: '' })
     const [expanded, setExpanded] = useState(false);
 
-    const isAuthPage = [link.SIGNIN, link.SIGNUP].includes(location.pathname);
+    const isPageWithoutHeader = [link.SIGNIN, link.SIGNUP, link.DELETE_USER_DATA].includes(location.pathname);
 
     const expandedHadle = () => setExpanded(false);
 
@@ -27,7 +27,7 @@ function Header({ onLog }) {
     }
     const handleSearch = async ({ searchQuery }) => navigate(`${link.SEARCH}?q=${encodeURIComponent(searchQuery)}`)
 
-    if (isAuthPage) return null
+    if (isPageWithoutHeader) return null
 
     return (
         <Navbar variant='light' expand='md' expanded={expanded} onToggle={setExpanded} className='pt-5 pb-3'>

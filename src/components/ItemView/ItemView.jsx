@@ -116,7 +116,6 @@ function ItemView({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreate
                                 ? <Alert variant="danger">{error.message}</Alert>
                                 : <ItemDetailsTab
                                     item={item}
-                                    //itemFields={itemFields}
                                     handlerChangeItem={handlerChangeItem}
                                 /> }
                     </Tab>

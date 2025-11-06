@@ -25,6 +25,8 @@ import AdminPage from '../AdminPage/AdminPage'
 import InventoryView from '../InventoryView/InventoryView';
 import ItemView from '../ItemView/ItemView';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
+import PageDeleteUserData from '../PageDeleteUserData/PageDeleteUserData';
+import PageNotFound from '../PageNotFound/PageNotFound';
 import LiveBlock from '../LiveBlock/LiveBlock';
 import { titleInfoTooltip, messageInfoTooltip, queryParams } from '../../utils/constants';
 import { isOwner, hasAdminRole, hasAccess } from '../../utils/utils';
@@ -44,6 +46,7 @@ function App() {
     const [access, setAccess] = useState(true);
 
     useEffect( () => { handleVerifyUser() }, [navigate])
+    useEffect( () => { handlerSignInSocialSubmit() }, [])
 
     const { data: dataCategories, loading: categoriesLoading, error: categoriesError,} = useQuery(GET_CATEGORIES);
     const [loadTags, resultTags] = useLazyQuery(GET_TAGS);
@@ -152,10 +155,8 @@ function App() {
     }
 
     const handlerCreateItem = async (newItem) => {
-        //console.log(newItem);
         try {
             const { data } = await createItem({ variables: { input: newItem } });
-            //console.log(data)
             if (data.createItem.id) {
                 setSelectedItemId(data.createItem.id)
                 openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORD.CREATE('Item'));
@@ -227,6 +228,16 @@ function App() {
         }
     }
 
+    const handlerSignInSocialSubmit = async() => {
+        const authToken = searchParams.get('token');
+        if (authToken) {
+            localStorage.setItem('token', authToken);
+            handleVerifyUser();
+            navigate(location.pathname, { replace: true });
+        }
+        
+    }
+
     const handlerSignInSubmit = async (values) => {
         try {
             const data = await login(values);
@@ -269,6 +280,7 @@ function App() {
                 <Route path="/search" element={<SearchPage handlerClickRecord={handlerClickRecord}/>} />
                 <Route path="/sign-in" element={<Login onAuth={handlerSignInSubmit}/>} />
                 <Route path="/sign-up" element={<Register onReg={handlerSignUpSubmit}/>} />
+                <Route path="/delete-user-data" element={<PageDeleteUserData />} />
                 <Route
                     path="/profile"
                     element={
@@ -292,7 +304,9 @@ function App() {
                             />
                         </ProtectedRoute>
                     }/>
+                <Route path="*" element={<PageNotFound />} />
             </Routes>
+            
                 <LiveBlock inventoryId={selectedInventoryId}>
                     <InventoryView 
                         isOpen={isInventoryViewOpen}
@@ -312,8 +326,6 @@ function App() {
                 isOpen={isItemViewOpen}
                 inventoryId={selectedInventoryId}
                 itemId={selectedItemId}
-                //status={{loadingItem, errorItem}}
-                //onSelectTab={handlerSelectTabs.Item}
                 handlerCloseView={handlerCloseRecordView.Item}
                 handlerCreateItem={handlerCreateItem} />
             <InfoTooltip

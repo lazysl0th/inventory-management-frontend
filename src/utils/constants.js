@@ -64,6 +64,8 @@ export const link = {
     FACEBOOK: import.meta.env.VITE_API_FACEBOOK_URL ? `${import.meta.env.VITE_API_FACEBOOK_URL}` : 'http://localhost:3001/signin/facebook',
     SIGNIN: import.meta.env.VITE_SIGNIN_URL ? `${import.meta.env.VITE_SIGNIN_URL}` : '/sign-in',
     SIGNUP: import.meta.env.VITE_SIGNUP_URL ? `${import.meta.env.VITE_SIGNUP_URL}` : '/sign-up',
+    DELETE_USER_DATA: import.meta.env.DELETE_USER_DATA ? `${import.meta.env.DELETE_USER_DATA}` : '/delete-user-data',
+    PAGE_NOT_FOUND: import.meta.env.PAGE_NOT_FOUND ? `${import.meta.env.PAGE_NOT_FOUND}` : '*',
     PASSWORD_RESET: import.meta.env.VITE_SINGIN_URL ? `${import.meta.env.VITE_SINGIN_URL}` : '/reset-password',
     SEARCH: import.meta.env.VITE_SINGIN_URL ? `${import.meta.env.VITE_SINGIN_URL}` : '/search',
 
