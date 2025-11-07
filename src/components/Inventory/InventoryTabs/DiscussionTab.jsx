@@ -1,6 +1,9 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { useQuery, useMutation, useSubscription } from "@apollo/client/react";
 import { Card, Form, Button, Alert, ListGroup, Spinner } from "react-bootstrap";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Link } from "react-router-dom";
 import { GET_COMMENTS, CREATE_COMMENT, COMMENT_ADDED} from "../../../graphql/queries";
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
 
@@ -49,11 +52,29 @@ export default function DiscussionTab({ inventoryId, onShowToast }) {
                             <ListGroup variant="flush">
                                 { comments?.map((comment) => (
                                     <ListGroup.Item key={comment.id}>
-                                        <div className="d-flex justify-content-between">
-                                            <strong>{comment.user.name}</strong>
-                                            <small className="text-muted">{ new Date(+comment.createdAt).toLocaleString() }</small>
+                                        <div className="d-flex justify-content-between align-items-center mb-1">
+                                            <Link to={`/users/${comment.user.id}`} className="fw-bold text-decoration-none">
+                                                {comment.user.name}
+                                            </Link>
+                                            <small className="text-muted">
+                                                {new Date(+comment.createdAt).toLocaleString()}
+                                            </small>
                                         </div>
-                                        <div>{ comment.content }</div>
+                                        <div className="markdown-body mt-1">
+                                            <ReactMarkdown
+                                                remarkPlugins={[remarkGfm]}
+                                                components={{
+                                                    a: (props) => (
+                                                        <a {...props} target="_blank" rel="noopener noreferrer" className="text-primary" />
+                                                    ),
+                                                    code: ({ node, ...props }) => (
+                                                        <code className="bg-light p-1 rounded text-danger" {...props} />
+                                                    ),
+                                                }}
+                                            >
+                                                {comment.content}
+                                            </ReactMarkdown>
+                                        </div>
                                     </ListGroup.Item>
                                 )) }
                             </ListGroup>
