@@ -1,22 +1,23 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
-import { Modal, Button, Spinner, Alert, Tabs, Tab, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { GET_INVENTORY, UPDATE_INVENTORY_NEW, GET_ITEMS, GET_COMMENTS, } from '../../graphql/queries';
+import { Modal, Button, Spinner, Alert, Tabs, Tab } from 'react-bootstrap';
+import { GET_INVENTORY, UPDATE_INVENTORY_NEW, GET_ITEMS } from '../../graphql/queries';
 import FormValidation from '../FormValidator/FormValidator';
 import InventoryDetailsTab from './InventoryTabs/InventoryDetailsTab';
 import CustomIdTab from './InventoryTabs/CustomIdTab';
 import FieldsTab from './InventoryTabs/FieldsTab';
 import AccessTab from "./InventoryTabs/AccessTab";
-import ChatTab from "../ChatTab/ChatTab";
+import ItemsTab from './InventoryTabs/ItemsTab'
+import DiscussionTab from "./InventoryTabs/DiscussionTab";
 import StatsTab from "./InventoryTabs/StatsTab";
-import RecordsList from '../RecordsList/RecordsList';
-import { initialStateInventory } from '../../utils/constants';
+import { initialStateInventory, titleInfoTooltip, } from '../../utils/constants';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import { InventorySchema } from '../../utils/validationSchema';
 
 
-function InventoryView({
+export default function Inventory({
     isOpen,
+    onOpenTooltip,
     categories,
     loadTags,
     resultTags,
@@ -35,14 +36,14 @@ function InventoryView({
     const [version, setVersion] = useState();
     const [activeTab, setActiveTab] = useState('details');
 
-    const [loadInventory, { data: dataInventory, loading: loadingInventory, error: errorInventory, resetInventory }] = useLazyQuery(GET_INVENTORY);
-    const [loadItems, { data: dataItems, loading: loadingItems, error: errorItems, reset: resetItems }] = useLazyQuery(GET_ITEMS);
-    const [loadChat, { data: dataChat, loading: loadingChat, error: errorChat, reset: resetChat }] = useLazyQuery(GET_COMMENTS);
-    const [updateInventor] = useMutation(UPDATE_INVENTORY_NEW);
+    const [loadInventory, { data, loading, error, reset }] = useLazyQuery(GET_INVENTORY);
+    const [updateInventory] = useMutation(UPDATE_INVENTORY_NEW, {
+            refetchQueries: [{ query: GET_ITEMS, variables: { inventoryId: inventoryId } }],
+            awaitRefetchQueries: true,
+        });
     
-    const inventoryData = dataInventory?.inventory || {}
-    const itemsData = dataItems?.items || []
-    
+    const inventoryData = data?.inventory || {}
+
     useEffect(() => {
         if (inventoryId) {
             loadInventory({ variables: { id: inventoryId } })
@@ -55,33 +56,24 @@ function InventoryView({
                 owner: {id: currentUser.id, name: currentUser.name} 
             })
         }
-        //if (['items', 'chat'].includes(activeTab)) loadInventory({ variables: { inventoryId: inventoryId } })
-        
-    }, [isOpen, loadingInventory, inventoryId]);
+    }, [isOpen, data, inventoryId]);
 
-    useEffect(() => {
-        if (activeTab === 'items' && inventoryId) loadItems({ variables: { inventoryId: inventoryId } })
-    }, [activeTab, loadingItems]);
-
-    useEffect(() => {
-        if (activeTab === 'chat' && inventoryId) loadItems({ variables: { inventoryId: inventoryId } })
-    }, [activeTab, loadingItems]);
-
-    const updateInitialInventory = (itemData) => {
+    const updateInitialInventory = (inventoryData) => {
         const updated = { ...inventory };
         for (let key in inventoryData) {
-            if (key === 'createdAt' || key === 'updatedAt') updated[key] = new Date(+itemData[key]).toLocaleString();
-            else if (key === 'version') setVersion(itemData[key]);
-            else updated[key] = itemData[key];
+            if (key === 'createdAt' || key === 'updatedAt') updated[key] = new Date(+inventoryData[key]).toLocaleString();
+            else if (key === 'version') setVersion(inventoryData[key]);
+            else updated[key] = inventoryData[key];
         }
         setInventory(updated);
     };
     
-    const handlerChangeInventory = ((name, value) => setInventory(prev => ({ ...prev, [name]: value, })));
+    const handlerChangeInventory = ((name, value) => {
+        setInventory(prev => ({ ...prev, [name]: value, }))});
 
     const handleCloseView = () => {
         handlerCloseView();
-        resetInventory?.();
+        reset?.();
         setInventory(initialStateInventory);
         setActiveTab('details');
     }
@@ -98,7 +90,6 @@ function InventoryView({
 
     const handleCreateInventory = () => {
         const { createdAt, updatedAt, ...newInventory } = inventory;
-        console.log(newInventory);
         handlerCreateInventory({
             ...newInventory,
             tags: inventory.tags?.map((tag) => ({
@@ -118,20 +109,18 @@ function InventoryView({
     }
     
     const handleUpdateInventory = async() => {
-        const { createdAt, updatedAt, ...updateInventory } = inventory;
-        //console.log(inventory)
-        //console.log(updateInventory)
+        const { createdAt, updatedAt, ...updatedInventory } = inventory;
         try {
-            const { data } = await updateInventor({
+            const { data } = await updateInventory({
                 variables: { 
-                    id: updateInventory.id,
+                    id: updatedInventory.id,
                     expectedVersion: version,
                     input: {
-                        ...updateInventory,
-                        tags: updateInventory.tags?.map((tag) => ({
+                        ...updatedInventory,
+                        tags: updatedInventory.tags?.map((tag) => ({
                             id: tag.id, name: tag.name,
                         })),
-                        fields: updateInventory.fields.map((field) => ({
+                        fields: updatedInventory.fields.map((field) => ({
                             id: field.id, 
                             title: field.title, 
                             type: field.type,
@@ -146,7 +135,8 @@ function InventoryView({
             });
             setVersion(data.updateInventory.version)
         } catch (e) {
-
+            console.log(e);
+            onOpenTooltip(titleInfoTooltip.ERROR, e.message)
         }
     }
 
@@ -170,7 +160,7 @@ function InventoryView({
                     <Modal.Header closeButton>
                         <Modal.Title>{inventory?.title}</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body className={(loadingInventory || errorInventory) && "align-self-center"}>
+                    <Modal.Body className={(loading || error) && "align-self-center"}>
                         <Tabs
                             id='inventory-tabs'
                             className="mb-3"
@@ -179,13 +169,13 @@ function InventoryView({
                             fill
                         >
                             <Tab eventKey='details' title='Details'>
-                                {loadingInventory
+                                {loading
                                     ? (<div className="d-flex justify-content-center align-items-center">
                                         <Spinner animation="border" className="align-self-center"/>
                                     </div>)
-                                    : errorInventory
+                                    : error
                                         ? (<div className="d-flex justify-content-center align-items-center">
-                                            <Alert variant="danger">{errorInventory.message}</Alert>
+                                            <Alert variant="danger">{error.message}</Alert>
                                             </div>)
                                         : <InventoryDetailsTab
                                             categories={categories}
@@ -201,83 +191,68 @@ function InventoryView({
                                         />}
                             </Tab>
                             <Tab eventKey="customId" title="Custom ID">
-                                {loadingInventory
+                                {loading
                                     ? (<div className="d-flex justify-content-center align-items-center">
                                         <Spinner animation="border" className="align-self-center"/>
                                     </div>)
-                                    : errorInventory
+                                    : error
                                         ? (<div className="d-flex justify-content-center align-items-center">
-                                            <Alert variant="danger">{errorInventory.message}</Alert>
+                                            <Alert variant="danger">{error.message}</Alert>
                                             </div>)
                                         : <CustomIdTab
                                             customIdFormat={inventory?.customIdFormat}
                                             handlerChangeCustomIdFormat={handlerChangeInventory}
-                                        /> }
+                                            loading={loading}
+                                            error={error}
+                                        />}
                             </Tab>
                             <Tab eventKey="fields" title="Fields">
-                                {loadingInventory
+                                {loading
                                     ? (<div className="d-flex justify-content-center align-items-center">
                                         <Spinner animation="border" className="align-self-center"/>
                                     </div>)
-                                    : errorInventory
+                                    : error
                                         ? (<div className="d-flex justify-content-center align-items-center">
-                                            <Alert variant="danger">{errorInventory.message}</Alert>
+                                            <Alert variant="danger">{error.message}</Alert>
                                             </div>)
-                                        : <FieldsTab
+                                        :(<FieldsTab
                                             itemFields={inventory.fields}
                                             handlerChangeFields={handlerChangeInventory}
                                             onShowToast={onShowToast}
-                                        /> }
+                                            loading={loading}
+                                            error={error}
+                                        />)}
                             </Tab>
                             <Tab eventKey="access" title="Access">
-                                {loadingInventory
+                                {loading
                                     ? <Spinner animation="border" className="align-self-center"/>
-                                    : errorInventory
-                                        ? <Alert variant="danger" className="align-self-center">{errorInventory.message}</Alert>
+                                    : error
+                                        ? <Alert variant="danger" className="align-self-center">{error.message}</Alert>
                                         : <AccessTab
                                             inventory={inventory}
                                             handlerChangeAllowedUsers={handlerChangeInventory}
                                         /> }
                             </Tab>
-                            <Tab eventKey="items" title="Items">
-                                {loadingItems
-                                    ? (<div className="d-flex justify-content-center align-items-center">
-                                        <Spinner animation="border" className="align-self-center"/>
-                                    </div>)
-                                    : errorItems
-                                        ? (<div className="d-flex justify-content-center align-items-center">
-                                            <Alert variant="danger">{errorItems.message}</Alert>
-                                            </div>)
-                                        : <RecordsList type='Item'
-                                            records={itemsData}
-                                            handlerAddRecord={handlerAddRecord}
-                                            handlerClickRecord={handlerClickRecord}
-                                            handlerDeleteRecords={handlerDeleteRecords} /> }
+                            <Tab eventKey="items" title="Items" mountOnEnter>
+                                <ItemsTab
+                                    inventoryId={inventory.id}
+                                    handlerClickRecord={handlerClickRecord}
+                                    handlerAddRecord={handlerAddRecord}
+                                    handlerDeleteRecords={handlerDeleteRecords}
+                                    itemFields={inventory.fields}
+                                />
                             </Tab>
-                            <Tab eventKey="chat" title="Chat">
-                                {loadingChat
-                                    ? (<div className="d-flex justify-content-center align-items-center">
-                                        <Spinner animation="border" className="align-self-center"/>
-                                    </div>)
-                                    : errorChat
-                                        ? (<div className="d-flex justify-content-center align-items-center">
-                                            <Alert variant="danger">{errorInventory.message}</Alert>
-                                            </div>)
-                                        : <ChatTab
-                                            comments={inventory.comments}
-                                            onAddComment={async (text) => {
-                                                console.log("Добавить комментарий:", text);
-                                            }}
-                                        /> }
+                            <Tab eventKey="discussion" title="Discussion" mountOnEnter>
+                                <DiscussionTab inventoryId={inventory.id} onShowToast={onShowToast}/>
                             </Tab>
                             <Tab eventKey="stats" title="Stats">
-                                {loadingInventory
+                                {loading
                                     ? (<div className="d-flex justify-content-center align-items-center">
                                         <Spinner animation="border" className="align-self-center"/>
                                     </div>)
-                                    : errorInventory
+                                    : error
                                         ? (<div className="d-flex justify-content-center align-items-center">
-                                            <Alert variant="danger">{errorInventory.message}</Alert>
+                                            <Alert variant="danger">{error.message}</Alert>
                                             </div>)
                                         : <StatsTab inventory={inventory}
                                         /> }
@@ -293,5 +268,3 @@ function InventoryView({
         </Modal>
     );
 }
-
-export default InventoryView;

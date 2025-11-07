@@ -37,8 +37,6 @@ export const IdGenerator = {
         if (!def || typeof def.gen !== "function") return "";
 
         const main = def.gen(part, part.value) || "";
-        //console.log(main);
-        //console.log(def);
         const sep = part.separator || "";
         const pos = part.position || "prefix";
 
@@ -53,3 +51,12 @@ export const hasOrderChanged = (prev, current) => {
     if (prev.length !== current.length) return true;
     return prev.some((item, i) => item.order !== current[i].order);
 }
+
+export const parseApolloError = (error) => {
+    if (!error) return 'Unknown error';
+    if (error.graphQLErrors?.length)
+        return error.graphQLErrors.map(e => e.message).join('\n');
+    if (error.networkError)
+        return error.networkError.message;
+    return error.message || 'Unknown error';
+};

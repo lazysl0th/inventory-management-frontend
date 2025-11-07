@@ -29,62 +29,38 @@ const wsLink = new GraphQLWsLink(
     })
 );
 
+const splitLink = ApolloLink.split(
+    ({ query }) => {
+        const def = getMainDefinition(query);
+        return (def.kind === "OperationDefinition" && def.operation === "subscription");
+    },
+    wsLink,
+    ApolloLink.from([authLink, httpLink])
+);
+
+const cache = new InMemoryCache({
+    typePolicies: {
+        Inventory: {
+            keyFields: ['id'],
+            fields: {
+                fields: { keyArgs: false, merge: false },
+                allowedUsers: { keyArgs: false, merge: false },
+                tags: { keyArgs: false, merge: false },
+                owner: { merge: false },
+                customIdFormat: { merge: false },
+            },
+        },
+        InventoryField: {
+            keyFields: false,
+        },
+        User: { keyFields: ['id'] },
+        Tag: { keyFields: ['id'] },
+    },
+})
+
 const apolloClient = new ApolloClient({
-    link: ApolloLink.from([authLink, removeTypenameLink, httpLink]),
-    cache: new InMemoryCache({
-        typePolicies:{
-            Inventory: {
-                keyFields: ['id'],
-                fields: {
-                    owner: {
-                        merge(existing, incoming) {
-                            return { ...existing, ...incoming };
-                        },
-                    },
-                    fields: {
-                        merge(existing = [], incoming = []) {
-                            const byKey = new Map();
-                            [...existing, ...incoming].forEach((field) => {
-                                const key = field?.id ?? `__title:${field?.title}`;
-                                byKey.set(key, { ...byKey.get(key), ...field });
-                                return Array.from(byKey.values()).sort((a, b) => (a?.order ?? 0) - (b?.order ?? 0));
-                            })
-                        }
-                    },
-                    customIdFormat: {
-                        merge(existing = {}, incoming = {}) {
-                            if (!existing) return incoming;
-                            const mergedParts = (() => {
-                                const existingParts = existing.parts ?? [];
-                                const incomingParts = incoming.parts ?? [];
-                                const byGuid = new Map();
-                                [...existingParts, ...incomingParts].forEach((part) => {
-                                    const key = part?.guid ?? `${part?.type}-${part?.order}`;
-                                    byGuid.set(key, { ...byGuid.get(key), ...part });
-                                });
-                                return Array.from(byGuid.values()).sort((a, b) => (a?.order ?? 0) - (b?.order ?? 0));
-                            })();
-                            return {
-                                ...existing,
-                                ...incoming,
-                                parts: mergedParts,
-                            };
-                        },
-                    },
-                    allowedUsers: {
-                        merge(existing = [], incoming = []) {
-                            const byId = new Map();
-                            [...existing, ...incoming].forEach((user) => byId.set(user.id, { ...byId.get(user.id), ...user }));
-                            return Array.from(byId.values()).sort((a, b) => a.name?.localeCompare(b.name));
-                        },
-                    },
-                }
-            },
-            User: {
-                keyFields: ['id'],
-            },
-        }
-    }),
+    link: ApolloLink.from([removeTypenameLink, splitLink]),
+    cache,
     defaultOptions: {
         watchQuery: {
             fetchPolicy: "cache-and-network",

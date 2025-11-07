@@ -29,6 +29,7 @@ export default function RecordsList({
     handlerAddRecord,
     handlerChangeUsersStatus,
     handlerChangeAccessUsers,
+    fields
 }) {
     const [rowSelection, setRowSelection] = useState({});
     const [editingCell, setEditingCell] = useState(null);
@@ -114,28 +115,13 @@ export default function RecordsList({
         return row.values.find((v) => v.field.id === col.id)?.[config.fieldValueKey];
     };
 
-    const collectColumn = (records, config) => {
-        //console.log(records);
-        /*const column = records
-            ?.find((record) => record.values.length > 0)?.values
-            .filter((value) => !value.field.isDeleted && value.field.showInTable)
-            .toSorted((a, b) => a.order - b.order)
-            ?.map((value) => ({
-                id: value.field[config.fieldIdKey],
-                header: value.field[config.fieldTitleKey],
-                order: value.field.order
-        })).sort((a, b) => a.order - b.order);
-        console.log(column);
-        return [{id: crypto.randomUUID(), header: 'Custom ID', order: 0}, column];*/
-
-        const values = records?.find(r => r.values.length > 0)?.values ?? [];
-
-        const columns = values.reduce((acc, { field, order }) => {
+    const collectColumn = (fields, config) => {
+        const columns = fields.reduce((acc, field) => {
             if (!field.isDeleted && field.showInTable) {
             acc.push({
-                id: field[config.fieldIdKey],
+                id: field[config.fieldIdKey] ?? field.guid,
                 header: field[config.fieldTitleKey],
-                order: order++
+                order: field.order+1
             });
             }
             return acc;
@@ -147,7 +133,7 @@ export default function RecordsList({
         return columns.sort((a, b) => a.order - b.order);
     };
 
-    const buildColumns = (records, type) => {
+    const buildColumns = (columns, type) => {
         const columnSchema = Array.isArray(RECORDS_LIST_HEADS[type])
             ? {
                 columns: RECORDS_LIST_HEADS[type],
@@ -155,10 +141,10 @@ export default function RecordsList({
                     col.accessor ? col.accessor(row[col.id], row) : row[col.id]
             }
             : {
-                columns: collectColumn(records, RECORDS_LIST_HEADS[type]),
+                columns: collectColumn(columns, RECORDS_LIST_HEADS[type]),
                 accessorFn: (row, col) => getRowValue(row, col, RECORDS_LIST_HEADS[type])
             };
-        return columnSchema?.columns?.map((column) =>
+        return columnSchema?.columns?.map((column) => 
             columnHelper.accessor(
                 (row) => columnSchema.accessorFn(row, column, RECORDS_LIST_HEADS[type]), {
                     id: column.id,
@@ -191,7 +177,7 @@ export default function RecordsList({
 
     const getColumnsByType = (type) => {
         if (!RECORDS_LIST_HEADS[type]) return [];
-        const columns = buildColumns(records, type) ?? [];
+        const columns = buildColumns(fields, type) ?? [];
         const checkboxColumn = createCheckboxColumn();
         return [checkboxColumn, ...columns];
     };
@@ -200,7 +186,7 @@ export default function RecordsList({
 
     const handelFilterChange = (e) => setGlobalFilter(e.target.value);
 
-    const columns = useMemo(() => getColumnsByType(type) || [], [type, editingCell]);
+    const columns = useMemo(() => getColumnsByType(type) || [], [type, editingCell, fields]);
 
     const table = useReactTable({
         data: useMemo(() => records || [], [records]),

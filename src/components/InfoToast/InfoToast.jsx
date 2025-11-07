@@ -3,7 +3,7 @@ import { Toast, ToastContainer } from "react-bootstrap";
 
 export default function InfoToast({ isShow, onClose, position, message}) {
     return (
-        <ToastContainer position={position} className="p-3">
+        <ToastContainer position={position} className="p-3 position-fixed">
             <Toast
                 show={isShow}
                 onClose={onClose}

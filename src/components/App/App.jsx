@@ -22,8 +22,8 @@ import Login from '../Login/Login';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import Profile from '../Profile/Profile';
 import AdminPage from '../AdminPage/AdminPage'
-import InventoryView from '../InventoryView/InventoryView';
-import ItemView from '../ItemView/ItemView';
+import Inventory from '../Inventory/Inventory';
+import Item from '../Item/Item';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import InfoToast from '../InfoToast/InfoToast';
 import PageDeleteUserData from '../PageDeleteUserData/PageDeleteUserData';
@@ -181,7 +181,7 @@ function App() {
             }
         } catch(e) {
             console.log(e)
-            openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORD.ERROR('Item'));
+            openInfoTooltip(titleInfoTooltip.ERROR, e);
 
         }
     }
@@ -198,7 +198,6 @@ function App() {
     }
 
     const hendlerDeleteItems = async (rowSelection) => {
-        console.log(rowSelection);
         try {
             const selectedIds = Object.keys(rowSelection).map(Number);
             await deleteItems({ variables: { ids: selectedIds } });
@@ -324,8 +323,9 @@ function App() {
                 <Route path="*" element={<PageNotFound />} />
             </Routes>
                 <LiveBlock inventoryId={selectedInventoryId}>
-                    <InventoryView 
+                    <Inventory 
                         isOpen={isInventoryViewOpen}
+                        onOpenTooltip={openInfoTooltip}
                         categories={categories}
                         loadTags={loadTags}
                         resultTags={resultTags}
@@ -338,7 +338,7 @@ function App() {
                         onShowToast={showInfoToats}
                     />
                 </LiveBlock>
-            <ItemView
+            <Item
                 isOpen={isItemViewOpen}
                 inventoryId={selectedInventoryId}
                 itemId={selectedItemId}

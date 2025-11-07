@@ -147,19 +147,6 @@ export const GET_ITEMS = gql`
     ${ITEM_BASE_FRAGMENT}
 `;
 
-export const GET_COMMENTS = gql`
-    query GetItems($inventoryId: Int!) {
-        items(inventoryId: $inventoryId) {
-            ...ItemBase
-        }
-        inventory(id: $inventoryId) {
-            ...InventoryBase
-        }
-    }
-    ${ITEM_BASE_FRAGMENT}
-    ${INVENTORY_BASE_FRAGMENT}
-`;
-
 export const GET_ITEM = gql`
     query GetItem($id: Int!) {
         item(id: $id) {
@@ -310,6 +297,7 @@ export const UPDATE_INVENTORY_NEW = gql`
                 id
                 title
                 order
+                showInTable
             }
         }
     }
@@ -332,6 +320,48 @@ export const TOGGLE_LIKE = gql`
             likesCount
             likedByMe
             __typename
+        }
+    }
+`;
+
+export const GET_COMMENTS = gql`
+    query GetComments($inventoryId: Int!) {
+        comments(inventoryId: $inventoryId) {
+            id
+            content
+            createdAt
+            user {
+                id
+                name
+            }
+        }
+    }
+`;
+
+export const CREATE_COMMENT = gql`
+    mutation CreateComment($input: CreateCommentInput!) {
+        createComment(input: $input) {
+            id
+            content
+            createdAt
+            user {
+                id
+                name
+            }
+        }
+    }
+`;
+
+export const COMMENT_ADDED = gql`
+    subscription OnCommentAdded($inventoryId: Int!) {
+        commentAdded(inventoryId: $inventoryId) {
+            id
+            content
+            createdAt
+            user {
+                id
+                name
+            }
         }
     }
 `;

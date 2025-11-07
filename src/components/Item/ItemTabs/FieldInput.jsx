@@ -3,7 +3,6 @@ import { Form } from "react-bootstrap";
 
 export default function FieldInput({ field, value, handlerChangeFieldInput }) {
     const [preview, setPreview] = useState(null);
-    //console.log(field);
 
     const handleChange = (e) => {
         const { name, value, checked} = e.target

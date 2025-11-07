@@ -1,13 +1,12 @@
 import { useContext, useState, useEffect } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { Modal, Button, Spinner, Alert, Tabs, Tab, } from 'react-bootstrap';
-import ItemDetailsTab from './ItemTabs/ItemDetailTab/ItemDetailTabs';
-import ChatTab from '../ChatTab/ChatTab';
+import ItemDetailsTab from './ItemTabs/ItemDetailTabs';
 import { initialStateItem } from '../../utils/constants';
-import { GET_ITEM, GET_INVENTORY_FIELDS, UPDATE_ITEM, TOGGLE_LIKE } from '../../graphql/queries';
+import { GET_ITEM, GET_INVENTORY_FIELDS, UPDATE_ITEM } from '../../graphql/queries';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 
-function ItemView({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreateItem, onShowToast }) {
+export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreateItem, onShowToast }) {
     const currentUser = useContext(CurrentUserContext);
     const [item, setItem] = useState(initialStateItem)
     const [version, setVersion] = useState();
@@ -24,10 +23,6 @@ function ItemView({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreate
         if (itemId) {
             loadItem({ variables: { id: itemId } })
             updateInitialItem(itemData);
-            //if (['chat'].includes(activeInventoryTab)) {
-                //loadItem({ variables: { [`${selectedItem.__typename.toLowerCase()}Id`]: selectedItem.id } })
-            //}
-            //else loadItem({ variables: { id: selectedItem.id } })
         } else {
             if (inventoryId) loadInventoryFields({ variables: { id: inventoryId } });
             updateInitialItem({
@@ -121,22 +116,6 @@ function ItemView({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreate
                                     onShowToast={onShowToast}
                                 /> }
                     </Tab>
-                    <Tab eventKey="chat" title="Chat">
-                        {loadingItem
-                            ? <Spinner animation="border" className="align-self-center"/>
-                            : error
-                                ? (<div className="d-flex justify-content-center align-items-center">
-                                        <Alert variant="danger">{error.message}</Alert>
-                                    </div>)
-                                : <ChatTab
-                                    comments={[]}
-                                    onAddComment={async (text) => {
-                                        // 🔹 Здесь потом будет GraphQL mutation
-                                        console.log("Добавить комментарий:", text);
-                                    }}
-                                /> }
-                    </Tab>
-
                 </Tabs>
             </Modal.Body>
             <Modal.Footer>
@@ -145,5 +124,3 @@ function ItemView({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreate
         </Modal>
     );
 }
-
-export default ItemView;

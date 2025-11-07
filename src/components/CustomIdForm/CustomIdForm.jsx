@@ -17,7 +17,6 @@ export default function CustomIdForm({ part, index, total, onUpdate, onMove }) {
 
 
     const handleChange = (partId, index) => (e) => {
-        console.log(part)
         const { name, value } = e.currentTarget
         switch (name) {
             case "type":

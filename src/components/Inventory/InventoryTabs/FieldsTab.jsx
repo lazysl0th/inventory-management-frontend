@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { Alert } from "react-bootstrap";
 import DndForm from "../../DndForm/DndForm";
 import DndFormField from "../../DndForm/DndFormField/DndFormField";
 import ItemFieldsForm from '../../ItemFieldsForm/ItemFieldsForm';
-import InfoToast from "../../InfoToast/InfoToast";
 import { hasOrderChanged } from "../../../utils/utils";
 import { FIELD_TYPES } from '../../../utils/constants'
 

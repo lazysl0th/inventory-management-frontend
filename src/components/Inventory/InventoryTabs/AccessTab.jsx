@@ -1,4 +1,4 @@
-import { Col, Form, Alert, Card } from "react-bootstrap";
+import { Form, Alert, Card } from "react-bootstrap";
 import RecordsList from "../../RecordsList/RecordsList";
 import { nameList } from "../../../utils/constants";
 
@@ -36,7 +36,6 @@ export default function AccessTab({ inventory, handlerChangeAllowedUsers }) {
                     </div>
                 </Card.Body>
             </Card>
-
             {false
                 ? (<Alert variant="light" className="border">No users have been granted write access.</Alert>)
                 : ( <RecordsList

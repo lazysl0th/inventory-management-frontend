@@ -36,7 +36,6 @@ export default function DndForm({
     const handleMove = useCallback((from, to) => {
         if (!onChange) return;
         if (to < 0 || to >= fields.length) return;
-        console.log(arrayMove(fields, from, to));
         onChange(arrayMove(fields, from, to));
     }, [fields, onChange]);
 

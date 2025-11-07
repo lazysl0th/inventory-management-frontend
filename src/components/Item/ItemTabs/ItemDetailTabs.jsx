@@ -2,9 +2,9 @@ import { useContext } from "react";
 import { useMutation } from '@apollo/client/react';
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { FaHeart } from "react-icons/fa";
-import FieldInput from './FileInput';
-import { TOGGLE_LIKE } from '../../../../graphql/queries';
-import { CurrentUserContext } from '../../../../context/CurrentUserContext';
+import FieldInput from './FieldInput';
+import { TOGGLE_LIKE } from '../../../graphql/queries';
+import { CurrentUserContext } from '../../../context/CurrentUserContext';
 
 export default function ItemDetailsTab({ item, handlerChangeItem, onShowToast }) {
     const currentUser = useContext(CurrentUserContext);
@@ -35,7 +35,7 @@ export default function ItemDetailsTab({ item, handlerChangeItem, onShowToast })
             const updatedLike = { __typename: data.toggleLikeItem.__typename, ...data.toggleLikeItem };
             for (let key in updatedLike) handlerChangeItem(key, updatedLike[key]);
         } catch (e) {
-            console.log(e)
+            console.log(e);
         }
     }
 
