@@ -1,9 +1,8 @@
-import { useContext, useState, useEffect, } from 'react';
+import { useContext, useRef } from 'react';
 import { useLazyQuery, } from '@apollo/client/react';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { Form, Row, Col, Image } from "react-bootstrap";
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
-import { uploadImage } from '../../../utils/imageApi';
 import { SEARCH_TAGS } from '../../../graphql/queries';
 
 export default function InventoryDetailsTab({
@@ -16,10 +15,13 @@ export default function InventoryDetailsTab({
     formikBlur,
     formikTouched,
     handlerChangeDetails,
-    readOnly
+    onUploadImage,
+    readOnly,
+    onShowToast
 }) {
     const currentUser = useContext(CurrentUserContext);
     const [searchTags] = useLazyQuery(SEARCH_TAGS, { fetchPolicy: "no-cache" });
+    const imageRef = useRef(null);
 
     const loadOptions = async (inputValue, callback) => {
         const { data } = await searchTags({ variables: { searchQuery: inputValue } });
@@ -33,29 +35,22 @@ export default function InventoryDetailsTab({
         handlerChangeDetails(e.target.name, e.target.value);
     };
 
-    const handleChange = (options) => {
-        if (options?.map) handlerChangeDetails('tags', (options).map((o) => ({ id: o.value, name: o.label })));
-        else if (options.target.files?.[0]) handlerChangeImage(options);
-        else handleFormikChange(options);
+    const handleChange = (param) => {
+        if (param?.map) handlerChangeDetails('tags', (param).map((o) => ({ id: o.value, name: o.label })));
+        else if (param.target.files?.[0]) handlerChangeImage(param);
+        else handleFormikChange(param);
     }
 
     const handlerChangeImage = async (e) => {
         if (!e.target.files[0]) return;
-        const image = await handleUploadImage(e.target.files[0]);
-        handlerChangeDetails(e.target.name, image.url);
-    };
-
-    const handleUploadImage = (file) => {
-        const formData = new FormData();
-        formData.append("file", file);
         try {
-            const data = uploadImage(formData);
-            console.log("Ответ сервера:", data);
-            return data;
+            const image = await onUploadImage(e.target.files[0]);
+            handlerChangeDetails(e.target.name, image.url);
         } catch (e) {
-            console.log("Ошибка при загрузке:", e);
+            imageRef.current.value = '';
+            onShowToast('Во время загрузки изображения произошла ошибка', 'bottom-center');
         }
-    }
+    };
 
     const handleAddTag = (inputValue) => {
         const name = inputValue.trim();
@@ -145,6 +140,7 @@ export default function InventoryDetailsTab({
                                 >No image</div>)}
 
                             <Form.Control
+                                ref={imageRef}
                                 type="file"
                                 name="image"
                                 accept="image/*"

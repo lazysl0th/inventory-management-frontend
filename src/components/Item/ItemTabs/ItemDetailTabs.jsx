@@ -6,18 +6,21 @@ import FieldInput from './FieldInput';
 import { TOGGLE_LIKE } from '../../../graphql/queries';
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
 
-export default function ItemDetailsTab({ item, handlerChangeItem, onShowToast }) {
+export default function ItemDetailsTab({ item, handlerChangeItem, onShowToast, onUploadImage }) {
     const currentUser = useContext(CurrentUserContext);
     const [toggleLike, { loadingToggleLike }] = useMutation(TOGGLE_LIKE);
 
     const getKey = (value) => value.guid ?? value.id;
 
     const handlerChange = (id, changes) => {
-        const updated = item.values.map(value => getKey(value) === id ? { ...value, ...changes } : value);
-        handlerChangeItem('values', updated)
+        if (id?.target) {
+            handlerChangeItem(id.target.name, id.target.value);
+        } else {
+            const updated = item.values.map(value => getKey(value) === id ? { ...value, ...changes } : value);
+            handlerChangeItem('values', updated)
+        }
     }
-
-
+    
     const handleLikeItem = async () => {
         try {
             const { data } = await toggleLike({
@@ -39,7 +42,7 @@ export default function ItemDetailsTab({ item, handlerChangeItem, onShowToast })
         }
     }
 
-    const handleClick = () => (currentUser.loggedIn ? handleLikeItem() : onShowToast('Нельзя', 'bottom-center'))
+    const handleClick = () => (currentUser.loggedIn && item.id ? handleLikeItem() : onShowToast('Нельзя', 'bottom-center'))
 
 
 
@@ -51,10 +54,10 @@ export default function ItemDetailsTab({ item, handlerChangeItem, onShowToast })
                         <Form.Label>ID</Form.Label>
                         <Form.Control
                             type="text"
-                            name="id"
-                            value={item?.customId}
-                            readOnly
-                            disabled
+                            name="customId"
+                            value={item?.customId }
+                            onChange={handlerChange}
+
                         />
                     </Form.Group>
                 </Col>
@@ -65,6 +68,8 @@ export default function ItemDetailsTab({ item, handlerChangeItem, onShowToast })
                             field={value.field}
                             value={{id: getKey(value), value: value.value}}
                             handlerChangeFieldInput={handlerChange}
+                            onUploadImage={onUploadImage}
+                            onShowToast={onShowToast}
                         />))}
                 </Col>
                 <Col xs={12}>

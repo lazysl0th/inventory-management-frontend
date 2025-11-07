@@ -6,7 +6,7 @@ import { initialStateItem } from '../../utils/constants';
 import { GET_ITEM, GET_INVENTORY_FIELDS, UPDATE_ITEM } from '../../graphql/queries';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 
-export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreateItem, onShowToast }) {
+export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreateItem, onShowToast, onUploadImage }) {
     const currentUser = useContext(CurrentUserContext);
     const [item, setItem] = useState(initialStateItem)
     const [version, setVersion] = useState();
@@ -114,6 +114,7 @@ export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, ha
                                     item={item}
                                     handlerChangeItem={handlerChangeItem}
                                     onShowToast={onShowToast}
+                                    onUploadImage={onUploadImage}
                                 /> }
                     </Tab>
                 </Tabs>

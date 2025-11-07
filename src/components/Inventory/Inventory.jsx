@@ -27,7 +27,8 @@ export default function Inventory({
     handlerCreateInventory,
     handlerAddRecord,
     handlerDeleteRecords,
-    onShowToast
+    onShowToast,
+    onUploadImage
 }) {
 
     const currentUser = useContext(CurrentUserContext);
@@ -78,8 +79,7 @@ export default function Inventory({
         setActiveTab('details');
     }
 
-    const handleImageFileSelect = (file) => {
-    };
+
 
     const validation = async () => {
         const errors = await formikRef.current.validateForm();
@@ -187,7 +187,8 @@ export default function Inventory({
                                             formikBlur={handleBlur}
                                             formikTouched={touched}
                                             handlerChangeDetails={handlerChangeInventory}
-                                            onImageFileSelect={handleImageFileSelect}
+                                            onUploadImage={onUploadImage}
+                                            onShowToast={onShowToast}
                                         />}
                             </Tab>
                             <Tab eventKey="customId" title="Custom ID">

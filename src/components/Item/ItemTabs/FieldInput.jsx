@@ -1,16 +1,28 @@
-import { useState } from "react";
-import { Form } from "react-bootstrap";
+import { useRef } from "react";
+import { Form, Image } from "react-bootstrap";
 
-export default function FieldInput({ field, value, handlerChangeFieldInput }) {
-    const [preview, setPreview] = useState(null);
+export default function FieldInput({ field, value, handlerChangeFieldInput, onShowToast, onUploadImage }) {
+    const imageRef = useRef(null);
 
-    const handleChange = (e) => {
-        const { name, value, checked} = e.target
-        const newValue = field.type === "BOOLEAN" 
-            ? checked : field.type === "NUMBER" 
-                ? (value === "" ? null : Number(value)) 
-                : value; 
+    const handleChange = async (e) => {
+        const { name, value, checked } = e.target
+        const newValue = field.type === "BOOLEAN"
+            ? checked : field.type === "FILE"
+                ? await handlerChangeImage(e.target) : field.type === "NUMBER" 
+                    ? (value === "" ? null : Number(value)) 
+                    : value; 
         handlerChangeFieldInput(isNaN(name) ? name : Number(name), { value: newValue });
+    };
+
+    const handlerChangeImage = async (target) => {
+        if (!target.files[0]) return;
+        try {
+            const image = await onUploadImage(target.files[0]);
+            return image.url;
+        } catch (e) {
+            imageRef.current.value = '';
+            onShowToast('Во время загрузки изображения произошла ошибка', 'bottom-center');
+        }
     };
 
     switch (field.type) {
@@ -48,22 +60,21 @@ export default function FieldInput({ field, value, handlerChangeFieldInput }) {
                 <Form.Group className="mb-1" controlId={field.id}>
                     <Form.Label>{field.title}</Form.Label>
                     <div className="d-flex flex-column gap-2">
-                        {preview ? (
-                            <Image
-                                ref={imageRef}
-                                src={preview}
-                                alt="Preview"
-                                thumbnail
-                                style={{ maxHeight: 100, objectFit: "cover" }}
-
-                            />
-                        ) : (
-                            <div
-                                className="border rounded d-flex align-items-center justify-content-center p-3 text-muted"
-                                style={{ height: 100 }}
-                            >No image</div>)}
+                        {value?.value
+                            ? (
+                                <Image
+                                    src={value.value}
+                                    alt="Preview"
+                                    thumbnail
+                                    style={{ maxHeight: 100, objectFit: "cover" }}
+                                />)
+                            : (<div
+                                    className="border rounded d-flex align-items-center justify-content-center p-3 text-muted"
+                                    style={{ height: 100 }}
+                                >No image</div>)}
                     </div>
                     <Form.Control
+                        ref={imageRef}
                         type="file"
                         placeholder="Enter file or image..."
                         name={value.id}

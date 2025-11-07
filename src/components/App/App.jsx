@@ -14,6 +14,7 @@ import {
     DELETE_ITEMS
 } from '../../graphql/queries';
 import { register, login, checkToken } from '../../utils/usersApi';
+import { uploadImage } from '../../utils/imageApi';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
 import SearchPage from '../SearchPage/SearchPage'
@@ -287,6 +288,13 @@ function App() {
             }
     }
 
+    const handlerUploadImage = (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        const data = uploadImage(formData);
+        return data;
+    }
+
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <Header onLog={handlerSignOut}/>
@@ -336,6 +344,7 @@ function App() {
                         handlerAddRecord={handlerAddRecord.Item}
                         handlerDeleteRecords={handlerDeleteRecords.Item}
                         onShowToast={showInfoToats}
+                        onUploadImage={handlerUploadImage}
                     />
                 </LiveBlock>
             <Item
@@ -344,7 +353,9 @@ function App() {
                 itemId={selectedItemId}
                 handlerCloseView={handlerCloseRecordView.Item}
                 handlerCreateItem={handlerCreateItem}
-                onShowToast={showInfoToats}/>
+                onShowToast={showInfoToats}
+                onUploadImage={handlerUploadImage}
+            />
             <InfoTooltip
                 isOpen={isInfoTooltipOpen}
                 onClose={handlerCloseInfoTooltip}
