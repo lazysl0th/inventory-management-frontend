@@ -8,7 +8,7 @@ const apiConfig = {
   })
 };
 
-const checkResponse = async (res) => {
+export const checkResponse = async (res) => {
     if (res.ok) return res.json();
     const e = await res.json();
     return Promise.reject(e);

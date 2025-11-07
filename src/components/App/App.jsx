@@ -164,7 +164,7 @@ function App() {
                 openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORD.ERROR('Inventory'));
             }
         } catch(e) {
-            console.log(e)
+            console.log(e);
             openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORD.ERROR('Inventory'));
 
         }
@@ -180,7 +180,7 @@ function App() {
                 openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORD.ERROR('Item'));
             }
         } catch(e) {
-            console.log(e)
+            console.log(e);
             openInfoTooltip(titleInfoTooltip.ERROR, e);
 
         }
@@ -223,7 +223,7 @@ function App() {
             }
         } catch (e) {
             setCurrentUser({ loggedIn: false });
-            console.log(e)
+            console.log(e);
         } finally {
             setIsVerifyCurrentUser(false);
         }

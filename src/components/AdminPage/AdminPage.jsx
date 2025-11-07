@@ -21,7 +21,7 @@ export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerCl
             setUsers(users);
             setIsLoading(false);
         } catch (e) {
-            console.log(e)
+            console.log(e);
         } finally {
             setIsLoading(false);
         }

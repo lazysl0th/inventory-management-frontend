@@ -3,6 +3,7 @@ import { useLazyQuery, } from '@apollo/client/react';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { Form, Row, Col, Image } from "react-bootstrap";
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
+import { uploadImage } from '../../../utils/imageApi';
 import { SEARCH_TAGS } from '../../../graphql/queries';
 
 export default function InventoryDetailsTab({
@@ -19,7 +20,6 @@ export default function InventoryDetailsTab({
 }) {
     const currentUser = useContext(CurrentUserContext);
     const [searchTags] = useLazyQuery(SEARCH_TAGS, { fetchPolicy: "no-cache" });
-    const [preview, setPreview] = useState(null);
 
     const loadOptions = async (inputValue, callback) => {
         const { data } = await searchTags({ variables: { searchQuery: inputValue } });
@@ -39,13 +39,23 @@ export default function InventoryDetailsTab({
         else handleFormikChange(options);
     }
 
-    const handlerChangeImage = (e) => {
+    const handlerChangeImage = async (e) => {
         if (!e.target.files[0]) return;
-        const reader = new FileReader();
-        reader.onloadend = () => setPreview(reader.result);
-        reader.readAsDataURL(e.target.files[0]);
-        handlerChangeDetails(e.target.name, e.target.files[0]);
+        const image = await handleUploadImage(e.target.files[0]);
+        handlerChangeDetails(e.target.name, image.url);
     };
+
+    const handleUploadImage = (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        try {
+            const data = uploadImage(formData);
+            console.log("Ответ сервера:", data);
+            return data;
+        } catch (e) {
+            console.log("Ошибка при загрузке:", e);
+        }
+    }
 
     const handleAddTag = (inputValue) => {
         const name = inputValue.trim();
@@ -57,16 +67,6 @@ export default function InventoryDetailsTab({
         };
         handlerChangeDetails('tags', [...inventoryTags || [], newTag]);
     };
-
-    const [localPreview, setLocalPreview] = useState(null);
-
-    useEffect(() => {
-        return () => {
-            if (localPreview && localPreview.startsWith("blob:")) {
-                URL.revokeObjectURL(localPreview);
-            }
-        };
-    }, [localPreview]);
 
     return (
         <Form>
@@ -130,10 +130,9 @@ export default function InventoryDetailsTab({
                     <Form.Group controlId="image">
                         <Form.Label>Image</Form.Label>
                         <div className="d-flex flex-column gap-2">
-                            {preview ? (
+                            {details?.image ? (
                                 <Image
-                                    ref={imageRef}
-                                    src={preview}
+                                    src={details.image}
                                     alt="Preview"
                                     thumbnail
                                     style={{ maxHeight: 160, objectFit: "cover" }}
