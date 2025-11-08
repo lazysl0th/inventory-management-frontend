@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import cryptoRandomString from "crypto-random-string";
+import { generateNBitRandomNumber } from './utils'
 
 export const initialStateInventory = {
     title: '',
@@ -160,7 +161,6 @@ export const PART_DEFINITIONS = {
         formatHelp: "Optional. Leave empty, value will be used as-is.",
         formats: null,
         gen: (part) => String(part.format ?? ""),
-        example: (part) => String(part.format ?? ""),
     },
 
     RANDOM20: {
@@ -170,22 +170,11 @@ export const PART_DEFINITIONS = {
         formats: [
             { value: "D6",  label: "Decimal D6 (000000)" },
             { value: "X5",  label: "Hex X5 (00000..fffff)" },
-            { value: "B20", label: "Binary B20" },
         ],
-        gen: (part) => {
-            const format = part.format || "D6";
-                if (format === "D6")  return cryptoRandomString({ length: 6, type: "numeric" });
-                if (format === "X5")  return cryptoRandomString({ length: 5, type: "hex" });
-                if (format === "B20") return cryptoRandomString({ length: 20, characters: "01" });
-                return cryptoRandomString({ length: 6, type: "numeric" });
+        gen: (part) => { 
+                if (part.format === "D6") return generateNBitRandomNumber(20);
+                if (part.format === "X5") return generateNBitRandomNumber(20).toString(16);
             },
-        example: (part) => {
-            const format = part.format || "D6";
-            if (format === "D6") return "025413";
-            if (format === "X5") return "a7e3a";
-            if (format === "B20") return "01001101100100101011";
-            return "025413";
-        },
     },
 
     RANDOM32: {
@@ -197,11 +186,9 @@ export const PART_DEFINITIONS = {
             { value: "X8",  label: "Hex X8 (00000000..ffffffff)" },
         ],
         gen: (part) => {
-            const format = part.format || "X8";
-            if (format === "D10") return cryptoRandomString({ length: 10, type: "numeric" });
-            return cryptoRandomString({ length: 8, type: "hex" });
+            if (part.format === "D10") return generateNBitRandomNumber(32);
+            if (part.format === "X8") return generateNBitRandomNumber(32).toString(16);
         },
-        example: (part) => (part.format === "D10" ? "3812405791" : "7af2c01b"),
     },
 
     RANDOM6: {
@@ -210,7 +197,6 @@ export const PART_DEFINITIONS = {
         formatHelp: "Fixed length decimal.",
         formats: [{ value: "D6", label: "Decimal D6 (000000)" }],
         gen: () => cryptoRandomString({ length: 6, type: "numeric" }),
-        example: () => "013245",
     },
 
     RANDOM9: {
@@ -219,7 +205,6 @@ export const PART_DEFINITIONS = {
         formatHelp: "Fixed length decimal.",
         formats: [{ value: "D9", label: "Decimal D9 (000000000)" }],
         gen: () => cryptoRandomString({ length: 9, type: "numeric" }),
-        example: () => "123456789",
     },
 
     GUID: {
@@ -227,11 +212,7 @@ export const PART_DEFINITIONS = {
         help: "Automatically generated UUID v4.",
         formatHelp: "No format is required.",
         formats: null,
-        gen: () =>
-            typeof crypto?.randomUUID === "function"
-                ? crypto.randomUUID()
-                : cryptoRandomString({ length: 32, type: "hex" }).replace(/^(.{8})(.{4})(.{4})(.{4})(.{12}).*$/, "$1-$2-$3-$4-$5"),
-        example: () => "91d2b6a0-f3c2-4f99-9245-fdb517b83af8",
+        gen: () => crypto.randomUUID()
     },
 
     DATETIME: {
@@ -246,7 +227,6 @@ export const PART_DEFINITIONS = {
             { value: "YYYYMMDD-HHmmss",label: "YYYYMMDD-HHmmss" },
         ],
         gen: (part) => dayjs().format(part.format || "YYYYMMDD"),
-        example: (part) => dayjs("2025-01-23T13:45:00").format(part.format || "YYYYMMDD"),
     },
 
     SEQUENCE: {
@@ -262,11 +242,7 @@ export const PART_DEFINITIONS = {
         gen: (part, value = 0) => {
             const len = parseInt(part.format.slice(1), 10);
             return String(value).length < len ? String(value).padStart(len, '0') : value;
-        },
-        example: (part) => {
-            const len = parseInt(part.format.slice(1), 10);
-            return String(value).length < len ? String(value).padStart(len, '0') : value;
-        },
+        }
     },
 };
 

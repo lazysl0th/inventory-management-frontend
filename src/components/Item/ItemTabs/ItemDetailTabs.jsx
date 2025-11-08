@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { useMutation } from '@apollo/client/react';
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { FaHeart } from "react-icons/fa";
@@ -6,21 +6,17 @@ import FieldInput from './FieldInput';
 import { TOGGLE_LIKE } from '../../../graphql/queries';
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
 
-export default function ItemDetailsTab({ item, handlerChangeItem, onShowToast, onUploadImage }) {
+export default function ItemDetailsTab({ item, customIdFormat, handlerChangeItem, onShowToast, onUploadImage }) {
     const currentUser = useContext(CurrentUserContext);
     const [toggleLike, { loadingToggleLike }] = useMutation(TOGGLE_LIKE);
 
     const getKey = (value) => value.guid ?? value.id;
 
     const handlerChange = (id, changes) => {
-        if (id?.target) {
-            handlerChangeItem(id.target.name, id.target.value);
-        } else {
-            const updated = item.values.map(value => getKey(value) === id ? { ...value, ...changes } : value);
-            handlerChangeItem('values', updated)
-        }
+        const updated = item.values.map(value => getKey(value) === id ? { ...value, ...changes } : value);
+        handlerChangeItem('values', updated)
     }
-    
+    (val) => handlerChangeItem("customId", val)
     const handleLikeItem = async () => {
         try {
             const { data } = await toggleLike({
@@ -44,7 +40,18 @@ export default function ItemDetailsTab({ item, handlerChangeItem, onShowToast, o
 
     const handleClick = () => (currentUser.loggedIn && item.id ? handleLikeItem() : onShowToast('Нельзя', 'bottom-center'))
 
+    const buildMaskFromSummary = (summary = "") => {
+        const chars = Array.from(summary);
+        const pattern = chars.map((ch) => {
+            if (/\p{Number}/u.test(ch)) return "\\p{Number}";
+            if (/\p{Letter}/u.test(ch)) return "\\p{Letter}";
+            if (/\p{Emoji}/u.test(ch)) return "\\p{Emoji}";
+            return ch.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            }).join("");
+        return new RegExp(`^${pattern}$`, "u");
+    };
 
+    const mask = useMemo(() => buildMaskFromSummary(customIdFormat?.summary ?? ""),[customIdFormat?.summary]);
 
     return (
         <Form>
@@ -53,12 +60,15 @@ export default function ItemDetailsTab({ item, handlerChangeItem, onShowToast, o
                     <Form.Group controlId="id">
                         <Form.Label>ID</Form.Label>
                         <Form.Control
-                            type="text"
                             name="customId"
-                            value={item?.customId }
-                            onChange={handlerChange}
-
+                            value={item?.customId}
+                            onChange={(e) => handlerChangeItem("customId", e.target.value)}
+                            className="form-control"
+                            isInvalid={item?.customId && !mask.test(item.customId)}
                         />
+                        <Form.Control.Feedback type="invalid">
+                            Неверный формат. Ожидается: {customIdFormat?.summary}
+                        </Form.Control.Feedback>
                     </Form.Group>
                 </Col>
                 <Col xs={12}>

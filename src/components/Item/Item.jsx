@@ -13,25 +13,25 @@ export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, ha
     const [activeTab, setActiveTab] = useState('details');
 
     const [loadItem, { data: dataItem, loading: loadingItem, error, reset }] = useLazyQuery(GET_ITEM);
-    const [loadInventoryFields, { data: dataInventory, loading: loadingInventory}] = useLazyQuery(GET_INVENTORY_FIELDS);
+    const [loadInventory, { data: dataInventory, loading: loadingInventory}] = useLazyQuery(GET_INVENTORY_FIELDS);
     const [updateItem] = useMutation(UPDATE_ITEM);
 
     const itemData = dataItem?.item || {}
     const itemFields = dataInventory?.inventory?.fields || []
+    const inventoryCustomIdFormat = dataInventory?.inventory?.customIdFormat || {}
 
     useEffect(() => {
         if (itemId) {
             loadItem({ variables: { id: itemId } })
             updateInitialItem(itemData);
-        } else {
-            if (inventoryId) loadInventoryFields({ variables: { id: inventoryId } });
+        } else if (inventoryId) {
+            loadInventory({ variables: { id: inventoryId } });
             updateInitialItem({
                 owner: {id: currentUser.id, name: currentUser.name},
                 values: itemFields.map((field) => ({ guid: crypto.randomUUID(), value: '', field: field, }))
             })
-            
         }
-    }, [isOpen, loadingItem, loadingInventory, itemId]);
+    }, [isOpen, loadingItem, loadingInventory, itemId, inventoryId]);
 
     const updateInitialItem = (itemData) => {
         const updated = { ...item };
@@ -54,6 +54,7 @@ export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, ha
 
     const handleCreateItem = () => {
         const { createdAt, updatedAt, values, ...newItem } = item;
+        console.log(item);
         handlerCreateItem({
             inventoryId: inventoryId,
             ...newItem,
@@ -62,7 +63,7 @@ export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, ha
     }
 
     const handleUpdateItem = async() => {
-        const { createdAt, updatedAt, values, ...updatedItem } = item;
+        const { createdAt, updatedAt, likesCount, likedByMe, values, ...updatedItem } = item;
         try {
             const { data } = await updateItem({
                 variables: { 
@@ -70,13 +71,13 @@ export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, ha
                     expectedVersion: version,
                     input: {
                         ...updatedItem,
+                        inventoryId: inventoryId,
                         values: values.map(value => ({fieldId: value.field.id, value: value.value})),
                     }
                 },
             });
             updateInitialItem(data.updateItem);
             setVersion(data.updateItem.version)
-
         } catch (e) {
 
         }
@@ -115,6 +116,7 @@ export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, ha
                                     handlerChangeItem={handlerChangeItem}
                                     onShowToast={onShowToast}
                                     onUploadImage={onUploadImage}
+                                    customIdFormat={inventoryCustomIdFormat}
                                 /> }
                     </Tab>
                 </Tabs>

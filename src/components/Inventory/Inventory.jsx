@@ -110,6 +110,7 @@ export default function Inventory({
     
     const handleUpdateInventory = async() => {
         const { createdAt, updatedAt, ...updatedInventory } = inventory;
+        console.log(inventory);
         try {
             const { data } = await updateInventory({
                 variables: { 

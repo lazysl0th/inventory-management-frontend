@@ -42,7 +42,7 @@ export const IdGenerator = {
 
         return pos === "suffix" ? main + sep : sep + main;
     },
-    generateFromParts(parts = [], partDefinitions) {
+    generateFromParts(parts, partDefinitions) {
         return parts.map((p) => IdGenerator.generatePart(partDefinitions, p)).filter(Boolean).join("");
     },
 };
@@ -52,11 +52,14 @@ export const hasOrderChanged = (prev, current) => {
     return prev.some((item, i) => item.order !== current[i].order);
 }
 
-export const parseApolloError = (error) => {
-    if (!error) return 'Unknown error';
-    if (error.graphQLErrors?.length)
-        return error.graphQLErrors.map(e => e.message).join('\n');
-    if (error.networkError)
-        return error.networkError.message;
-    return error.message || 'Unknown error';
+export const generateNBitRandomNumber = (bit) => {
+    const bytes = Math.ceil(bit / 8);
+    const buffer = new Uint8Array(bytes);
+    window.crypto.getRandomValues(buffer);
+    let numBigInt = 0n;
+    for (let i = 0; i < bytes; i++) {
+        numBigInt = (numBigInt << 8n) | BigInt(buffer[i]);
+    }
+    const mask = (1n << BigInt(bit)) - 1n;
+    return numBigInt & mask;
 };

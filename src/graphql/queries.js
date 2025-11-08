@@ -166,6 +166,7 @@ export const GET_INVENTORY_FIELDS = gql`
     query GetInventoryFields($id: Int!) {
         inventory(id: $id) {
             id
+            customIdFormat
             fields {
                 id
                 title

@@ -182,8 +182,7 @@ function App() {
             }
         } catch(e) {
             console.log(e);
-            openInfoTooltip(titleInfoTooltip.ERROR, e);
-
+            openInfoTooltip(titleInfoTooltip.ERROR, e.message);
         }
     }
 
