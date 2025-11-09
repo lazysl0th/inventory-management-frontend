@@ -1,16 +1,27 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
-import { Modal, Button, Spinner, Alert, Tabs, Tab, } from 'react-bootstrap';
+import { Modal, Button, Spinner, Alert } from 'react-bootstrap';
 import ItemDetailsTab from './ItemTabs/ItemDetailTabs';
-import { initialStateItem } from '../../utils/constants';
+import { initialStateItem, titleInfoTooltip } from '../../utils/constants';
 import { GET_ITEM, GET_INVENTORY_FIELDS, UPDATE_ITEM } from '../../graphql/queries';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
+import { useAutoSave } from '../../hooks/useAutoSave';
+import { mergeItem } from '../../utils/utils'
 
-export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, handlerCreateItem, onShowToast, onUploadImage }) {
+function Item({
+    isOpen,
+    inventoryId,
+    itemId,
+    handlerCloseView,
+    handlerCreateItem,
+    onShowToast,
+    onUploadImage,
+    onOpenTooltip,
+}, ref) {
     const currentUser = useContext(CurrentUserContext);
+    const timerRef = useRef(null);
     const [item, setItem] = useState(initialStateItem)
     const [version, setVersion] = useState();
-    const [activeTab, setActiveTab] = useState('details');
 
     const [loadItem, { data: dataItem, loading: loadingItem, error, reset }] = useLazyQuery(GET_ITEM);
     const [loadInventory, { data: dataInventory, loading: loadingInventory}] = useLazyQuery(GET_INVENTORY_FIELDS);
@@ -23,17 +34,22 @@ export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, ha
     useEffect(() => {
         if (itemId) {
             loadItem({ variables: { id: itemId } })
-            updateInitialItem(itemData);
-        } else if (inventoryId) {
-            loadInventory({ variables: { id: inventoryId } });
-            updateInitialItem({
+            updateStateItem(itemData);
+        } else {
+            updateStateItem({
                 owner: {id: currentUser.id, name: currentUser.name},
                 values: itemFields.map((field) => ({ guid: crypto.randomUUID(), value: '', field: field, }))
             })
         }
-    }, [isOpen, loadingItem, loadingInventory, itemId, inventoryId]);
+    }, [isOpen, dataItem, itemId]);
+    
+    useEffect(() => {
+        if (inventoryId) {
+            loadInventory({ variables: { id: inventoryId } });
+        }
+    }, [isOpen, dataInventory, inventoryId]);
 
-    const updateInitialItem = (itemData) => {
+    const updateStateItem = (itemData) => {
         const updated = { ...item };
         for (let key in itemData) {
             if (key === 'createdAt' || key === 'updatedAt') updated[key] = new Date(+itemData[key]).toLocaleString();
@@ -43,18 +59,15 @@ export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, ha
         setItem(updated);
     };
 
-    const handlerChangeItem = ((name, value) => setItem(prev => ({ ...prev, [name]: value, })));
-
     const handleCloseView = () => {
         handlerCloseView();
         reset?.();
         setItem(initialStateItem);
-        setActiveTab('details');
+        //setIsSaving(false);
     }
 
     const handleCreateItem = () => {
         const { createdAt, updatedAt, values, ...newItem } = item;
-        console.log(item);
         handlerCreateItem({
             inventoryId: inventoryId,
             ...newItem,
@@ -62,26 +75,50 @@ export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, ha
         });
     }
 
-    const handleUpdateItem = async() => {
-        const { createdAt, updatedAt, likesCount, likedByMe, values, ...updatedItem } = item;
+    const handleUpdateItem = async(updatedItem = item, expectedVersion) => {
+        const { createdAt, updatedAt, likesCount, likedByMe, values, ...data } = updatedItem;
         try {
-            const { data } = await updateItem({
+            const { data: res } = await updateItem({
                 variables: { 
-                    id: updatedItem.id,
-                    expectedVersion: version,
+                    id: data.id,
+                    ...(expectedVersion !== undefined ? { expectedVersion } : {}),
                     input: {
-                        ...updatedItem,
+                        ...data,
                         inventoryId: inventoryId,
                         values: values.map(value => ({fieldId: value.field.id, value: value.value})),
                     }
                 },
             });
-            updateInitialItem(data.updateItem);
-            setVersion(data.updateItem.version)
+            updateStateItem(res.updateItem);
+            setVersion(res.updateItem.version)
         } catch (e) {
-
+            console.log(e);
+            onOpenTooltip((titleInfoTooltip.ERROR), e.message);
         }
     }
+
+    const forceSaveItem = async () => {
+        console.log('p;tcm')
+        const { data: fresh } = await loadItem({ variables: { id: itemId }, fetchPolicy: "network-only", });
+        const merged = mergeItem(fresh.item, item);
+        await handleUpdateItem(merged, fresh.item.version);
+    };
+
+    const { isDirty, isSaving, errorAutoSave, scheduleSave, flushSave } = useAutoSave(8000, handleUpdateItem);
+
+    const handlerChangeItem = ((name, value) => {
+        setItem(prev => { 
+            const updated = { ...prev, [name]: value, }
+            if (itemId) scheduleSave(updated, version);
+            return updated;
+        })
+    });
+
+    const handleFlashSave = () => {
+        flushSave(item, version)
+    }
+
+    useImperativeHandle(ref, () => ({ forceSaveItem }));
 
     return (
 
@@ -97,33 +134,27 @@ export default function Item({ isOpen, inventoryId, itemId, handlerCloseView, ha
             <Modal.Header closeButton>
             </Modal.Header>
             <Modal.Body className={(loadingItem || error) && "align-self-center"}>
-                <Tabs
-                    id={''}
-                    className="mb-3"
-                    activeKey={activeTab}
-                    onSelect={setActiveTab}
-                    fill
-                >
-                    <Tab eventKey="details" title="Details">
-                        {loadingItem
-                            ? <Spinner animation="border"/>
-                            : error
-                                ? (<div className="d-flex justify-content-center align-items-center">
-                                        <Alert variant="danger">{error.message}</Alert>
-                                    </div>)
-                                : <ItemDetailsTab
-                                    item={item}
-                                    handlerChangeItem={handlerChangeItem}
-                                    onShowToast={onShowToast}
-                                    onUploadImage={onUploadImage}
-                                    customIdFormat={inventoryCustomIdFormat}
-                                /> }
-                    </Tab>
-                </Tabs>
+                {loadingItem
+                    ? <Spinner animation="border"/>
+                    : error
+                        ? (<div className="d-flex justify-content-center align-items-center">
+                                <Alert variant="danger">{error.message}</Alert>
+                            </div>)
+                        : <ItemDetailsTab
+                            item={item}
+                            handlerChangeItem={handlerChangeItem}
+                            onShowToast={onShowToast}
+                            onUploadImage={onUploadImage}
+                            customIdFormat={inventoryCustomIdFormat}
+                        /> }
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="primary" onClick={itemId ? handleUpdateItem : handleCreateItem}> { itemId ? 'Update' : 'Create' } </Button>
+                {isSaving && <Spinner animation="border" size="sm" />}
+                {errorAutoSave && onShowToast(errorAutoSave, 'bottom-center')}
+                <Button disabled={!isDirty && itemId} variant="primary" onClick={itemId ? handleFlashSave : handleCreateItem}> { itemId ? 'Update' : 'Create' } </Button>
             </Modal.Footer>
         </Modal>
     );
 }
+
+export default forwardRef(Item);

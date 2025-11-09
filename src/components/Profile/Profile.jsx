@@ -108,7 +108,8 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
                             : <RecordsList
                                 type='Inventory'
                                 nameRecordList={nameList.WRITE_ACCESS}
-                                records={editableInventories?.inventories} 
+                                records={editableInventories?.inventories}
+                                handlerClickRecord={handlerClickRecord}
                             />}
                 </Col>
             </Row>

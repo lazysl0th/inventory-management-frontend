@@ -11,15 +11,11 @@ export default function ItemsTab({
     handlerDeleteRecords,
     itemFields,
 }) {
-    const [items, setItems] = useState([]);
-
-
     const { data, loading, error } = useQuery(GET_ITEMS, { 
         variables: { inventoryId },
         skip: !inventoryId });
-
-    useEffect(() => { if (inventoryId) setItems(data?.items) }, [inventoryId, data?.items]);
-
+    
+    const items = data?.items || [];
 
     return (
         loading

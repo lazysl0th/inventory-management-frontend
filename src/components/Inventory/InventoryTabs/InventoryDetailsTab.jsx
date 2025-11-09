@@ -4,6 +4,8 @@ import AsyncCreatableSelect from 'react-select/async-creatable';
 import { Form, Row, Col, Image } from "react-bootstrap";
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
 import { SEARCH_TAGS } from '../../../graphql/queries';
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function InventoryDetailsTab({
     formikValues,

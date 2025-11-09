@@ -54,7 +54,7 @@ const cache = new InMemoryCache({
             keyFields: false,
         },
         User: { keyFields: ['id'] },
-        Tag: { keyFields: ['id'] },
+        Tag: { keyFields: false },
     },
 })
 

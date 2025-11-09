@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { Routes, Route, useNavigate, useSearchParams } from 'react-router-dom';
+import { useApolloClient } from "@apollo/client/react";
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import './App.css'
 import {
@@ -11,7 +12,9 @@ import {
     DELETE_INVENTORIES,
     CREATE_ITEM,
     GET_ITEMS,
-    DELETE_ITEMS
+    DELETE_ITEMS,
+    GET_INVENTORY,
+    GET_ITEM
 } from '../../graphql/queries';
 import { register, login, checkToken } from '../../utils/usersApi';
 import { uploadImage } from '../../utils/imageApi';
@@ -50,6 +53,9 @@ function App() {
     const [selectedItemId, setSelectedItemId] = useState(null);
     const [searchParams] = useSearchParams();
     const [access, setAccess] = useState(true);
+    const client = useApolloClient();
+    const inventoryRef = useRef(null);
+    const itemRef = useRef(null);
 
     useEffect( () => { handleVerifyUser() }, [navigate])
     useEffect( () => { handlerSignInSocialSubmit() }, [])
@@ -141,6 +147,7 @@ function App() {
     }
 
     const closeItem = () => {
+        console.log(1)
         setSelectedItemId(null);
         setIsItemViewOpen(false);
     }
@@ -294,6 +301,31 @@ function App() {
         return data;
     }
 
+    const handlerReloadInventory = async() => {
+        try {
+            await client.refetchQueries({ include: [{ query: GET_INVENTORY, variables: { id: selectedInventoryId },}] });
+            openInfoTooltip(titleInfoTooltip.SUCCESS, "Данные обновлены");
+        } catch (e) {
+            openInfoTooltip(titleInfoTooltip.ERROR, "Не удалось обновить данные");
+        }
+    };
+
+    const handlerReloadItem = async() => {
+        try {
+            await client.refetchQueries({ include: [{ query: GET_ITEM, variables: { id: selectedItemId } }] });
+            openInfoTooltip(titleInfoTooltip.SUCCESS, "Данные обновлены");
+        } catch (e) {
+            openInfoTooltip(titleInfoTooltip.ERROR, "Не удалось обновить данные");
+        }
+    };
+
+    const handlerReloadRecord = () => selectedItemId ? handlerReloadItem() : handlerReloadInventory();
+
+    const handlerForceSaveRecord = async () => {
+        selectedItemId ? itemRef.current?.forceSaveItem() : inventoryRef.current?.forceSaveInventory();
+        openInfoTooltip(titleInfoTooltip.SUCCESS, "Изменения сохранены поверх.");
+    }
+
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <Header onLog={handlerSignOut}/>
@@ -330,7 +362,8 @@ function App() {
                 <Route path="*" element={<PageNotFound />} />
             </Routes>
                 <LiveBlock inventoryId={selectedInventoryId}>
-                    <Inventory 
+                    <Inventory
+                        ref={inventoryRef}
                         isOpen={isInventoryViewOpen}
                         onOpenTooltip={openInfoTooltip}
                         categories={categories}
@@ -347,6 +380,7 @@ function App() {
                     />
                 </LiveBlock>
             <Item
+                ref={itemRef}
                 isOpen={isItemViewOpen}
                 inventoryId={selectedInventoryId}
                 itemId={selectedItemId}
@@ -354,12 +388,15 @@ function App() {
                 handlerCreateItem={handlerCreateItem}
                 onShowToast={showInfoToats}
                 onUploadImage={handlerUploadImage}
+                onOpenTooltip={openInfoTooltip}
             />
             <InfoTooltip
                 isOpen={isInfoTooltipOpen}
                 onClose={handlerCloseInfoTooltip}
                 title={infoTooltipTitle}
                 message={infoTooltipMessage}
+                onReload={handlerReloadRecord}
+                onForceSave={handlerForceSaveRecord}
             />
             <InfoToast isShow={isInfoToastShow} onClose={handlerCloseInfoToast} message={infoToastMessage} position={infoToastPosition}/>
         </CurrentUserContext.Provider>

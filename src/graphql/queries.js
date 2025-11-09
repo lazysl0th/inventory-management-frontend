@@ -105,7 +105,7 @@ export const SEARCH_INVENTORIES = gql`
 `
 
 export const GET_INVENTORY = gql`
-        query GetInventoryAndCategory($id: Int!) {
+        query GetInventory($id: Int!) {
             inventory(id: $id) {
                 ...InventoryBase
                 image
@@ -122,16 +122,14 @@ export const GET_INVENTORY = gql`
                     isDeleted
                 }
                 isPublic
+                tags {
+                    id
+                    name
+                }
                 allowedUsers {
                     ...UserBase
                 }
                 version
-            }
-            categories: __type(name: "Category") {
-                name
-                enumValues {
-                    name
-                }
             }
         }
         ${USER_BASE_FRAGMENT}
@@ -155,6 +153,7 @@ export const GET_ITEM = gql`
                 id
                 name
             }
+            version
             createdAt
             updatedAt
         }
@@ -288,18 +287,24 @@ export const UPDATE_INVENTORY_NEW = gql`
         updateInventory(id: $id, input: $input, expectedVersion: $expectedVersion) {
             id
             title
-            version
-            updatedAt
-            tags {
-                id
-                name
-            }
+            description
+            category
+            image
+            isPublic
+            customIdFormat
+            tags { id name }
             fields {
                 id
                 title
-                order
+                type
+                description
                 showInTable
+                order
+                isDeleted
             }
+            version
+            updatedAt
+            itemsCount
         }
     }
 `;
@@ -307,9 +312,24 @@ export const UPDATE_INVENTORY_NEW = gql`
 export const UPDATE_ITEM = gql`
     mutation UpdateItem($id: Int!, $input: CreateItemInput!, $expectedVersion: Int!) {
         updateItem(id: $id, input: $input, expectedVersion: $expectedVersion) {
-            id
-            version
-            updatedAt
+id
+      version
+      customId
+      createdAt
+      updatedAt
+      owner {
+        id
+        name
+      }
+      values {
+        field {
+          id
+          title
+        }
+        value
+      }
+      likesCount
+      likedByMe
         }
     }
 `;

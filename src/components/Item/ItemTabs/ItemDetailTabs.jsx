@@ -64,7 +64,7 @@ export default function ItemDetailsTab({ item, customIdFormat, handlerChangeItem
                             value={item?.customId}
                             onChange={(e) => handlerChangeItem("customId", e.target.value)}
                             className="form-control"
-                            isInvalid={item?.customId && !mask.test(item.customId)}
+                            //isInvalid={item?.customId && !mask.test(item.customId)}
                         />
                         <Form.Control.Feedback type="invalid">
                             Неверный формат. Ожидается: {customIdFormat?.summary}

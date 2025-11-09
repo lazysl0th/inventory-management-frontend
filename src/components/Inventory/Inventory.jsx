@@ -1,7 +1,8 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useContext, forwardRef, useImperativeHandle, useRef } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { Modal, Button, Spinner, Alert, Tabs, Tab } from 'react-bootstrap';
 import { GET_INVENTORY, UPDATE_INVENTORY_NEW, GET_ITEMS } from '../../graphql/queries';
+import { useAutoSave } from '../../hooks/useAutoSave';
 import FormValidation from '../FormValidator/FormValidator';
 import InventoryDetailsTab from './InventoryTabs/InventoryDetailsTab';
 import CustomIdTab from './InventoryTabs/CustomIdTab';
@@ -13,14 +14,13 @@ import StatsTab from "./InventoryTabs/StatsTab";
 import { initialStateInventory, titleInfoTooltip, } from '../../utils/constants';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import { InventorySchema } from '../../utils/validationSchema';
+import { mergeInventory } from '../../utils/utils'
 
-
-export default function Inventory({
+function Inventory({
     isOpen,
     onOpenTooltip,
     categories,
     loadTags,
-    resultTags,
     inventoryId,
     handlerCloseView,
     handlerClickRecord,
@@ -29,10 +29,11 @@ export default function Inventory({
     handlerDeleteRecords,
     onShowToast,
     onUploadImage
-}) {
+}, ref) {
 
     const currentUser = useContext(CurrentUserContext);
     const formikRef = useRef();
+    const timerRef = useRef(null);
     const [inventory, setInventory] = useState(initialStateInventory)
     const [version, setVersion] = useState();
     const [activeTab, setActiveTab] = useState('details');
@@ -44,22 +45,23 @@ export default function Inventory({
         });
     
     const inventoryData = data?.inventory || {}
+    
+    useEffect(() => { return () => { if (timerRef.current) clearTimeout(timerRef.current); }; }, []);
 
     useEffect(() => {
         if (inventoryId) {
             loadInventory({ variables: { id: inventoryId } })
             loadTags()
-            updateInitialInventory(inventoryData);
+            updateStateInventory(inventoryData);
             formikRef.current.setValues({ title: inventoryData.title || '', category: inventoryData.category || '', })
-            handlerChangeInventory('tags', resultTags?.data?.tags?.filter((tag) => tag.inventories.some((inventory) => inventory.id === inventoryId)))
         } else {
-            updateInitialInventory({
+            updateStateInventory({
                 owner: {id: currentUser.id, name: currentUser.name} 
             })
         }
     }, [isOpen, data, inventoryId]);
 
-    const updateInitialInventory = (inventoryData) => {
+    const updateStateInventory = (inventoryData) => {
         const updated = { ...inventory };
         for (let key in inventoryData) {
             if (key === 'createdAt' || key === 'updatedAt') updated[key] = new Date(+inventoryData[key]).toLocaleString();
@@ -68,24 +70,12 @@ export default function Inventory({
         }
         setInventory(updated);
     };
-    
-    const handlerChangeInventory = ((name, value) => {
-        setInventory(prev => ({ ...prev, [name]: value, }))});
 
     const handleCloseView = () => {
         handlerCloseView();
         reset?.();
         setInventory(initialStateInventory);
         setActiveTab('details');
-    }
-
-
-
-    const validation = async () => {
-        const errors = await formikRef.current.validateForm();
-        formikRef.current.setTouched(Object.keys(errors).reduce((acc, key) => ({ ...acc, [key]: true }), {}));
-        if (Object.keys(errors).length === 0) formikRef.current.handleSubmit()
-        else onShowToast('Заполните обязательные поля', 'bottom-center');
     }
 
     const handleCreateInventory = () => {
@@ -107,21 +97,20 @@ export default function Inventory({
             allowedUsers: newInventory.allowedUsers.filter((user) => !isNaN(user.id)).map((user) => ({ id: user.id })),
         });
     }
-    
-    const handleUpdateInventory = async() => {
-        const { createdAt, updatedAt, ...updatedInventory } = inventory;
-        console.log(inventory);
+
+    const handleUpdateInventory = async(updatedInventory = inventory, expectedVersion) => {
+        const { createdAt, updatedAt, ...data } = updatedInventory;
         try {
-            const { data } = await updateInventory({
+            const { data: res } = await updateInventory({
                 variables: { 
-                    id: updatedInventory.id,
-                    expectedVersion: version,
+                    id: data.id,
+                    ...(expectedVersion !== undefined ? { expectedVersion } : {}),
                     input: {
-                        ...updatedInventory,
-                        tags: updatedInventory.tags?.map((tag) => ({
+                        ...data,
+                        tags: data.tags?.map((tag) => ({
                             id: tag.id, name: tag.name,
                         })),
-                        fields: updatedInventory.fields.map((field) => ({
+                        fields: data.fields.map((field) => ({
                             id: field.id, 
                             title: field.title, 
                             type: field.type,
@@ -130,15 +119,45 @@ export default function Inventory({
                             order: field.order,
                             isDeleted: field.isDeleted, 
                         })),
-                        allowedUsers: inventory.allowedUsers.filter((user) => !isNaN(user.id)).map((user) => ({ id: user.id })),
+                        allowedUsers: data.allowedUsers.filter((user) => !isNaN(user.id)).map((user) => ({ id: user.id })),
                     }
                 },
             });
-            setVersion(data.updateInventory.version)
+            setVersion(res.updateInventory.version);
         } catch (e) {
             console.log(e);
-            onOpenTooltip(titleInfoTooltip.ERROR, e.message)
+            onOpenTooltip((titleInfoTooltip.ERROR), e.message);
         }
+    }
+
+    const forceSaveInventory = async () => {
+        const { data: fresh } = await loadInventory({ variables: { id: inventoryId }, fetchPolicy: "network-only", });
+        const merged = mergeInventory(fresh.inventory, inventory);
+        const updated = await handleUpdateInventory(merged, fresh.inventory.version);
+        updateStateInventory(updated);
+    };
+
+    const { isDirty, isSaving, errorAutoSave, scheduleSave, flushSave } = useAutoSave(8000, handleUpdateInventory);
+
+    const handlerChangeInventory = ((name, value) => {
+        setInventory(prev => {
+            const updated = { ...prev, [name]: value, }
+            if (inventoryId) scheduleSave(updated, version);
+            return updated;
+        });
+    });
+
+    const validation = async () => {
+        const errors = await formikRef.current.validateForm();
+        formikRef.current.setTouched(Object.keys(errors).reduce((acc, key) => ({ ...acc, [key]: true }), {}));
+        if (Object.keys(errors).length === 0) formikRef.current.handleSubmit()
+        else onShowToast('Заполните обязательные поля', 'bottom-center');
+    }
+
+    useImperativeHandle(ref, () => ({ forceSaveInventory }));
+
+    const handleFlashSave = () => {
+        flushSave(inventory, version)
     }
 
     return (
@@ -154,7 +173,7 @@ export default function Inventory({
             innerRef={formikRef}
             initialValues={{title: inventory.title, category: inventory.category}}
             validationSchema={InventorySchema}
-            onSubmit={inventoryId ? handleUpdateInventory : handleCreateInventory}
+            onSubmit={inventoryId ? handleFlashSave : handleCreateInventory}
             validateOnMount={true}>
             { ({ handleSubmit, values, handleChange, handleBlur, touched, errors, isSubmitting}) => (
                 <>
@@ -263,10 +282,18 @@ export default function Inventory({
                         </Tabs>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="primary" onClick={validation}> { inventoryId ? 'Update' : 'Create' } </Button>
+                        {isSaving && <Spinner animation="border" size="sm" />}
+                        {errorAutoSave && onShowToast(errorAutoSave, 'bottom-center')}
+                        <Button
+                            variant="primary"
+                            onClick={validation}
+                            disabled={!isDirty}
+                        > { inventoryId ? 'Update' : 'Create' } </Button>
                     </Modal.Footer>
                 </>)}
             </FormValidation>
         </Modal>
     );
 }
+
+export default forwardRef(Inventory);

@@ -59,11 +59,14 @@ export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerCl
             const usersIds = Object.keys(rowSelection).map(id => Number(id));
             const rolesIds = Array.from(roles).map(id => Number(id));
             const accessUsers = await userApi.changeAccess(usersIds, rolesIds);
-            setUsers(prevUsers =>
+            setUsers(prevUsers => (
                 prevUsers.map(user => ({
                     ...user,
-                    'roles': accessUsers.userRoles.filter(userRole => userRole.userId === user.id).map(userRole => ({ role: userRole.role }))
-                })
+                    roles: accessUsers.userRoles.map(r => (r.userId === user.id ? { role: r.role } : null)).at(0)
+                        ? accessUsers.userRoles.map(r => (r.userId === user.id ? { role: r.role } : null))
+                        : user.roles
+                    })
+                )
             ))
             onOpenTooltip(titleInfoTooltip.SUCCESS, roles === '1' ? messageInfoTooltip.USER.PERMISSION.GRANT : messageInfoTooltip.USER.PERMISSION.REVOKE)
         } catch (e) {

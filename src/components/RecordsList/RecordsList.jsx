@@ -105,14 +105,30 @@ export default function RecordsList({
     const handleAdd = () => (type === "Inventory" || type === "Item") ? handlerAddRecord() : handleAddRow();
 
     const cellRenderer = (info, col) => {
-        if (info.row.original[col.highlightKey])
-            return parse(info.row.original[col.highlightKey]);
+        if (info.row.original[col.highlightKey]) return parse(info.row.original[col.highlightKey]);
+        if (typeof info.getValue() === 'boolean') {
+            return (
+                <Form.Check
+                    type="checkbox"
+                    checked={info.getValue()}
+                    readOnly
+                    disabled
+                    className="m-0"
+                />
+            );
+        }
+        if (info.getValue() === null || info.getValue() === undefined) return '';
         return info.getValue();
     };
 
     const getRowValue = (row, col, config) => {
         if (col.header === config.fieldCustomIdKey) return row.customId;
-        return row.values.find((v) => v.field.id === col.id)?.[config.fieldValueKey];
+        const value = row.values.find((value) => value.field.id === col.id);
+        if (!value) return null;
+        if (typeof value.value === 'boolean') return value.value;
+        if (value.value === 'true') return true;
+        if (value.value === 'false') return false;
+        return value.value;
     };
 
     const collectColumn = (fields, config) => {
@@ -186,7 +202,7 @@ export default function RecordsList({
 
     const handelFilterChange = (e) => setGlobalFilter(e.target.value);
 
-    const columns = useMemo(() => getColumnsByType(type) || [], [type, editingCell, fields]);
+    const columns = getColumnsByType(type);
 
     const table = useReactTable({
         data: useMemo(() => records || [], [records]),
