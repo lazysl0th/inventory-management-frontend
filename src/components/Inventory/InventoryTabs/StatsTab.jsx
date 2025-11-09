@@ -10,11 +10,7 @@ export default function StatsTab({ inventoryId, itemsCount }) {
 
     const [loadStats, { data, loading, error }] = useLazyQuery(GET_INVENTORY_STATS, {fetchPolicy: 'network-only'});
 
-    useEffect(() => { if (inventoryId) loadStats({ variables: { id: inventoryId } }); }, [inventoryId]);
-
-    useEffect(() => { console.log(data) }, [data]);
-    useEffect(() => { console.log(data?.inventory.stats.numStats) }, [data]);
-    
+    useEffect(() => { if (inventoryId) loadStats({ variables: { id: inventoryId } }); }, [inventoryId]);    
 
     if (!data?.inventory.stats.length == 0) return (<Alert variant="secondary" className="m-3"> Statistics not available for this inventory. </Alert>);
 

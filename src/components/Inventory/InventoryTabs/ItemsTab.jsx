@@ -10,6 +10,7 @@ export default function ItemsTab({
     handlerAddRecord,
     handlerDeleteRecords,
     itemFields,
+    disabled
 }) {
     const { data, loading, error } = useQuery(GET_ITEMS, { 
         variables: { inventoryId },
@@ -31,6 +32,7 @@ export default function ItemsTab({
                     fields={itemFields}
                     handlerAddRecord={handlerAddRecord}
                     handlerClickRecord={handlerClickRecord}
-                    handlerDeleteRecords={handlerDeleteRecords} />
+                    handlerDeleteRecords={handlerDeleteRecords}
+                    disabled={disabled} />
     );
 }

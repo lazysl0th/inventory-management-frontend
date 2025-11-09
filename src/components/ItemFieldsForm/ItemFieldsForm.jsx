@@ -2,7 +2,7 @@ import { Row, Col, Form, Button, Badge, ButtonGroup } from "react-bootstrap";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa6";
 import { FIELD_TYPES } from "../../utils/constants";
 
-export default function ItemFieldsForm({ field, index, total, onUpdate, onMove }) {
+export default function ItemFieldsForm({ field, index, total, onUpdate, onMove, disabled }) {
     
     
     const handleChange = (fieldGuid, index) => (e) => {
@@ -23,6 +23,7 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove }
     const stop = (e) => e.stopPropagation();
     
     return (
+        <fieldset disabled={disabled}>
         <Row className="align-items-start g-3 gy-4">
             <Col xs={12} md={6}>
                 <Form.Group>
@@ -109,5 +110,6 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove }
                 </ButtonGroup>
             </Col>
         </Row>
+        </fieldset>
     )
 }

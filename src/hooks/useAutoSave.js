@@ -32,5 +32,11 @@ export const useAutoSave = (delay = 8000, saveFn) => {
          save(updated, version);;
     };
 
-    return { isDirty, isSaving, errorAutoSave, scheduleSave, flushSave };
+    const cancelSave = () => {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+        setIsDirty(false);
+    };
+
+    return { isDirty, isSaving, errorAutoSave, scheduleSave, flushSave, cancelSave };
 };

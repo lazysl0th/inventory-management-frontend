@@ -29,7 +29,8 @@ export default function RecordsList({
     handlerAddRecord,
     handlerChangeUsersStatus,
     handlerChangeAccessUsers,
-    fields
+    fields,
+    disabled,
 }) {
     const [rowSelection, setRowSelection] = useState({});
     const [editingCell, setEditingCell] = useState(null);
@@ -136,10 +137,7 @@ export default function RecordsList({
     };
 
     const collectColumn = (fields, config) => {
-        //console.log(fields);
-        //console.log(config);
         const columns = fields.reduce((acc, field) => {
-            //console.log(field);
             if (!field.isDeleted && field.showInTable) {
             acc.push({
                 id: field[config.fieldIdKey] ?? field.guid,
@@ -153,7 +151,6 @@ export default function RecordsList({
     };
 
     const buildColumns = (columns, type) => {
-        console.log(columns);
         const columnSchema = Array.isArray(RECORDS_LIST_HEADS[type])
             ? {
                 columns: RECORDS_LIST_HEADS[type],
@@ -184,6 +181,7 @@ export default function RecordsList({
                     indeterminate={table.getIsSomeRowsSelected()}
                     onChange={table.getToggleAllRowsSelectedHandler()}
                     onClick={(e) => e.stopPropagation()}
+                    disabled={disabled}
                 />
             ),
         cell: ({ row }) => (
@@ -192,6 +190,7 @@ export default function RecordsList({
                 indeterminate={row.getIsSomeSelected()}
                 onChange={row.getToggleSelectedHandler()}
                 onClick={(e) => e.stopPropagation()}
+                disabled={disabled}
             />)
     });
 
@@ -238,7 +237,7 @@ export default function RecordsList({
                         || type == 'Item'
                         || location.pathname === "/admin") && ( <Col md="auto" className="d-flex gap-2">
                                 {(nameRecordList === nameList.USERS )
-                                    ? (<>
+                                    ? (<fieldset disabled={disabled}>
                                             <OverlayTrigger
                                                 placement="top"
                                                 overlay={<Tooltip id="tooltip-add">Block</Tooltip>}
@@ -274,13 +273,13 @@ export default function RecordsList({
                                                     <MdAdminPanelSettings />
                                                 </Button>
                                             </OverlayTrigger>
-                                        </>)
+                                        </fieldset>)
 
                                     : (<OverlayTrigger
                                             placement="top"
                                             overlay={<Tooltip id="tooltip-add">Add</Tooltip>}
                                         >
-                                            <Button variant="outline-success" onClick={handleAdd}>
+                                            <Button variant="outline-success" disabled={disabled} onClick={handleAdd}>
                                                 <VscAdd />
                                             </Button>
                                         </OverlayTrigger>)}
@@ -348,6 +347,7 @@ export default function RecordsList({
                                                 editingField={editingField}
                                                 setEditingCell={setEditingCell}
                                                 onChange={handleChangeCell}
+                                                disabled={disabled}
                                             />)
                                         : (<Record
                                                 key={row.id}

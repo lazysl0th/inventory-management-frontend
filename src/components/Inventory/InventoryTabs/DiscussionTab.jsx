@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { GET_COMMENTS, CREATE_COMMENT, COMMENT_ADDED} from "../../../graphql/queries";
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
 
-export default function DiscussionTab({ inventoryId, onShowToast }) {
+export default function DiscussionTab({ inventoryId, disabled }) {
     const currentUser = useContext(CurrentUserContext);
     const [content, setContent] = useState('');
     const [comments, setComments] = useState([]);
@@ -25,15 +25,9 @@ export default function DiscussionTab({ inventoryId, onShowToast }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (currentUser.loggedIn) {
-            if (!content.trim()) return;
-            await createComment({ variables: { input: { inventoryId, content } } });
-            setContent('');
-            
-        }
-        else {
-            onShowToast('Нельзя', 'bottom-center')
-        }
+        if (!content.trim()) return;
+        await createComment({ variables: { input: { inventoryId, content } } });
+        setContent('');
     };
 
     return (
@@ -90,11 +84,12 @@ export default function DiscussionTab({ inventoryId, onShowToast }) {
                                     rows={2}
                                     placeholder="Write a comment..."
                                     value={content}
+                                    disabled={disabled}
                                     onChange={(e) => setContent(e.target.value)}
                                 />
                                 </Form.Group>
                                 <div className="d-flex justify-content-end">
-                                    <Button type="submit" variant="primary"> Send </Button>
+                                    <Button type="submit" disabled={disabled} variant="primary"> Send </Button>
                                 </div>
                             </Form>
                         </Card.Body>

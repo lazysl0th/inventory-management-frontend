@@ -3,10 +3,11 @@ import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { Modal, Button, Spinner, Alert } from 'react-bootstrap';
 import ItemDetailsTab from './ItemTabs/ItemDetailTabs';
 import { initialStateItem, titleInfoTooltip } from '../../utils/constants';
-import { GET_ITEM, GET_INVENTORY_FIELDS, UPDATE_ITEM } from '../../graphql/queries';
+import { GET_ITEM, GET_INVENTORY_INFO, UPDATE_ITEM } from '../../graphql/queries';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import { useAutoSave } from '../../hooks/useAutoSave';
-import { mergeItem } from '../../utils/utils'
+import { mergeItem } from '../../utils/utils';
+import useAccess from '../../hooks/useAccess';
 
 function Item({
     isOpen,
@@ -24,12 +25,16 @@ function Item({
     const [version, setVersion] = useState();
 
     const [loadItem, { data: dataItem, loading: loadingItem, error, reset }] = useLazyQuery(GET_ITEM);
-    const [loadInventory, { data: dataInventory, loading: loadingInventory}] = useLazyQuery(GET_INVENTORY_FIELDS);
+    const [loadInventory, { data: dataInventory, loading: loadingInventory}] = useLazyQuery(GET_INVENTORY_INFO);
     const [updateItem] = useMutation(UPDATE_ITEM);
 
     const itemData = dataItem?.item || {}
     const itemFields = dataInventory?.inventory?.fields || []
     const inventoryCustomIdFormat = dataInventory?.inventory?.customIdFormat || {}
+
+    const { readOnly, readAccess, writeAccess } = useAccess([dataInventory?.inventory]);
+
+    useEffect(() => { return () => { if (timerRef.current) clearTimeout(timerRef.current); }; }, []);
 
     useEffect(() => {
         if (itemId) {
@@ -63,7 +68,7 @@ function Item({
         handlerCloseView();
         reset?.();
         setItem(initialStateItem);
-        //setIsSaving(false);
+        cancelSave()
     }
 
     const handleCreateItem = () => {
@@ -98,13 +103,12 @@ function Item({
     }
 
     const forceSaveItem = async () => {
-        console.log('p;tcm')
         const { data: fresh } = await loadItem({ variables: { id: itemId }, fetchPolicy: "network-only", });
         const merged = mergeItem(fresh.item, item);
         await handleUpdateItem(merged, fresh.item.version);
     };
 
-    const { isDirty, isSaving, errorAutoSave, scheduleSave, flushSave } = useAutoSave(8000, handleUpdateItem);
+    const { isDirty, isSaving, errorAutoSave, scheduleSave, flushSave, cancelSave } = useAutoSave(8000, handleUpdateItem);
 
     const handlerChangeItem = ((name, value) => {
         setItem(prev => { 
@@ -146,6 +150,8 @@ function Item({
                             onShowToast={onShowToast}
                             onUploadImage={onUploadImage}
                             customIdFormat={inventoryCustomIdFormat}
+                            readAccess={readAccess}
+                            disabled={readOnly && !writeAccess}
                         /> }
             </Modal.Body>
             <Modal.Footer>

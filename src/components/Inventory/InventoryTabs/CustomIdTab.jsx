@@ -5,7 +5,7 @@ import CustomIdForm from "../../CustomIdForm/CustomIdForm";
 import { IdGenerator, hasOrderChanged } from "../../../utils/utils";
 import { PART_DEFINITIONS } from "../../../utils/constants";
 
-export default function CustomIdTab({ customIdFormat, handlerChangeCustomIdFormat, loading, error}) {
+export default function CustomIdTab({ customIdFormat, handlerChangeCustomIdFormat, loading, error, disabled}) {
 
     const createNewPart = () => ({
         guid: crypto.randomUUID(),
@@ -44,16 +44,20 @@ export default function CustomIdTab({ customIdFormat, handlerChangeCustomIdForma
                                 createNewItem={createNewPart}
                                 addLabel="Добавить элемент"
                                 onChange={handlerChange}
+                                disabled={disabled}
                                 renderItem={({ field, index, total, onUpdate, onMove }) => {
                                     return (
-                                        <DndFormField id={field.guid}>
-                                            <CustomIdForm
-                                                part={field}
-                                                index={index}
-                                                total={total}
-                                                onUpdate={onUpdate}
-                                                onMove={onMove}/>
-                                        </DndFormField>
+                                        <fieldset disabled={disabled}>
+                                            <DndFormField id={field.guid}>
+                                                <CustomIdForm
+                                                    part={field}
+                                                    index={index}
+                                                    total={total}
+                                                    onUpdate={onUpdate}
+                                                    onMove={onMove}
+                                                    />
+                                            </DndFormField>
+                                        </fieldset>
                                     );
                                 }}
                             />)}

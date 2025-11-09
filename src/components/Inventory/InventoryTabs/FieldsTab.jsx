@@ -6,7 +6,7 @@ import { hasOrderChanged } from "../../../utils/utils";
 import { FIELD_TYPES } from '../../../utils/constants'
 
 
-export default function FieldsTab({ itemFields, handlerChangeFields, onShowToast }) {
+export default function FieldsTab({ itemFields, handlerChangeFields, onShowToast, disabled }) {
 
     function createNewField(fields, type = "TEXT") {
         const countOfType = fields.filter(field => field.type === type).length;
@@ -40,11 +40,12 @@ export default function FieldsTab({ itemFields, handlerChangeFields, onShowToast
                         fields={itemFields}
                         onChange={handlerChange}
                         createNewItem={createNewField}
+                        disabled={disabled}
                         addLabel="Добавить поле"
                         renderItem={({ field, index, total, onUpdate, onMove }) => {
                             return (
                                 <DndFormField id={field.guid || field.id}>
-                                    <ItemFieldsForm field={field} index={index} total={total} onUpdate={onUpdate} onMove={onMove} />
+                                    <ItemFieldsForm field={field} index={index} total={total} onUpdate={onUpdate} onMove={onMove} disabled={disabled} />
                                 </DndFormField>);
                         }}
                     />)}

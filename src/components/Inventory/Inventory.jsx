@@ -15,6 +15,7 @@ import { initialStateInventory, titleInfoTooltip, } from '../../utils/constants'
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import { InventorySchema } from '../../utils/validationSchema';
 import { mergeInventory } from '../../utils/utils'
+import useAccess from '../../hooks/useAccess';
 
 function Inventory({
     isOpen,
@@ -30,13 +31,13 @@ function Inventory({
     onShowToast,
     onUploadImage
 }, ref) {
-
     const currentUser = useContext(CurrentUserContext);
     const formikRef = useRef();
     const timerRef = useRef(null);
     const [inventory, setInventory] = useState(initialStateInventory)
     const [version, setVersion] = useState();
     const [activeTab, setActiveTab] = useState('details');
+    const { readOnly, readAccess, writeAccess } = useAccess([inventory]);
 
     const [loadInventory, { data, loading, error, reset }] = useLazyQuery(GET_INVENTORY);
     const [updateInventory] = useMutation(UPDATE_INVENTORY_NEW, {
@@ -46,7 +47,7 @@ function Inventory({
     
     const inventoryData = data?.inventory || {}
     
-    useEffect(() => { return () => { if (timerRef.current) clearTimeout(timerRef.current); }; }, []);
+    useEffect(() => { return () => { if (timerRef.current) clearTimeout(timerRef.current) }; }, []);
 
     useEffect(() => {
         if (inventoryId) {
@@ -76,6 +77,7 @@ function Inventory({
         reset?.();
         setInventory(initialStateInventory);
         setActiveTab('details');
+        cancelSave();
     }
 
     const handleCreateInventory = () => {
@@ -137,7 +139,7 @@ function Inventory({
         updateStateInventory(updated);
     };
 
-    const { isDirty, isSaving, errorAutoSave, scheduleSave, flushSave } = useAutoSave(8000, handleUpdateInventory);
+    const { isDirty, isSaving, errorAutoSave, scheduleSave, flushSave, cancelSave } = useAutoSave(8000, handleUpdateInventory);
 
     const handlerChangeInventory = ((name, value) => {
         setInventory(prev => {
@@ -156,9 +158,7 @@ function Inventory({
 
     useImperativeHandle(ref, () => ({ forceSaveInventory }));
 
-    const handleFlashSave = () => {
-        flushSave(inventory, version)
-    }
+    const handleFlashSave = () => flushSave(inventory, version)
 
     return (
         <Modal
@@ -209,6 +209,7 @@ function Inventory({
                                             handlerChangeDetails={handlerChangeInventory}
                                             onUploadImage={onUploadImage}
                                             onShowToast={onShowToast}
+                                            disabled={readOnly && !writeAccess}
                                         />}
                             </Tab>
                             <Tab eventKey="customId" title="Custom ID">
@@ -225,6 +226,7 @@ function Inventory({
                                             handlerChangeCustomIdFormat={handlerChangeInventory}
                                             loading={loading}
                                             error={error}
+                                            disabled={readOnly && !writeAccess}
                                         />}
                             </Tab>
                             <Tab eventKey="fields" title="Fields">
@@ -242,6 +244,7 @@ function Inventory({
                                             onShowToast={onShowToast}
                                             loading={loading}
                                             error={error}
+                                            disabled={readOnly}
                                         />)}
                             </Tab>
                             <Tab eventKey="access" title="Access">
@@ -252,6 +255,7 @@ function Inventory({
                                         : <AccessTab
                                             inventory={inventory}
                                             handlerChangeAllowedUsers={handlerChangeInventory}
+                                            disabled={readOnly}
                                         /> }
                             </Tab>
                             <Tab eventKey="items" title="Items" mountOnEnter>
@@ -261,10 +265,11 @@ function Inventory({
                                     handlerAddRecord={handlerAddRecord}
                                     handlerDeleteRecords={handlerDeleteRecords}
                                     itemFields={inventory.fields}
+                                    disabled={readOnly && !writeAccess}
                                 />
                             </Tab>
                             <Tab eventKey="discussion" title="Discussion" mountOnEnter>
-                                <DiscussionTab inventoryId={inventory.id} onShowToast={onShowToast}/>
+                                <DiscussionTab inventoryId={inventory.id} disabled={!readAccess} />
                             </Tab>
                             <Tab eventKey="stats" title="Stats">
                                 {loading

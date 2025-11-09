@@ -9,7 +9,8 @@ export default function EditableRecord({
     onChange,
     isEditing,
     editingField,
-    setEditingCell
+    setEditingCell,
+    disabled
 }) {
     const selectRef = useRef(null);
     const [searchUsers] = useLazyQuery(SEARCH_USERS, { fetchPolicy: "no-cache" });
@@ -124,6 +125,7 @@ export default function EditableRecord({
                                     key={`${row.guid}-${cell.column.id}`}
                                     ref={selectRef}
                                     cacheOptions
+                                    disabled={disabled}
                                     defaultOptions
                                     loadOptions={(txt) => loadOptions(txt, cell.column.id)}
                                     value={currentOption}

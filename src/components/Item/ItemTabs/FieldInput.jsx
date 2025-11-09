@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Form, Image } from "react-bootstrap";
 
-export default function FieldInput({ field, value, handlerChangeFieldInput, onShowToast, onUploadImage }) {
+export default function FieldInput({ field, value, handlerChangeFieldInput, onShowToast, onUploadImage, disabled }) {
     const imageRef = useRef(null);
 
     const handleChange = async (e) => {
@@ -37,6 +37,7 @@ export default function FieldInput({ field, value, handlerChangeFieldInput, onSh
                         placeholder="Enter text..."
                         value={value.value || ""}
                         onChange={handleChange}
+                        disabled={disabled}
                     />
                 </Form.Group>
             );
@@ -51,6 +52,7 @@ export default function FieldInput({ field, value, handlerChangeFieldInput, onSh
                         placeholder="Enter number..."
                         value={value.value ?? ""}
                         onChange={handleChange}
+                        disabled={disabled}
                     />
                 </Form.Group>
             );
@@ -80,6 +82,7 @@ export default function FieldInput({ field, value, handlerChangeFieldInput, onSh
                         name={value.id}
                         accept="image/*"
                         onChange={handleChange}
+                        disabled={disabled}
                     />
                 </Form.Group>
             );
@@ -93,6 +96,7 @@ export default function FieldInput({ field, value, handlerChangeFieldInput, onSh
                         label={field.title}
                         checked={!!value.value}
                         onChange={handleChange}
+                        disabled={disabled}
                     />
                     </Form.Group>
                 );
@@ -108,6 +112,7 @@ export default function FieldInput({ field, value, handlerChangeFieldInput, onSh
                             placeholder="Enter value..."
                             value={value.value || ""}
                             onChange={handleChange}
+                            disabled={disabled}
                         />
                     </Form.Group>
             );

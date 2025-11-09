@@ -11,6 +11,7 @@ export default function DndForm({
     createNewItem,
     renderItem,
     fullId,
+    disabled,
     addLabel = "Add element",
     className = "",
 }) {
@@ -58,8 +59,8 @@ export default function DndForm({
             {title && <h5 className="mb-3">{title}</h5>}
 
             <div ref={formRef}>
-                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                    <SortableContext items={fields?.map(getKey)?.filter(Boolean)} strategy={verticalListSortingStrategy}>
+                <DndContext sensors={disabled ? undefined : sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <SortableContext items={fields?.map(getKey)?.filter(Boolean)} strategy={verticalListSortingStrategy} disabled={disabled}>
                         {fields?.toSorted((a, b) => a.order - b.order).map((field, index) => (
                             <div key={getKey(field)}>
                                 {renderItem({
@@ -75,7 +76,7 @@ export default function DndForm({
             </div>
 
             <div className="d-flex justify-content-between align-items-center mt-3">
-                <Button variant="outline-primary" size="sm" onClick={handleAdd}> + {addLabel} </Button>
+                <Button variant="outline-primary" size="sm" disabled={disabled} onClick={handleAdd}> + {addLabel} </Button>
                 { fullId ? (<Badge bg="dark" className="p-2">Example:&nbsp;{fullId || "—"}</Badge>) : (<></>) }
             </div>
         </Card>

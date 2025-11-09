@@ -28,8 +28,6 @@ const ITEM_BASE_FRAGMENT = gql`
                 isDeleted
             }
         }
-        likesCount
-        likedByMe
     }
 `;
 
@@ -161,10 +159,13 @@ export const GET_ITEM = gql`
     ${ITEM_BASE_FRAGMENT}
 `;
 
-export const GET_INVENTORY_FIELDS = gql`
+export const GET_INVENTORY_INFO = gql`
     query GetInventoryFields($id: Int!) {
         inventory(id: $id) {
             id
+            allowedUsers {
+                id
+            }
             customIdFormat
             fields {
                 id
@@ -409,4 +410,14 @@ export const GET_INVENTORY_STATS = gql`
             }
         }
     }
+`;
+
+export const GET_ITEM_LIKES = gql`
+  query GetItemLikes($id: Int!) {
+    item(id: $id) {
+      id
+      likesCount
+      likedByMe
+    }
+  }
 `;

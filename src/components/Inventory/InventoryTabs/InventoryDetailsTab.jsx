@@ -1,11 +1,11 @@
 import { useContext, useRef } from 'react';
 import { useLazyQuery, } from '@apollo/client/react';
 import AsyncCreatableSelect from 'react-select/async-creatable';
+import { components } from "react-select";
 import { Form, Row, Col, Image } from "react-bootstrap";
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
 import { SEARCH_TAGS } from '../../../graphql/queries';
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import MarkdownField from './MarkdownField';
 
 export default function InventoryDetailsTab({
     formikValues,
@@ -19,7 +19,8 @@ export default function InventoryDetailsTab({
     handlerChangeDetails,
     onUploadImage,
     readOnly,
-    onShowToast
+    onShowToast,
+    disabled,
 }) {
     const currentUser = useContext(CurrentUserContext);
     const [searchTags] = useLazyQuery(SEARCH_TAGS, { fetchPolicy: "no-cache" });
@@ -43,6 +44,8 @@ export default function InventoryDetailsTab({
         else handleFormikChange(param);
     }
 
+    const handleChangeDescription = (name) => (value) => handlerChangeDetails(name, value);
+
     const handlerChangeImage = async (e) => {
         if (!e.target.files[0]) return;
         try {
@@ -53,6 +56,9 @@ export default function InventoryDetailsTab({
             onShowToast('Во время загрузки изображения произошла ошибка', 'bottom-center');
         }
     };
+
+    const CustomMultiValueRemove = () => null;
+    const CustomClearIndicator = () => null;
 
     const handleAddTag = (inputValue) => {
         const name = inputValue.trim();
@@ -67,157 +73,165 @@ export default function InventoryDetailsTab({
 
     return (
         <Form>
-            <Row className="g-3">
-                <Col xs={12}>
-                    <Form.Group controlId="title">
-                        <Form.Label className="required">Title</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="title"
-                            value={formikValues.title}
-                            onChange={handleFormikChange}
-                            placeholder="Enter title..."
-                            disabled={readOnly}
-                            onBlur={formikBlur}
-                            isInvalid={formikTouched?.title && !!formikErrors?.title}
-                        />
-                        <Form.Control.Feedback type='invalid'>
-                            {formikErrors?.title}
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                </Col>
-                <Col xs={12} md={8}>
-                    <Form.Group controlId="description">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            rows={4}
-                            name="description"
-                            value={details.description}
-                            onChange={handleChange}
-                            placeholder="Description…"
-                        />
-                    </Form.Group>
-                </Col>
-
-                <Col xs={12} md={4}>
-                    <Form.Group controlId="category">
-                        <Form.Label className="required">Category</Form.Label>
-                        <Form.Select
-                            value={formikValues.category}
-                            onChange={handleFormikChange}
-                            disabled={readOnly}
-                            name="category"
-                            isInvalid={formikTouched?.category && !!formikErrors?.category}
-                        >
-                            <option value="" disabled> Select category… </option>
-                            { categories?.enumValues?.map((category) => ( 
-                                <option key={category.name} value={category.name}> {category.name} </option>)) }
-                        </Form.Select>
-                        <Form.Text className="text-muted">
-                            Value definition develop (enum).
-                        </Form.Text>
-                        <Form.Control.Feedback type='invalid'>
-                            {formikErrors?.category}
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                </Col>
-
-                <Col xs={12} md={4}>
-                    <Form.Group controlId="image">
-                        <Form.Label>Image</Form.Label>
-                        <div className="d-flex flex-column gap-2">
-                            {details?.image ? (
-                                <Image
-                                    src={details.image}
-                                    alt="Preview"
-                                    thumbnail
-                                    style={{ maxHeight: 160, objectFit: "cover" }}
-
-                                />
-                            ) : (
-                                <div
-                                    className="border rounded d-flex align-items-center justify-content-center p-3 text-muted"
-                                    style={{ height: 160 }}
-                                >No image</div>)}
-
+            <fieldset disabled={disabled}>
+                <Row className="g-3">
+                    <Col xs={12}>
+                        <Form.Group controlId="title">
+                            <Form.Label className="required">Title</Form.Label>
                             <Form.Control
-                                ref={imageRef}
-                                type="file"
-                                name="image"
-                                accept="image/*"
-                                onChange={handleChange}
+                                type="text"
+                                name="title"
+                                value={formikValues.title}
+                                onChange={handleFormikChange}
+                                placeholder="Enter title..."
                                 disabled={readOnly}
+                                onBlur={formikBlur}
+                                isInvalid={formikTouched?.title && !!formikErrors?.title}
                             />
-                        </div>
-                    </Form.Group>
-                </Col>
+                            <Form.Control.Feedback type='invalid'>
+                                {formikErrors?.title}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                    </Col>
+                    <Col xs={12} md={8}>
+                        <Form.Group controlId="description">
+                            <Form.Label>Description</Form.Label>
+                            <MarkdownField
+                                value={details.description}
+                                onChange={handleChangeDescription('description')}
+                                readOnly={disabled}
+                            />
+                        </Form.Group>
+                    </Col>
+                    <Col xs={12} md={4}>
+                        <Form.Group controlId="category">
+                            <Form.Label className="required">Category</Form.Label>
+                            <Form.Select
+                                value={formikValues.category}
+                                onChange={handleFormikChange}
+                                disabled={readOnly}
+                                name="category"
+                                isInvalid={formikTouched?.category && !!formikErrors?.category}
+                            >
+                                <option value="" disabled> Select category… </option>
+                                { categories?.enumValues?.map((category) => ( 
+                                    <option key={category.name} value={category.name}> {category.name} </option>)) }
+                            </Form.Select>
+                            <Form.Text className="text-muted">
+                                Value definition develop (enum).
+                            </Form.Text>
+                            <Form.Control.Feedback type='invalid'>
+                                {formikErrors?.category}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                    </Col>
 
-                <Col xs={12} md={8}>
-                    <Row className="g-3">
-                        <Col xs={12} md={6}>
-                            <Form.Group controlId="owner">
-                                <Form.Label>Tags</Form.Label>
-                                <AsyncCreatableSelect
-                                    isMulti
-                                    cacheOptions
-                                    defaultOptions
-                                    loadOptions={loadOptions}
-                                    onChange={handleChange}
-                                    onCreateOption={handleAddTag}
-                                    value={inventoryTags?.map(tag => ({ value: tag.id, label: tag.name }))}
-                                    placeholder={'Tags'}
-                                    styles={{
-                                        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                                    }}
-                                    noOptionsMessage={({ inputValue }) =>
-                                        inputValue ? "Ничего не найдено" : "Начните ввод для поиска"
-                                    }
-                                />
-                            </Form.Group>
-                        </Col>
+                    <Col xs={12} md={4}>
+                        <Form.Group controlId="image">
+                            <Form.Label>Image</Form.Label>
+                            <div className="d-flex flex-column gap-2">
+                                {details?.image ? (
+                                    <Image
+                                        src={details.image}
+                                        alt="Preview"
+                                        thumbnail
+                                        style={{ maxHeight: 160, objectFit: "cover" }}
 
-                        <Col xs={12} md={6}>
-                            <Form.Group controlId="owner">
-                                <Form.Label>Owner</Form.Label>
+                                    />
+                                ) : (
+                                    <div
+                                        className="border rounded d-flex align-items-center justify-content-center p-3 text-muted"
+                                        style={{ height: 160 }}
+                                    >No image</div>)}
+
                                 <Form.Control
-                                    type="text"
-                                    name="owner"
-                                    value={details?.owner?.name ?? ''}
-                                    readOnly
-                                    disabled
+                                    ref={imageRef}
+                                    type="file"
+                                    name="image"
+                                    accept="image/*"
+                                    onChange={handleChange}
+                                    disabled={readOnly}
                                 />
-                            </Form.Group>
-                        </Col>
+                            </div>
+                        </Form.Group>
+                    </Col>
 
-                        <Col xs={12} md={6}>
-                            <Form.Group controlId="created">
-                                <Form.Label>Created by</Form.Label>
+                    <Col xs={12} md={8}>
+                        <Row className="g-3">
+                            <Col xs={12} md={6}>
+                                <Form.Group controlId="owner">
+                                    <Form.Label>Tags</Form.Label>
+                                    <AsyncCreatableSelect
+                                        isMulti
+                                        cacheOptions
+                                        disabled={disabled}
+                                        isClearable={disabled}
+                                        defaultOptions
+                                        loadOptions={loadOptions}
+                                        onChange={handleChange}
+                                        onCreateOption={handleAddTag}
+                                        components={{
+                                            MultiValueRemove: disabled
+                                            ? CustomMultiValueRemove
+                                            : components.MultiValueRemove,
+                                            ClearIndicator: disabled
+                                            ? CustomClearIndicator
+                                            : components.ClearIndicator,
+                                        }}
+                                        value={inventoryTags?.map(tag => ({ value: tag.id, label: tag.name }))}
+                                        placeholder={'Tags'}
+                                        styles={{
+                                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                        }}
+                                        noOptionsMessage={({ inputValue }) =>
+                                            inputValue ? "Ничего не найдено" : "Начните ввод для поиска"
+                                        }
+                                    />
+                                </Form.Group>
+                            </Col>
+
+                            <Col xs={12} md={6}>
+                                <Form.Group controlId="owner">
+                                    <Form.Label>Owner</Form.Label>
                                     <Form.Control
                                         type="text"
-                                        name="createdAt"
-                                        value={details?.createdAt ?? ''}
+                                        name="owner"
+                                        value={details?.owner?.name ?? ''}
                                         readOnly
                                         disabled
                                     />
-                            </Form.Group>
-                        </Col>
+                                </Form.Group>
+                            </Col>
 
-                        <Col xs={12} md={6}>
-                            <Form.Group controlId="invUpdated">
-                                <Form.Label>Update at</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        name="updateAt"
-                                        value={details?.updatedAt ?? ''}
-                                        readOnly
-                                        disabled
-                                    />
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
+                            <Col xs={12} md={6}>
+                                <Form.Group controlId="created">
+                                    <Form.Label>Created by</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="createdAt"
+                                            value={details?.createdAt ?? ''}
+                                            readOnly
+                                            disabled
+                                        />
+                                </Form.Group>
+                            </Col>
+
+                            <Col xs={12} md={6}>
+                                <Form.Group controlId="invUpdated">
+                                    <Form.Label>Update at</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="updateAt"
+                                            value={details?.updatedAt ?? ''}
+                                            readOnly
+                                            disabled
+                                        />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+            </fieldset>
         </Form>
     );
 }

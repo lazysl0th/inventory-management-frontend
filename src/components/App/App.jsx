@@ -33,9 +33,7 @@ import InfoToast from '../InfoToast/InfoToast';
 import PageDeleteUserData from '../PageDeleteUserData/PageDeleteUserData';
 import PagePrivacy from '../PagePrivacy/PagePrivacy'
 import PageNotFound from '../PageNotFound/PageNotFound';
-import LiveBlock from '../LiveBlock/LiveBlock';
 import { titleInfoTooltip, messageInfoTooltip, queryParams } from '../../utils/constants';
-import { isOwner, hasAdminRole, hasAccess } from '../../utils/utils';
 
 function App() {
     const navigate = useNavigate();
@@ -147,7 +145,6 @@ function App() {
     }
 
     const closeItem = () => {
-        console.log(1)
         setSelectedItemId(null);
         setIsItemViewOpen(false);
     }
@@ -284,16 +281,6 @@ function App() {
         navigate('/sign-in', { replace: true });
     }
 
-    const handlerCheckPermissionInventory = (inventories, user, requiredRoles) => {
-        if (!isOwner(inventories, user) && !hasAdminRole(requiredRoles, user)) setAccess(false);
-    }
-    
-    const handlerCheckPermissionItem = (item, user, requiredRoles) => {
-        if (!isOwner(uniqueInventories, user) && !hasAdminRole(requiredRoles, user) && !hasAccess(uniqueInventories, user)) {
-                setAccess(false);
-            }
-    }
-
     const handlerUploadImage = (file) => {
         const formData = new FormData();
         formData.append("file", file);
@@ -349,7 +336,7 @@ function App() {
                 <Route
                     path="/admin"
                     element={
-                        <ProtectedRoute isLoading={isVerifyCurrentUser} >
+                        <ProtectedRoute isLoading={isVerifyCurrentUser} isAdmin={true} >
                             <AdminPage
                                 onOpenTooltip={openInfoTooltip}
                                 onCheckCurrentUser={handleVerifyUser}
@@ -361,24 +348,22 @@ function App() {
                     }/>
                 <Route path="*" element={<PageNotFound />} />
             </Routes>
-                <LiveBlock inventoryId={selectedInventoryId}>
-                    <Inventory
-                        ref={inventoryRef}
-                        isOpen={isInventoryViewOpen}
-                        onOpenTooltip={openInfoTooltip}
-                        categories={categories}
-                        loadTags={loadTags}
-                        resultTags={resultTags}
-                        inventoryId={selectedInventoryId}
-                        handlerCloseView={handlerCloseRecordView.Inventory}
-                        handlerClickRecord={handlerClickRecord}
-                        handlerCreateInventory={handlerCreateInventory}
-                        handlerAddRecord={handlerAddRecord.Item}
-                        handlerDeleteRecords={handlerDeleteRecords.Item}
-                        onShowToast={showInfoToats}
-                        onUploadImage={handlerUploadImage}
-                    />
-                </LiveBlock>
+                <Inventory
+                    ref={inventoryRef}
+                    isOpen={isInventoryViewOpen}
+                    onOpenTooltip={openInfoTooltip}
+                    categories={categories}
+                    loadTags={loadTags}
+                    resultTags={resultTags}
+                    inventoryId={selectedInventoryId}
+                    handlerCloseView={handlerCloseRecordView.Inventory}
+                    handlerClickRecord={handlerClickRecord}
+                    handlerCreateInventory={handlerCreateInventory}
+                    handlerAddRecord={handlerAddRecord.Item}
+                    handlerDeleteRecords={handlerDeleteRecords.Item}
+                    onShowToast={showInfoToats}
+                    onUploadImage={handlerUploadImage}
+                />
             <Item
                 ref={itemRef}
                 isOpen={isItemViewOpen}

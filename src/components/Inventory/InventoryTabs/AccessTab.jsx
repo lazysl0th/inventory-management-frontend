@@ -2,7 +2,7 @@ import { Form, Alert, Card } from "react-bootstrap";
 import RecordsList from "../../RecordsList/RecordsList";
 import { nameList } from "../../../utils/constants";
 
-export default function AccessTab({ inventory, handlerChangeAllowedUsers }) {
+export default function AccessTab({ inventory, handlerChangeAllowedUsers, disabled }) {
 
     const { isPublic, allowedUsers = [] } = inventory;
 
@@ -27,6 +27,7 @@ export default function AccessTab({ inventory, handlerChangeAllowedUsers }) {
                             name='isPublic'
                             checked={isPublic || false}
                             onChange={handleChange}
+                            disabled={disabled}
                         />
                     </div>
                     <div className="text-muted small">
@@ -43,6 +44,7 @@ export default function AccessTab({ inventory, handlerChangeAllowedUsers }) {
                         records={inventory.allowedUsers}
                         nameRecordList={nameList.ACCESS}
                         onChangeRecordList={handlerChange}
+                        disabled={disabled}
                     />
 
             )}

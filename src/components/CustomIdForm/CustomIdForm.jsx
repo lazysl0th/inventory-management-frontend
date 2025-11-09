@@ -6,7 +6,7 @@ import { PART_DEFINITIONS } from "../../utils/constants";
 import { getAvailableParts, IdGenerator } from "../../utils/utils";
 
 
-export default function CustomIdForm({ part, index, total, onUpdate, onMove }) {
+export default function CustomIdForm({ part, index, total, onUpdate, onMove, disabled }) {
     const target = useRef(null);
     const [showPicker, setShowPicker] = useState(false);
     const partDefinition = PART_DEFINITIONS[part.type] || {};

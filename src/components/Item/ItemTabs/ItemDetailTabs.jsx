@@ -1,44 +1,15 @@
-import { useContext, useMemo } from "react";
-import { useMutation } from '@apollo/client/react';
+import { useMemo } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
-import { FaHeart } from "react-icons/fa";
 import FieldInput from './FieldInput';
-import { TOGGLE_LIKE } from '../../../graphql/queries';
-import { CurrentUserContext } from '../../../context/CurrentUserContext';
+import LikeButton from "./LikeButton";
 
-export default function ItemDetailsTab({ item, customIdFormat, handlerChangeItem, onShowToast, onUploadImage }) {
-    const currentUser = useContext(CurrentUserContext);
-    const [toggleLike, { loadingToggleLike }] = useMutation(TOGGLE_LIKE);
-
+export default function ItemDetailsTab({ item, customIdFormat, handlerChangeItem, onShowToast, onUploadImage, readAccess, disabled }) {
     const getKey = (value) => value.guid ?? value.id;
-
     const handlerChange = (id, changes) => {
         const updated = item.values.map(value => getKey(value) === id ? { ...value, ...changes } : value);
         handlerChangeItem('values', updated)
     }
-    (val) => handlerChangeItem("customId", val)
-    const handleLikeItem = async () => {
-        try {
-            const { data } = await toggleLike({
-                variables: { id: item.id },
-                optimisticResponse: {
-                    __typename: "Mutation",
-                    toggleLikeItem: {
-                        __typename: "Item",
-                        id: item.id,
-                        likesCount: item.likedByMe ? item.likesCount - 1 : item.likesCount + 1,
-                        likedByMe: !item.likedByMe,
-                    },
-                },
-            })
-            const updatedLike = { __typename: data.toggleLikeItem.__typename, ...data.toggleLikeItem };
-            for (let key in updatedLike) handlerChangeItem(key, updatedLike[key]);
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    const handleClick = () => (currentUser.loggedIn && item.id ? handleLikeItem() : onShowToast('Нельзя', 'bottom-center'))
+    const handleChangeCustomID = (name) => (e) => handlerChangeItem(name, e.target.value)
 
     const buildMaskFromSummary = (summary = "") => {
         const chars = Array.from(summary);
@@ -50,9 +21,7 @@ export default function ItemDetailsTab({ item, customIdFormat, handlerChangeItem
             }).join("");
         return new RegExp(`^${pattern}$`, "u");
     };
-
     const mask = useMemo(() => buildMaskFromSummary(customIdFormat?.summary ?? ""),[customIdFormat?.summary]);
-
     return (
         <Form>
             <Row className="g-3 justify-content-end">
@@ -62,9 +31,10 @@ export default function ItemDetailsTab({ item, customIdFormat, handlerChangeItem
                         <Form.Control
                             name="customId"
                             value={item?.customId}
-                            onChange={(e) => handlerChangeItem("customId", e.target.value)}
+                            onChange={handleChangeCustomID("customId")}
                             className="form-control"
-                            //isInvalid={item?.customId && !mask.test(item.customId)}
+                            isInvalid={item?.customId && !mask.test(item.customId)}
+                            disabled={disabled}
                         />
                         <Form.Control.Feedback type="invalid">
                             Неверный формат. Ожидается: {customIdFormat?.summary}
@@ -80,6 +50,7 @@ export default function ItemDetailsTab({ item, customIdFormat, handlerChangeItem
                             handlerChangeFieldInput={handlerChange}
                             onUploadImage={onUploadImage}
                             onShowToast={onShowToast}
+                            disabled={disabled}
                         />))}
                 </Col>
                 <Col xs={12}>
@@ -123,14 +94,13 @@ export default function ItemDetailsTab({ item, customIdFormat, handlerChangeItem
                             </Form.Group>
                         </Col>
                         <Col xs={2} className="d-flex justify-content-end align-items-end">
-                            <Button
-                                    className="d-flex align-items-center gap-1"
-                                    onClick={handleClick}
-                                    disabled={loadingToggleLike}
-                                >
-                                <FaHeart className={`${item.likedByMe ? 'text-danger' : ''}`}/> 
-                                <span>{item.likesCount}</span>
-                            </Button>
+                              <LikeButton
+                                itemId={item.id}
+                                likedByMe={item.likedByMe}
+                                likesCount={item.likesCount}
+                                readAccess={readAccess}
+                                onShowToast={onShowToast}
+                            />
                         </Col>
                     </Row>
                 </Col>

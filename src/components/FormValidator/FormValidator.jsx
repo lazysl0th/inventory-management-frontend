@@ -11,6 +11,8 @@ export default function FormValidation ({ initialValues, validationSchema, onSub
         }
     }
 
+    
+
     return (
         <Formik
             initialValues={initialValues}
@@ -19,11 +21,16 @@ export default function FormValidation ({ initialValues, validationSchema, onSub
             onSubmit={submitHandler}
             validateOnMount={validateOnMount}
         >
-            {(formikProps) => (
-                    <>
-                        { children({ ...formikProps }) }
-                    </>
-            )}
+            {(formikProps) => {
+                const { setFieldValue } = formikProps;
+                const handleChangeCheckbox = (e) => {
+                    const { name, checked } = e.target;
+                    setFieldValue(name, checked);
+                };
+                    return (<>
+                        { children({ ...formikProps, handleChangeCheckbox}) }
+                    </>)
+            }}
         </Formik>
     );
 }
