@@ -275,8 +275,11 @@ function Inventory({
                                         ? (<div className="d-flex justify-content-center align-items-center">
                                             <Alert variant="danger">{error.message}</Alert>
                                             </div>)
-                                        : <StatsTab inventory={inventory}
-                                        /> }
+                                        : <StatsTab 
+                                            inventoryId={inventoryId}
+                                            itemsCount={inventory.itemsCount}
+
+                                            /> }
                             </Tab>
                             <Tab eventKey="export" title="Export"></Tab>
                         </Tabs>

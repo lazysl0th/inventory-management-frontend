@@ -101,7 +101,9 @@ export const nameList = {
     ACCESS: 'Users with write access',
     ITEMS: 'Items',
     USERS: 'Users',
-    INVENTORIES: 'Inventories'
+    INVENTORIES: 'Inventories',
+    NUM_STATS: 'Stats on numeric fields',
+    TEXT_STATS: 'Stats on text fields'
 }
 
 export const TAGS_CLOUD_SOLOR = {
@@ -123,6 +125,17 @@ export const RECORDS_LIST_HEADS = {
         { id: 'owner', header: 'Owner', accessor: value => value?.name },
     ],
     'Item': { fieldIdKey: 'id', fieldTitleKey: 'title', fieldValueKey: 'value', fieldCustomIdKey: 'Custom ID'},
+    'NumStats': [
+        { id: 'field', header: 'Field' },
+        { id: 'average', header: 'Average' },
+        { id: 'max', header: 'Max' },
+        { id: 'min', header: 'Min' },
+    ],
+    'TextStats': [
+        { id: 'field', header: 'Field' },
+        { id: 'value', header: 'Value' },
+        { id: 'count', header: 'Count' },
+    ],
     'CustomIdPart': [
         { id: 'type', header: 'Type' },
         { id: 'value', header: 'Value' },

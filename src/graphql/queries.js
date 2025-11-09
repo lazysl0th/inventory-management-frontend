@@ -312,24 +312,24 @@ export const UPDATE_INVENTORY_NEW = gql`
 export const UPDATE_ITEM = gql`
     mutation UpdateItem($id: Int!, $input: CreateItemInput!, $expectedVersion: Int!) {
         updateItem(id: $id, input: $input, expectedVersion: $expectedVersion) {
-id
-      version
-      customId
-      createdAt
-      updatedAt
-      owner {
-        id
-        name
-      }
-      values {
-        field {
-          id
-          title
-        }
-        value
-      }
-      likesCount
-      likedByMe
+            id
+            version
+            customId
+            createdAt
+            updatedAt
+            owner {
+                id
+                name
+            }
+            values {
+                field {
+                    id
+                    title
+                }
+                value
+            }
+            likesCount
+            likedByMe
         }
     }
 `;
@@ -382,6 +382,30 @@ export const COMMENT_ADDED = gql`
             user {
                 id
                 name
+            }
+        }
+    }
+`;
+
+export const GET_INVENTORY_STATS = gql`
+    query GetInventoryStats($id: Int!) {
+        inventory(id: $id) {
+        id
+        title
+            stats {
+                numStats {
+                    field
+                    average
+                    min
+                    max
+                }
+                textStats {
+                    field
+                    topValues {
+                        value
+                        count
+                    }
+                }
             }
         }
     }

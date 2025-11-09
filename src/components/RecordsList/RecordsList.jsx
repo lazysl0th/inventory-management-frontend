@@ -39,7 +39,11 @@ export default function RecordsList({
 
     const onDisabled = () => Object.values(rowSelection).some(Boolean);
 
-    const getUniqIdValue = (row) => row.guid ? String(row.guid) : String(row.id);
+    const getUniqIdValue = (row) => {
+        if (row.id !== undefined && row.id !== null) return String(row.id)
+        else if (row.guid) return String(row.guid);
+        return Object.values(row).map(value => (value !== null && value !== undefined ? value.toString() : "")).join("_");
+    };
 
     const handleDeleteRecord = async () => {
         await handlerDeleteRecords(rowSelection)
@@ -132,7 +136,10 @@ export default function RecordsList({
     };
 
     const collectColumn = (fields, config) => {
+        //console.log(fields);
+        //console.log(config);
         const columns = fields.reduce((acc, field) => {
+            //console.log(field);
             if (!field.isDeleted && field.showInTable) {
             acc.push({
                 id: field[config.fieldIdKey] ?? field.guid,
@@ -141,15 +148,12 @@ export default function RecordsList({
             });
             }
             return acc;
-        }, [{
-                id: crypto.randomUUID(),
-                header: config.fieldCustomIdKey,
-                order: 0
-            }]);
+        }, [ config.fieldCustomIdKey ? { id: crypto.randomUUID(), header: config.fieldCustomIdKey, order: 0 } : null]);
         return columns.sort((a, b) => a.order - b.order);
     };
 
     const buildColumns = (columns, type) => {
+        console.log(columns);
         const columnSchema = Array.isArray(RECORDS_LIST_HEADS[type])
             ? {
                 columns: RECORDS_LIST_HEADS[type],
@@ -191,7 +195,7 @@ export default function RecordsList({
             />)
     });
 
-    const getColumnsByType = (type) => {
+    const getColumnsByType = (type, fields) => {
         if (!RECORDS_LIST_HEADS[type]) return [];
         const columns = buildColumns(fields, type) ?? [];
         const checkboxColumn = createCheckboxColumn();
@@ -202,7 +206,7 @@ export default function RecordsList({
 
     const handelFilterChange = (e) => setGlobalFilter(e.target.value);
 
-    const columns = getColumnsByType(type);
+    const columns = getColumnsByType(type, fields);
 
     const table = useReactTable({
         data: useMemo(() => records || [], [records]),
@@ -293,7 +297,7 @@ export default function RecordsList({
                         )}
                         {records?.length == 0
                             ? (<></>)
-                            : (<Col md className="d-flex justify-content-end">
+                            : ( (type !== 'NumStats' && type !== 'TextStats') && <Col md className="d-flex justify-content-end">
                                 <Form.Control
                                     type="text"
                                     placeholder="Filter..."
