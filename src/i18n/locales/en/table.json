@@ -1,0 +1,58 @@
+{
+    "placeholders": {
+        "filter": "Filter...",
+        "noMatches": "No matches",
+        "users": "Name / Email",
+        "enterValue": "Enter {{field}}..."
+    },
+    "fields": {
+        "email": "email",
+        "name": "name"
+    },
+    "inventory": {
+        "title": "Title",
+        "description": "Description",
+        "category": "Category",
+        "owner": "Owner"
+    },
+    "inventorySearchResult": {
+        "title": "Title",
+        "description": "Description",
+        "category": "Category",
+        "owner": "Owner"
+    },
+    "numStats": {
+        "field": "Field",
+        "average": "Average",
+        "max": "Max",
+        "min": "Min"
+    },
+    "textStats": {
+        "field": "Field",
+        "value": "Value",
+        "count": "Count"
+    },
+    "user": {
+        "name": "Name",
+        "email": "Email"
+    },
+    "adminUser": {
+        "name": "Name",
+        "email": "Email",
+        "status": "Status",
+        "roles": "Roles"
+    },
+    "nameList":  {
+        "LATEST": "Latest inventories",
+        "TOP_ITEMS": "Top 5 by number of items",
+        "SEARCH": "Search result",
+        "OWNER": "My inventories",
+        "WRITE_ACCESS": "Inventories with write access",
+        "ACCESS": "Users with write access",
+        "ITEMS": "Items",
+        "USERS": "Users",
+        "INVENTORIES": "Inventories",
+        "NUM_STATS": "Stats on numeric fields",
+        "TEXT_STATS": "Stats on text fields"
+    }
+}

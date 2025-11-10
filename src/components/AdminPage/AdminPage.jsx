@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { Spinner, Alert, Container, Row, Col } from 'react-bootstrap';
 import RecordsList from '../RecordsList/RecordsList';
-import { nameList, titleInfoTooltip, messageInfoTooltip} from '../../utils/constants';
+import { NAME_LIST, titleInfoTooltip, messageInfoTooltip} from '../../utils/constants';
 import * as userApi from '../../utils/usersApi';
 import { GET_INVENTORIES } from '../../graphql/queries';
 
 export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerClickRecord, handlerAddRecord, handlerDeleteRecords }) {
     const [users, setUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+
 
     useEffect(() => { loadUsers() }, [])
     
@@ -84,7 +85,7 @@ export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerCl
                             ? <Alert variant="danger" className="align-self-center">Ошибка загрузки пользователей</Alert>
                             : <RecordsList
                                 type='AdminUser'
-                                nameRecordList={nameList.USERS}
+                                nameRecordList={NAME_LIST.USERS}
                                 records={users} 
                                 handlerClickRecord={handlerClickRecord}
                                 handlerChangeUsersStatus={handlerChangeUsersStatus}
@@ -101,7 +102,7 @@ export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerCl
                             ? <Alert variant="danger" className="align-self-center">{allInventoriesError.message}</Alert>
                             : <RecordsList
                                 type='Inventory'
-                                nameRecordList={nameList.INVENTORIES}
+                                nameRecordList={NAME_LIST.INVENTORIES}
                                 records={allInventories.inventories} 
                                 handlerAddRecord={handlerAddRecord}
                                 handlerDeleteRecords={handlerDeleteRecords}

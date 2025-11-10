@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, forwardRef, useImperativeHandle, useRef } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { Modal, Button, Spinner, Alert, Tabs, Tab } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { GET_INVENTORY, UPDATE_INVENTORY_NEW, GET_ITEMS } from '../../graphql/queries';
 import { useAutoSave } from '../../hooks/useAutoSave';
 import FormValidation from '../FormValidator/FormValidator';
@@ -38,6 +39,7 @@ function Inventory({
     const [version, setVersion] = useState();
     const [activeTab, setActiveTab] = useState('details');
     const { readOnly, readAccess, writeAccess } = useAccess([inventory]);
+    const { t } = useTranslation("inventory");
 
     const [loadInventory, { data, loading, error, reset }] = useLazyQuery(GET_INVENTORY);
     const [updateInventory] = useMutation(UPDATE_INVENTORY_NEW, {
@@ -188,7 +190,7 @@ function Inventory({
                             onSelect={setActiveTab}
                             fill
                         >
-                            <Tab eventKey='details' title='Details'>
+                            <Tab eventKey='details' title={t("tabs.details")}>
                                 {loading
                                     ? (<div className="d-flex justify-content-center align-items-center">
                                         <Spinner animation="border" className="align-self-center"/>

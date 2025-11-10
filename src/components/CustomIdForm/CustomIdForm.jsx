@@ -4,14 +4,18 @@ import { FaChevronUp, FaChevronDown } from "react-icons/fa6";
 import EmojiPicker from "emoji-picker-react";
 import { PART_DEFINITIONS } from "../../utils/constants";
 import { getAvailableParts, IdGenerator } from "../../utils/utils";
+import { useTranslation } from 'react-i18next';
 
 
-export default function CustomIdForm({ part, index, total, onUpdate, onMove, disabled }) {
+
+export default function CustomIdForm({ part, index, total, onUpdate, onMove }) {
     const target = useRef(null);
     const [showPicker, setShowPicker] = useState(false);
     const partDefinition = PART_DEFINITIONS[part.type] || {};
     const formats = partDefinition.formats || [];
     const piecePreview = IdGenerator.generatePart(PART_DEFINITIONS, part);
+    const { t } = useTranslation("inventory");
+
 
     const stop = (e) => e.stopPropagation();
 
@@ -39,27 +43,27 @@ export default function CustomIdForm({ part, index, total, onUpdate, onMove, dis
         <Row className="align-items-start g-3 gy-4">
             <Col xs={12} md={6}>
                 <Form.Group>
-                    <Form.Label className="fw-semibold">Тип</Form.Label>
+                    <Form.Label className="fw-semibold">{t("labels.type")}</Form.Label>
                     <Form.Select
                             value={part?.type}
                             onMouseDown={stop}
                             name='type'
                             onChange={handleChange(part?.guid)}
                     >
-                        <option value="">Выберите...</option>
+                        <option value="">{t("options.selectType")}</option>
                             {getAvailableParts(PART_DEFINITIONS).map((part) => (
                                 <option key={part.type} value={part.type}>
-                                    {part.label}
+                                    {t(`${part.label}`)}
                                 </option>))}
                     </Form.Select>
                     <Form.Text className="text-muted small d-block mt-1">
-                        {partDefinition?.help || "Выберите тип элемента."}
+                        {t(`${partDefinition?.help}`)}
                     </Form.Text>
                 </Form.Group>
             </Col>
             <Col xs={12} md={6}>
                 <Form.Group>
-                        <Form.Label className="fw-semibold">Формат</Form.Label>
+                        <Form.Label className="fw-semibold">{t("labels.format")}</Form.Label>
                         {part.type === 'SEQUENCE'
                             ? (<>
                                     <InputGroup>
@@ -71,7 +75,7 @@ export default function CustomIdForm({ part, index, total, onUpdate, onMove, dis
                                         >
                                             {formats.map((format) => (
                                                 <option key={format.value} value={format.value}>
-                                                    {format.label}
+                                                    {t(`${format.label}`)}
                                                 </option>
                                             ))}
                                         </Form.Select>
@@ -79,17 +83,13 @@ export default function CustomIdForm({ part, index, total, onUpdate, onMove, dis
                                             type="number"
                                             name="value"
                                             value={part?.value || ''}
-                                            placeholder="Начальное значение"
+                                            placeholder={t("placeholders.initialValue")}
                                             min="0"
                                             onMouseDown={stop}
                                             onChange={handleChange(part?.guid)
                                             }
                                         />
                                     </InputGroup>
-
-                                    <Form.Text className="text-muted small d-block mt-1">
-                                        Укажите формат и стартовое значение для последовательности.
-                                    </Form.Text>
                                 </>)
                             : formats.length > 0 
                                 ? (<Form.Select
@@ -100,7 +100,7 @@ export default function CustomIdForm({ part, index, total, onUpdate, onMove, dis
                                     >
                                         {formats.map((format) => (
                                             <option key={format.value} value={format.value}>
-                                                {format.label}
+                                                {t(`${format.label}`)}
                                             </option>
                                         ))}
                                     </Form.Select>)
@@ -110,7 +110,7 @@ export default function CustomIdForm({ part, index, total, onUpdate, onMove, dis
                                                 type="text"
                                                 name="format"
                                                 value={part?.format || ''}
-                                                placeholder="Пользовательский формат"
+                                                placeholder={t("placeholders.customFormat")}
                                                 onMouseDown={stop}
                                                 onChange={handleChange(part?.guid)}
                                             />
@@ -140,14 +140,14 @@ export default function CustomIdForm({ part, index, total, onUpdate, onMove, dis
                                     </>)}
 
                             <Form.Text className="text-muted small d-block mt-1">
-                                {partDefinition?.formatHelp || "Укажите или выберите формат."}
+                                {t(`${partDefinition?.formatHelp}`)}
                             </Form.Text>
                 </Form.Group>
             </Col>
 
             <Col xs={12} sm={5}>
                 <Form.Group>
-                    <Form.Label className="fw-semibold">Разделитель</Form.Label>
+                    <Form.Label className="fw-semibold">{t("labels.separator")}</Form.Label>
                     <Form.Control
                         type="text"
                         name='separator'
@@ -157,25 +157,25 @@ export default function CustomIdForm({ part, index, total, onUpdate, onMove, dis
                         onChange={handleChange(part?.guid)}
                     />
                     <Form.Text className="text-muted small d-block mt-1">
-                        Добавляет префикс или суффикс.
+                        {t("hints.separator")}
                     </Form.Text>
                 </Form.Group>
             </Col>
 
             <Col xs={6} sm={4}>
                 <Form.Group>
-                    <Form.Label className="fw-semibold">Позиция</Form.Label>
+                    <Form.Label className="fw-semibold">{t("labels.position")}</Form.Label>
                     <Form.Select
                         name='position'
                         value={part?.position}
                         onMouseDown={stop}
                         onChange={handleChange(part?.guid)}
                     >
-                        <option value="prefix">Перед</option>
-                        <option value="suffix">После</option>
+                        <option value="prefix">{t("options.before")}</option>
+                        <option value="suffix">{t("options.after")}</option>
                     </Form.Select>
                     <Form.Text className="text-muted small d-block mt-1">
-                        Определяет, где добавляется разделитель.
+                        {t("hints.position")}
                     </Form.Text>
                 </Form.Group>
             </Col>

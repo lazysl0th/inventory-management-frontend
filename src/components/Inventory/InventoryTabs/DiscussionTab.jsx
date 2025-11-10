@@ -4,10 +4,12 @@ import { Card, Form, Button, Alert, ListGroup, Spinner } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { GET_COMMENTS, CREATE_COMMENT, COMMENT_ADDED} from "../../../graphql/queries";
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
 
 export default function DiscussionTab({ inventoryId, disabled }) {
+    const { t } = useTranslation("inventory");
     const currentUser = useContext(CurrentUserContext);
     const [content, setContent] = useState('');
     const [comments, setComments] = useState([]);
@@ -41,7 +43,7 @@ export default function DiscussionTab({ inventoryId, disabled }) {
                 </div>)
                 : (<div className="p-3 d-flex flex-column" style={{ height: "100%" }} >
                     {comments?.length === 0
-                        ? (<Alert variant="light" className="border flex-grow-1">No comments yet. Be the first to comment!</Alert>)
+                        ? (<Alert variant="light" className="border flex-grow-1">{t("texts.discussion")}</Alert>)
                         : (<div className="flex-grow-1 overflow-auto mb-3" style={{ maxHeight: 400 }} ref={messagesEndRef}>
                             <ListGroup variant="flush">
                                 { comments?.map((comment) => (
@@ -82,14 +84,14 @@ export default function DiscussionTab({ inventoryId, disabled }) {
                                 <Form.Control
                                     as="textarea"
                                     rows={2}
-                                    placeholder="Write a comment..."
+                                    placeholder={t("placeholders.writeComment")}
                                     value={content}
                                     disabled={disabled}
                                     onChange={(e) => setContent(e.target.value)}
                                 />
                                 </Form.Group>
                                 <div className="d-flex justify-content-end">
-                                    <Button type="submit" disabled={disabled} variant="primary"> Send </Button>
+                                    <Button type="submit" disabled={disabled} variant="primary">{t("buttons.send")}</Button>
                                 </div>
                             </Form>
                         </Card.Body>

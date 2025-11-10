@@ -2,6 +2,8 @@ import { useCallback, useRef } from "react";
 import { Card, Button, Badge} from "react-bootstrap";
 import { DndContext, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, arrayMove, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { VscAdd } from "react-icons/vsc";
+import { useTranslation } from 'react-i18next';
 import { SafeMouseSensor, SafeTouchSensor } from "../../utils/utils";
 
 export default function DndForm({
@@ -12,10 +14,11 @@ export default function DndForm({
     renderItem,
     fullId,
     disabled,
-    addLabel = "Add element",
-    className = "",
+    addLabel,
+    className,
 }) {
     const formRef = useRef(null);
+    const { t } = useTranslation("inventory");
     const sensors = useSensors(
         useSensor(SafeMouseSensor, { activationConstraint: { distance: 5 } }),
         useSensor(SafeTouchSensor)
@@ -56,7 +59,7 @@ export default function DndForm({
 
     return (
         <Card className={`p-3 shadow-sm ${className}`}>
-            {title && <h5 className="mb-3">{title}</h5>}
+            {title && <h5 className="mb-3">{t(`dndForm.${title}`)}</h5>}
 
             <div ref={formRef}>
                 <DndContext sensors={disabled ? undefined : sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -76,8 +79,10 @@ export default function DndForm({
             </div>
 
             <div className="d-flex justify-content-between align-items-center mt-3">
-                <Button variant="outline-primary" size="sm" disabled={disabled} onClick={handleAdd}> + {addLabel} </Button>
-                { fullId ? (<Badge bg="dark" className="p-2">Example:&nbsp;{fullId || "—"}</Badge>) : (<></>) }
+                <Button variant="outline-primary" size="sm" disabled={disabled} onClick={handleAdd}>
+                    <VscAdd /> {t(`dndForm.${addLabel}`)}
+                </Button>
+                { fullId ? (<Badge bg="dark" className="p-2">{t("badges.example")}&nbsp;{fullId || "—"}</Badge>) : (<></>) }
             </div>
         </Card>
     );

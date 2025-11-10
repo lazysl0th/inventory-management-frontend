@@ -1,0 +1,11 @@
+{
+    "modals":{
+        "blocked": "Usuario bloqueado correctamente",
+        "unblocked": "Usuario desbloqueado correctamente",
+        "grant": "Se han otorgado privilegios de administrador a los usuarios",
+        "revoke": "Se han revocado los privilegios de administrador a los usuarios"
+    },
+    "links": {
+        "admin": "Panel de administración"
+    }
+}

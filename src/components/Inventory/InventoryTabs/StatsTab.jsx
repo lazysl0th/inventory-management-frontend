@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useLazyQuery } from "@apollo/client/react";
-import { Card, Badge, Alert } from "react-bootstrap";
+import { Badge, Alert } from "react-bootstrap";
 import { GET_INVENTORY_STATS } from '../../../graphql/queries';
 import RecordsList from "../../RecordsList/RecordsList";
-import { nameList } from "../../../utils/constants";
-
+import { NAME_LIST } from "../../../utils/constants";
+import { useTranslation } from 'react-i18next';
 
 export default function StatsTab({ inventoryId, itemsCount }) {
+    const { t } = useTranslation("inventory");
 
     const [loadStats, { data, loading, error }] = useLazyQuery(GET_INVENTORY_STATS, {fetchPolicy: 'network-only'});
 
@@ -26,21 +27,21 @@ export default function StatsTab({ inventoryId, itemsCount }) {
     return (
         <div className="p-3 d-flex flex-column gap-4">
             <div>
-                <strong>Total items:</strong>{" "}<Badge bg="primary">{itemsCount}</Badge>
+                <strong>{t("badges.totalItems")}</strong>{" "}<Badge bg="primary">{itemsCount}</Badge>
             </div>
             {!data?.inventory.stats.numStats?.length
-                ? (<Alert variant="light" className="border">No aggregated data on numeric fields available yet.</Alert>)
+                ? (<Alert variant="light" className="border">{t("texts.noStatsText")}</Alert>)
                 : (<RecordsList 
                     type='NumStats'
-                    nameRecordList={nameList.NUM_STATS}
+                    nameRecordList={NAME_LIST.NUM_STATS}
                     records={data?.inventory.stats.numStats}
                 />)}
             {!data?.inventory.stats.textStats?.length
-                ? (<Alert variant="light" className="border">No aggregated data on numeric text available yet.</Alert>)
+                ? (<Alert variant="light" className="border">{t("texts.noStatsNum")}</Alert>)
                 : (<RecordsList 
                         type='TextStats'
                         records={textStats}
-                        nameRecordList={nameList.TEXT_STATS}
+                        nameRecordList={NAME_LIST.TEXT_STATS}
                     />)}
         </div>
     );

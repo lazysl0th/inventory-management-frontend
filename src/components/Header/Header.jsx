@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Container, Nav, Navbar, Form, InputGroup, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { useTranslation } from "react-i18next";
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import { FaSearch } from 'react-icons/fa';
 import FormValidation from '../FormValidator/FormValidator';
@@ -12,6 +13,9 @@ import './Header.css';
 function Header({ onLog }) {
     const location = useLocation();
     const navigate = useNavigate();
+    const { t: ts } = useTranslation("search");
+    const { t: ta } = useTranslation("auth");
+    const { t: tad } = useTranslation("admin");
 
     const currentUser = useContext(CurrentUserContext);
     const [initialValues] = useState({ searchQuery: '' })
@@ -48,7 +52,7 @@ function Header({ onLog }) {
                                         <Form.Control
                                             type='search'
                                             name='searchQuery'
-                                            placeholder='Search'
+                                            placeholder={ts("placeholders.search")}
                                             aria-label='Search'
                                             onChange={handleChange}
                                             onBlur={handleBlur}
@@ -80,10 +84,10 @@ function Header({ onLog }) {
                             ? <>{ (location.pathname !== '/profile')
                                     ? ( <>
                                         <Navbar.Text className='ps-2'>
-                                            Signed in as: <a href="/profile">{currentUser?.name}</a>
+                                            {ta("text.signedInAs")}: <a href="/profile">{currentUser?.name}</a>
                                         </Navbar.Text>
                                         <Navbar.Text className='ps-2'>
-                                            Email: <a href={`mailto:${currentUser?.email}`}>{currentUser?.email}</a>
+                                            {ta("text.email")}: <a href={`mailto:${currentUser?.email}`}>{currentUser?.email}</a>
                                         </Navbar.Text>
                                     </> )
                                     : (hasAdminRole([roles.ADMIN], currentUser)
@@ -91,10 +95,10 @@ function Header({ onLog }) {
                                                 className='text-dark ms-2' 
                                                 href='/admin' 
                                                 onClick={expandedHadle}>
-                                               Admin panel
+                                               {tad("links.admin")}
                                             </Nav.Link> ))}
                                 <Nav.Link as="button" className='text-dark' onClick={hadleLogout}>
-                                    Sign&nbsp;Out
+                                    {ta("links.signout")}
                                 </Nav.Link>
                                 </>
                             : ( <>
@@ -102,13 +106,13 @@ function Header({ onLog }) {
                                         className='align-self-end text-dark' 
                                         href='/sign-in' 
                                         onClick={expandedHadle}>
-                                            Sign In
+                                            {ta("links.signin")}
                                     </Nav.Link>
                                     <Nav.Link
                                         className='align-self-end text-dark'
                                         href='/sign-up'
                                         onClick={expandedHadle}>
-                                            Sign Up
+                                            {ta("links.signup")}
                                     </Nav.Link>
                                 </>) }
                     </Nav>

@@ -4,11 +4,20 @@ import { Container, Row, Col, Button, Form, Spinner, Alert} from "react-bootstra
 import { GET_INVENTORIES } from '../../graphql/queries';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import RecordsList from "../RecordsList/RecordsList";
-import { queryParams, nameList } from '../../utils/constants';
+import { queryParams, NAME_LIST } from '../../utils/constants';
+import { useTranslation } from 'react-i18next';
 
 
 export default function Profile ({ handlerClickRecord, handlerDeleteRecords, handlerAddRecord }) {
     const currentUser = useContext(CurrentUserContext);
+    const { t, i18n } = useTranslation("profile");
+    const { t: ta } = useTranslation("auth");
+    const [theme, setTheme] = useState('light');
+    const currentLang = i18n.language;
+
+    const handleChangeLanguage = (e) => {
+        i18n.changeLanguage(e.target.value)
+    }
 
     const { data: myInventories, loading: myInventoriesLoading, error: myInventoriesError, refetch } = useQuery(GET_INVENTORIES, {
         variables: { ownerId: currentUser.id },
@@ -22,18 +31,14 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
         },
     });
 
-    const [theme, setTheme] = useState('light');
-    const [language, setLanguage] = useState('en');
+
 
     const handleThemeToggle = () => {
         setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
         document.body.dataset.bsTheme = theme === "light" ? "dark" : "light";
     };
 
-    const handleLanguageChange = (lang) => {
-        setLanguage(lang);
-        alert(`Language change: ${lang === "es" ? "Spanish" : "English"}`);
-    };
+
 
     return (
         <Container className="py-4">
@@ -43,39 +48,40 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
                         <Form>
                             <Row className="mb-3">
                                 <Form.Group as={Col} controlId="formProfileName">
-                                    <Form.Label>Name</Form.Label>
+                                    <Form.Label>{t("labels.name")}</Form.Label>
                                     <Form.Control type="text" placeholder="Enter name" />
                                 </Form.Group>
                                 <Form.Group as={Col} controlId="formProfileEmail">
-                                    <Form.Label>Email</Form.Label>
+                                    <Form.Label>{t("labels.email")}</Form.Label>
                                     <Form.Control type="email" placeholder="Enter email" />
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">
                                 <Form.Group as={Col}>
-                                    <Form.Label>Interface</Form.Label>
+                                    <Form.Label>{t("labels.interface")}</Form.Label>
                                     <Button className="w-100"
                                         variant={theme === "light" ? "outline-dark" : "outline-light"}
                                         onClick={handleThemeToggle}
                                     >
-                                        {theme === "light" ? " Dark" : "Light"}
+                                        {theme === "light" ? t("buttons.dark") : t("buttons.light")}
                                     </Button>
                                 </Form.Group>
 
                                 <Form.Group as={Col} controlId="formProfileLanguage">
-                                    <Form.Label>Language</Form.Label>
+                                    <Form.Label>{t("labels.language")}</Form.Label>
                                     <Form.Select
-                                        value={language}
-                                        onChange={(e) => handleLanguageChange(e.target.value)}
+                                        value={currentLang}
+                                        onChange={handleChangeLanguage}
                                     >
-                                        <option value="en">English</option>
-                                        <option value="es">Spanish</option>
+                                        <option value="en">{t("options.english")}</option>
+                                        <option value="es">{t("options.spanish")}</option>
+                                        <option value="ua">{t("options.ukrainian")}</option>
                                     </Form.Select>
                                 </Form.Group>
 
                                 <Form.Group as={Col} controlId="formChangePassword" className="align-self-end">
                                     <Button variant="outline-secondary" className="w-100" onClick={() => alert("Change password")}>
-                                        Change password
+                                        {ta("buttons.changePassword")}
                                     </Button>{" "}
                                 </Form.Group>
                             </Row>
@@ -90,7 +96,7 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
                             ? <Alert variant="danger" className="align-self-center">{myInventoriesError.message}</Alert>
                             : <RecordsList
                                 type='Inventory'
-                                nameRecordList={nameList.OWNER}
+                                nameRecordList={NAME_LIST.OWNER}
                                 records={myInventories?.inventories}
                                 handlerClickRecord={handlerClickRecord}
                                 handlerAddRecord={handlerAddRecord}
@@ -107,7 +113,7 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
                             ? <Alert variant="danger" className="align-self-center">{editableInventoriestopError.message}</Alert>
                             : <RecordsList
                                 type='Inventory'
-                                nameRecordList={nameList.WRITE_ACCESS}
+                                nameRecordList={NAME_LIST.WRITE_ACCESS}
                                 records={editableInventories?.inventories}
                                 handlerClickRecord={handlerClickRecord}
                             />}

@@ -2,6 +2,8 @@ import { useRef, useEffect, useCallback, useMemo } from "react";
 import AsyncSelect from "react-select/async";
 import { useLazyQuery } from "@apollo/client/react";
 import { SEARCH_USERS } from "../../../graphql/queries";
+import { useTranslation } from "react-i18next";
+
 
 export default function EditableRecord({
     record,
@@ -12,6 +14,7 @@ export default function EditableRecord({
     setEditingCell,
     disabled
 }) {
+    const { t } = useTranslation("table");
     const selectRef = useRef(null);
     const [searchUsers] = useLazyQuery(SEARCH_USERS, { fetchPolicy: "no-cache" });
 
@@ -98,7 +101,7 @@ export default function EditableRecord({
                 fontStyle: value ? "normal" : "italic"
             }}
         >
-            {value || "Имя / Email"}
+            {value || t("placeholders.users")}
         </span>
     );
 
@@ -137,8 +140,8 @@ export default function EditableRecord({
                                     blurInputOnSelect={false}
                                     isClearable={false}
                                     backspaceRemovesValue={false}
-                                    placeholder={`Введите ${cell.column.id === "email" ? "email" : "имя"}...`}
-                                    noOptionsMessage={() => "Нет совпадений"}
+                                    placeholder={t("placeholders.enterValue", {field: t(`fields.${cell.column.id}`)})}
+                                    noOptionsMessage={() => t("placeholders.noMatches")}
                                     menuPortalTarget={document.body}
                                     menuPlacement="auto"
                                     components={{ DropdownIndicator: null, IndicatorSeparator: null }}

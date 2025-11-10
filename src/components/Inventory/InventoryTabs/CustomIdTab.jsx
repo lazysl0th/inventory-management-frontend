@@ -2,10 +2,12 @@ import { Alert, Spinner, } from "react-bootstrap";
 import DndForm from "../../DndForm/DndForm";
 import DndFormField from "../../DndForm/DndFormField/DndFormField";
 import CustomIdForm from "../../CustomIdForm/CustomIdForm";
+import { useTranslation } from 'react-i18next';
 import { IdGenerator, hasOrderChanged } from "../../../utils/utils";
-import { PART_DEFINITIONS } from "../../../utils/constants";
+import { PART_DEFINITIONS, DND_FORM } from "../../../utils/constants";
 
 export default function CustomIdTab({ customIdFormat, handlerChangeCustomIdFormat, loading, error, disabled}) {
+    const { t } = useTranslation("inventory");
 
     const createNewPart = () => ({
         guid: crypto.randomUUID(),
@@ -36,13 +38,13 @@ export default function CustomIdTab({ customIdFormat, handlerChangeCustomIdForma
                     </div>)
                 :(<div className="p-3">
                     {customIdFormat?.part?.length === 0 
-                        ? ( <Alert variant="light" className="border"> No parts defined for this Custom ID. </Alert>)
+                        ? ( <Alert variant="light" className="border">{t(texts.noPartsCustomID)}</Alert>)
                         : ( <DndForm
-                                title="Формат идентификатора"
+                                title={DND_FORM.CUSTOM_ID.TITLE}
                                 fields={customIdFormat?.parts}
                                 fullId={customIdFormat?.summary}
                                 createNewItem={createNewPart}
-                                addLabel="Добавить элемент"
+                                addLabel={DND_FORM.CUSTOM_ID.ADD_PART}
                                 onChange={handlerChange}
                                 disabled={disabled}
                                 renderItem={({ field, index, total, onUpdate, onMove }) => {

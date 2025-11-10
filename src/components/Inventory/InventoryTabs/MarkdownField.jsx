@@ -7,7 +7,7 @@ export default function MarkdownField({
     value,
     onChange,
     readOnly = false,
-    placeholder = "Введите текст (поддерживается Markdown)…",
+    placeholder,
 }) {
 
     const handleChange = (e) => onChange(e.target.value)

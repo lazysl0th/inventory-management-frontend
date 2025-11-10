@@ -1,0 +1,171 @@
+{
+    "tabs": {
+        "details": "Detalles",
+        "customId": "ID personalizado",
+        "fields": "Campos",
+        "access": "Acceso",
+        "items": "Elementos",
+        "discussion": "Discusión",
+        "stats": "Estadísticas",
+        "export": "Exportar"
+},
+    "labels": {
+        "title": "Título",
+        "description": "Descripción",
+        "category": "Categoría",
+        "image": "Imagen",
+        "tags": "Etiquetas",
+        "owner": "Propietario",
+        "createdBy": "Creado por",
+        "updateAt": "Actualizado el",
+        "fileNotSelected": "Archivo no seleccionado",
+        "type": "Tipo",
+        "format": "Formato",
+        "separator": "Separador",
+        "position": "Posición",
+        "showInTable": "Mostrar en la tabla",
+        "publicAccess": "Acceso público"
+    },
+    "sugerencias": {
+        "separador": "Añade un prefijo o sufijo.",
+        "posición": "Determina dónde se añade el separador."
+    },
+    "categories": {
+        "Equipment": "Equipment",
+        "Furniture": "Furniture",
+        "Book": "Books",
+        "Other": "Other"
+    },
+    "typesCustomId": {
+        "fixed": {
+            "label": "Fixed",
+            "hint": "Texto que no cambia. Puede usar Unicode o emojis.",
+            "formatHint": "Introduzca un valor constante.",
+            "formats": {}
+        },
+        "20bitRandom": {
+            "label": "Aleatorio de 20 bits",
+            "hint": "Valor aleatorio de 20 bits. Por ejemplo, formato decimal de seis dígitos (D6) o hexadecimal de cinco dígitos (X5).",
+            "formatHint": "Elija cómo representar los bits aleatorios.",
+            "formats": {
+                "D6": "Decimal D6 (000000)",
+                "X5": "Hex X5 (00000..fffff)"
+            }
+        },
+        "32bitRandom": {
+            "label": "Número aleatorio de 32 bits",
+            "hint": "Valor aleatorio de 32 bits. Por ejemplo, formato decimal de diez dígitos (D10) o hexadecimal de ocho dígitos (X8).",
+            "formatHint": "Elige cómo representar los bits aleatorios.",
+            "formats": {
+                "D10": "Decimal D10 (0000000000)",
+                "X8": "Hex X8 (00000000..ffffffff)"
+            }
+        },
+        "6digitsRandom": {
+            "label": "Número aleatorio de 6 dígitos",
+            "hint": "Número aleatorio de seis dígitos.",
+            "formatHint": "Decimal de longitud fija.",
+            "formats": { "D6": "Decimal D6 (000000)" }
+        },
+        "9digitsRandom": {
+            "label": "Número aleatorio de 9 dígitos.",
+            "hint": "Un número aleatorio de nueve dígitos.",
+            "formatHint": "Decimal de longitud fija.",
+            "formats": { "D9": "Decimal D9 (000000000)" }
+        },
+        "guid": {
+            "label": "GUID",
+            "hint": "UUID v4 generado automáticamente.",
+            "formatHint": "No se requiere formato.",
+            "formats": {}
+        },
+        "dateTime": {
+            "label": "Fecha y hora",
+            "hint": "Fecha y hora de creación del elemento.",
+            "formatHint": "Elija un patrón común o use uno personalizado.",
+            "formats": {
+                "YYYY": "Año (YYYY)",
+                "YYYYMM": "Año + mes (AAAAMM)",
+                "AAAAMMDD": "Fecha (AAAAMMDD)",
+                "AAAAMMDD-HHmm": "Fecha y hora (AAAAMMDD-HHmm)",
+                "AAAAMMDD-HHmmss": "Fecha, hora y segundos (AAAAMMDD-HHmmss)"
+            }
+        },
+        "secuencia": {
+            "etiqueta": "Secuencia (+1)",
+            "sugerencia": "Índice secuencial. Por ejemplo, con ceros a la izquierda (D4) o sin ellos (D).",
+            "sugerenciaformato": "Elija el ancho: D, D2, D3, D4... y el valor inicial",
+            "formatos": {
+                "D1": "1, 2, 3",
+                "D2": "01, 02, 03",
+                "D3": "001, 002, 003",
+                "D4": "0001, 0002, 0003"
+            }
+        }
+    },
+    "options": {
+        "selectCategory": "Seleccionar categoría...",
+        "selectType": "Seleccionar tipo...",
+        "before": "Antes",
+        "after": "Después",
+        "publickAccess": "Acceso público"
+    },
+    "buttons": {
+        "selectFile": "Seleccionar archivo",
+        "create": "Crear",
+        "update": "Actualizar",
+        "send": "Enviar"
+    },
+    "dndForm": {
+        "CUSTOM_ID": "Formato de ID personalizado",
+        "CUSTOM_FIELDS": "Campos personalizados",
+        "ADD_PART": "Agregar elemento",
+        "ADD_FIELD": "Agregar campo"
+    },
+    "headers": {
+        "usersWithWriteAccess": "Usuarios con acceso de escritura",
+        "statsOnTextFields": "Estadísticas de los campos de texto",
+        "statsOnNumericFields": "Estadísticas sobre campos numéricos"
+    },
+    "toasts": {
+        "saved": "Inventario guardado",
+        "error": "Error al guardar",
+        "like": "Solo los usuarios registrados pueden dar me gusta",
+        "image": "Se produjo un error al cargar la imagen",
+        "field": "No se pueden agregar más campos de tipo {{fieldTypeLabel}} (límite {{fieldTypeLimit}})"
+    },
+    "badges": {
+        "example": "Ejemplo:",
+        "totalItems": "Total de elementos",
+        "position": "Posición"
+    },
+    "fieldsTypes": {
+        "TEXT": "Texto de una sola línea",
+        "LONGTEXT": "Texto de varias líneas",
+        "NUMBER": "Numérico",
+        "FILE": "Enlace a archivo/imagen",
+        "BOOLEAN": "Verdadero/Falso"
+    },
+    "textos": {
+        "acceso privado": "Solo los usuarios autorizados y los administradores tienen acceso",
+        "acceso público": "Cualquiera puede ver este inventario",
+        "sin usuarios": "Ningún usuario tiene permiso de escritura.",
+        "discusión": "Aún no hay comentarios. ¡Sé el primero en comentar!",
+        "sin estadísticas numéricas": "Aún no hay datos agregados disponibles sobre campos numéricos",
+        "sin estadísticas de texto": "Aún no hay datos agregados disponibles sobre campos numéricos.",
+        "categoría": "Definición de valor en desarrollo (enumeración).",
+        "sin piezas personalizadas ID": "No se han definido piezas para este ID personalizado.",
+        "campos personalizados": "No se han definido campos personalizados para este inventario."
+    },
+    "placeholders": {
+        "writeComment": "Escribe un comentario...",
+        "noImage": "Sin imagen",
+        "descriptionInventory": "Introduce texto (compatible con Markdown)...",
+        "descriptionField": "Descripción (opcional)",
+        "initialValue": "Valor inicial",
+        "customFormat": "Formato personalizado",
+        "title": "Introduce el título",
+        "tagsNoFound": "No se encontraron",
+        "tagsEnter": "Empieza a escribir para buscar"
+    }
+}

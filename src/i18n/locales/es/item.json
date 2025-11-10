@@ -1,0 +1,26 @@
+{
+
+"labels": {
+
+"owner": "Propietario",
+
+"createdBy": "Creado por",
+
+"updateAt": "Actualizar el",
+
+"customId": "ID"
+
+},
+    "butons": {
+        "selectFile": "Seleccionar archivo",
+        "create": "Crear",
+        "update": "Actualizar"
+    },
+    "feedback": {
+        "invalidCustomId": "Formato no válido. Se esperaba:"
+    },
+    "toasts": {
+        "like": "Solo los usuarios autenticados pueden dar me gusta",
+        "errorLike": "Se produjo un error al dar me gusta"
+    }
+}

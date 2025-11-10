@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Container, Row, Col, Form, FloatingLabel, Button} from 'react-bootstrap';
+import { useTranslation } from "react-i18next";
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
 import { BiArrowBack } from 'react-icons/bi';
 import { FcGoogle } from 'react-icons/fc';
@@ -9,6 +10,7 @@ import { SignupSchema } from '../../utils/validationSchema';
 import { link } from '../../utils/constants'
 
 export default function Register ({ onReg }) {
+    const { t } = useTranslation("auth");
     const [showPassword, setShowPassword] = useState(false);
     const [initialValues, setIinitialValues] = useState({ name: '', email: '', password: '' })
 
@@ -20,7 +22,7 @@ export default function Register ({ onReg }) {
                 <Col xs={6} md={3}>
                     <span>
                         <a className='fw-normal text-decoration-underline text-dark' href='/'>
-                            <BiArrowBack/>{' '}Back
+                            <BiArrowBack/>{' '}{t("links.back")}
                         </a>
                     </span>
                 </Col>
@@ -35,12 +37,12 @@ export default function Register ({ onReg }) {
                                 name='register'
                                 onSubmit={handleSubmit}
                             >
-                                <p className='text-start mb-0'>Start your journey</p>
-                                <h2 className='text-start mb-5'>Sign Up to The App</h2>
+                                <p className='text-start mb-0'>{t("text.paragraph")}</p>
+                                <h2 className='text-start mb-5'>{t("text.headerSignup")}</h2>
                                 <Form.Group className="mb-3" controlId="formGroup">
                                     <FloatingLabel
                                         controlId="floatingInputName"
-                                        label="Name"
+                                        label={t("placeholders.name")}
                                         className="mb-3"
                                     >
                                         <Form.Control 
@@ -59,7 +61,7 @@ export default function Register ({ onReg }) {
                                     </FloatingLabel>
                                     <FloatingLabel
                                         controlId="floatingInputEmail"
-                                        label="Email"
+                                        label={t("placeholders.email")}
                                         className="mb-3"
                                     >
                                         <Form.Control 
@@ -77,7 +79,7 @@ export default function Register ({ onReg }) {
                                         </Form.Control.Feedback>
                                     </FloatingLabel>
                                     <Form.Group className='mb-3 position-relative' controlId='formGroupPassword' >
-                                        <FloatingLabel controlId='floatingLabelPassword' label='Password'>
+                                        <FloatingLabel controlId='floatingLabelPassword' label={t("placeholders.password")}>
                                             <Form.Control 
                                                 type={showPassword ? 'text' : 'password'}
                                                 name='password'
@@ -102,7 +104,7 @@ export default function Register ({ onReg }) {
                                     </Form.Group>
                                 </Form.Group>
                                 <Button type='submit' variant='dark' disabled={isSubmitting}>
-                                    {isSubmitting ? "Signing Up..." : "Sign Up"}
+                                    {isSubmitting ? t("buttons.signup")+"..." : t("buttons.signup")}
                                 </Button>
                             </Form>
                         )}
@@ -138,16 +140,16 @@ export default function Register ({ onReg }) {
             <Row className="text-center py-5">
                 <Col xs={6} md={3}>
                     <span>
-                        Account already exist?{' '}
+                        {t("text.existAccount")}{' '}
                         <a href={link.SIGNIN} className='text-decoration-underline text-primary fw-normal text-dark'>
-                            Sign{'\u00A0'}in
+                            {t("links.signin")}
                         </a>
                     </span>
                 </Col>
 
                 <Col xs={6} md={3}>
                     <a href={link.PASSWORD_RESET} className='text-decoration-underline text-primary fw-normal text-dark'>
-                        Forgot password?
+                        {t("links.forgotPassword")}
                     </a>
                 </Col>
             </Row>

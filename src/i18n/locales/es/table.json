@@ -1,0 +1,58 @@
+{
+    "placeholders": {
+        "filter": "Filtrar...",
+        "noMatches": "Sin coincidencias",
+        "users": "Nombre / Correo electrónico",
+        "enterValue": "Ingrese {{field}}..."
+    },
+    "fields": {
+        "email": "Correo electrónico",
+        "name": "Nombre"
+    },
+    "inventory": {
+        "title": "Título",
+        "description": "Descripción",
+        "category": "Categoría",
+        "owner": "Propietario"
+    },
+    "inventorySearchResult": {
+        "title": "Título",
+        "description": "Descripción",
+        "category": "Categoría",
+        "owner": "Propietario"
+    },
+    "numStats": {
+        "field": "Campo",
+        "average": "Promedio",
+        "max": "Máximo",
+        "min": "Mínimo"
+    },
+    "textStats": {
+        "field": "Campo",
+        "value": "Valor",
+        "count": "Cantidad"
+    },
+    "user": {
+        "name": "Nombre",
+        "email": "Correo electrónico"
+    },
+    "adminUser": {
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "status": "Estado",
+        "roles": "Roles"
+    },
+    "nameList": {
+        "LATEST": "Últimos inventarios",
+        "TOP_ITEMS": "Los 5 artículos más populares",
+        "SEARCH": "Resultado de la búsqueda",
+        "OWNER": "Mis inventarios",
+        "WRITE_ACCESS": "Inventarios con acceso de escritura",
+        "ACCESS": "Usuarios con acceso de escritura",
+        "ITEMS": "Artículos",
+        "USERS": "Usuarios",
+        "INVENTORIES": "Inventarios",
+        "NUM_STATS": "Estadísticas de campos numéricos",
+        "TEXT_STATS": "Estadísticas de campos de texto"
+    }
+}

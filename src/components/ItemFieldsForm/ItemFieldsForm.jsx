@@ -1,9 +1,11 @@
 import { Row, Col, Form, Button, Badge, ButtonGroup } from "react-bootstrap";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa6";
 import { FIELD_TYPES } from "../../utils/constants";
+import { useTranslation } from "react-i18next";
+
 
 export default function ItemFieldsForm({ field, index, total, onUpdate, onMove, disabled }) {
-    
+    const { t } = useTranslation("inventory");
     
     const handleChange = (fieldGuid, index) => (e) => {
         const { name, value, checked} = e.currentTarget;
@@ -27,12 +29,12 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove, 
         <Row className="align-items-start g-3 gy-4">
             <Col xs={12} md={6}>
                 <Form.Group>
-                    <Form.Label className="fw-semibold">Заголовок</Form.Label>
+                    <Form.Label className="fw-semibold">{t("labels.title")}</Form.Label>
                     <Form.Control
                         type="text"
                         name="title"
                         value={field?.title || ""}
-                        placeholder="Введите заголовок"
+                        placeholder={t("placeholders.title")}
                         onMouseDown={stop}
                         onChange={handleChange(field?.guid || field?.id)}
                     />
@@ -41,13 +43,13 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove, 
 
             <Col xs={12} md={6}>
                 <Form.Group>
-                    <Form.Label className="fw-semibold">Описание</Form.Label>
+                    <Form.Label className="fw-semibold">{t("labels.description")}</Form.Label>
                     <Form.Control
                         as="textarea"
                         name='description'
                         rows={2}
                         value={field.description || ""}
-                        placeholder="Описание (опционально)"
+                        placeholder={t("placeholders.descriptionField")}
                         onMouseDown={stop}
                         onChange={handleChange(field?.guid || field?.id)}
                     />
@@ -56,7 +58,7 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove, 
 
             <Col xs={12} sm={5}>
                 <Form.Group>
-                    <Form.Label className="fw-semibold">Тип</Form.Label>
+                    <Form.Label className="fw-semibold">{t("labels.type")}</Form.Label>
                     <Form.Select
                         value={field.type}
                         onMouseDown={stop}
@@ -65,7 +67,7 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove, 
                     >
                         {Object.entries(FIELD_TYPES).map(([key, cfg]) => (
                             <option key={key} value={key}>
-                            {cfg.label}
+                            {t(`fieldsTypes.${cfg.label}`)}
                         </option>))}
                     </Form.Select>
                 </Form.Group>
@@ -75,7 +77,7 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove, 
                 <Form.Check
                     type="checkbox"
                     name='showInTable'
-                    label="Показывать в таблице"
+                    label={t("labels.showInTable")}
                     checked={!!field?.showInTable}
                     onMouseDown={stop}
                     onChange={handleChange(field?.guid || field?.id)}
@@ -84,7 +86,7 @@ export default function ItemFieldsForm({ field, index, total, onUpdate, onMove, 
 
             <Col xs={12} sm={3} className="d-flex flex-column align-items-center align-self-center justify-content-between">
                 <Badge bg="light" text="dark" className="mb-2 w-100 text-center">
-                    Position {index}
+                    {t("badges.position")} {index}
                 </Badge>
                 <ButtonGroup size="sm">
                     <Button

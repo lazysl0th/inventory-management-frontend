@@ -237,7 +237,7 @@ function App() {
         try {
             const data = await register(values);
             if (data.user) {
-                openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.REGISTRATION.success);
+                openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.USER.REGISTRATION.success);
                 handlerSignInSubmit(data.user);
             } else {
                 openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.ERROR);

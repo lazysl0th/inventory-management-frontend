@@ -1,6 +1,7 @@
 import { useContext, useRef } from 'react';
 import { useLazyQuery, } from '@apollo/client/react';
 import AsyncCreatableSelect from 'react-select/async-creatable';
+import { useTranslation } from 'react-i18next';
 import { components } from "react-select";
 import { Form, Row, Col, Image } from "react-bootstrap";
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
@@ -25,6 +26,7 @@ export default function InventoryDetailsTab({
     const currentUser = useContext(CurrentUserContext);
     const [searchTags] = useLazyQuery(SEARCH_TAGS, { fetchPolicy: "no-cache" });
     const imageRef = useRef(null);
+    const { t } = useTranslation("inventory");
 
     const loadOptions = async (inputValue, callback) => {
         const { data } = await searchTags({ variables: { searchQuery: inputValue } });
@@ -53,7 +55,7 @@ export default function InventoryDetailsTab({
             handlerChangeDetails(e.target.name, image.url);
         } catch (e) {
             imageRef.current.value = '';
-            onShowToast('Во время загрузки изображения произошла ошибка', 'bottom-center');
+            onShowToast(t("toasts.image"), 'bottom-center');
         }
     };
 
@@ -77,7 +79,7 @@ export default function InventoryDetailsTab({
                 <Row className="g-3">
                     <Col xs={12}>
                         <Form.Group controlId="title">
-                            <Form.Label className="required">Title</Form.Label>
+                            <Form.Label className="required">{t("labels.title")}</Form.Label>
                             <Form.Control
                                 type="text"
                                 name="title"
@@ -95,17 +97,18 @@ export default function InventoryDetailsTab({
                     </Col>
                     <Col xs={12} md={8}>
                         <Form.Group controlId="description">
-                            <Form.Label>Description</Form.Label>
+                            <Form.Label>{t("labels.description")}</Form.Label>
                             <MarkdownField
                                 value={details.description}
                                 onChange={handleChangeDescription('description')}
                                 readOnly={disabled}
+                                placeholder={t("placeholders.descriptionInventory")}
                             />
                         </Form.Group>
                     </Col>
                     <Col xs={12} md={4}>
                         <Form.Group controlId="category">
-                            <Form.Label className="required">Category</Form.Label>
+                            <Form.Label className="required">{t("labels.category")}</Form.Label>
                             <Form.Select
                                 value={formikValues.category}
                                 onChange={handleFormikChange}
@@ -113,12 +116,12 @@ export default function InventoryDetailsTab({
                                 name="category"
                                 isInvalid={formikTouched?.category && !!formikErrors?.category}
                             >
-                                <option value="" disabled> Select category… </option>
+                                <option value="" disabled>{t("options.selectCategory")}</option>
                                 { categories?.enumValues?.map((category) => ( 
-                                    <option key={category.name} value={category.name}> {category.name} </option>)) }
+                                    <option key={category.name} value={category.name}>{t(`categories.${category.name}`)}</option>)) }
                             </Form.Select>
                             <Form.Text className="text-muted">
-                                Value definition develop (enum).
+                                {t("texts.category")}
                             </Form.Text>
                             <Form.Control.Feedback type='invalid'>
                                 {formikErrors?.category}
@@ -128,7 +131,7 @@ export default function InventoryDetailsTab({
 
                     <Col xs={12} md={4}>
                         <Form.Group controlId="image">
-                            <Form.Label>Image</Form.Label>
+                            <Form.Label>{t("labels.image")}</Form.Label>
                             <div className="d-flex flex-column gap-2">
                                 {details?.image ? (
                                     <Image
@@ -142,16 +145,21 @@ export default function InventoryDetailsTab({
                                     <div
                                         className="border rounded d-flex align-items-center justify-content-center p-3 text-muted"
                                         style={{ height: 160 }}
-                                    >No image</div>)}
-
+                                    >{t("placeholders.noImage")}</div>)}
+                                <Form.Label className="btn btn-outline-primary">
+                                    {t("buttons.selectFile")}
+                                </Form.Label>
                                 <Form.Control
                                     ref={imageRef}
                                     type="file"
                                     name="image"
+                                    placeholder="123"
                                     accept="image/*"
                                     onChange={handleChange}
                                     disabled={readOnly}
+                                    style={{ display: "none" }}
                                 />
+                                <Form.Text className="text-muted">{details.image ? '' : t("labels.fileNotSelected")}</Form.Text>
                             </div>
                         </Form.Group>
                     </Col>
@@ -160,7 +168,7 @@ export default function InventoryDetailsTab({
                         <Row className="g-3">
                             <Col xs={12} md={6}>
                                 <Form.Group controlId="owner">
-                                    <Form.Label>Tags</Form.Label>
+                                    <Form.Label>{t("labels.tags")}</Form.Label>
                                     <AsyncCreatableSelect
                                         isMulti
                                         cacheOptions
@@ -184,7 +192,7 @@ export default function InventoryDetailsTab({
                                             menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                                         }}
                                         noOptionsMessage={({ inputValue }) =>
-                                            inputValue ? "Ничего не найдено" : "Начните ввод для поиска"
+                                            inputValue ? t("placeholders.tagsNoFound") : t("placeholders.tagsEnter")
                                         }
                                     />
                                 </Form.Group>
@@ -192,7 +200,7 @@ export default function InventoryDetailsTab({
 
                             <Col xs={12} md={6}>
                                 <Form.Group controlId="owner">
-                                    <Form.Label>Owner</Form.Label>
+                                    <Form.Label>{t("labels.owner")}</Form.Label>
                                     <Form.Control
                                         type="text"
                                         name="owner"
@@ -205,7 +213,7 @@ export default function InventoryDetailsTab({
 
                             <Col xs={12} md={6}>
                                 <Form.Group controlId="created">
-                                    <Form.Label>Created by</Form.Label>
+                                    <Form.Label>{t("labels.createdBy")}</Form.Label>
                                         <Form.Control
                                             type="text"
                                             name="createdAt"
@@ -218,7 +226,7 @@ export default function InventoryDetailsTab({
 
                             <Col xs={12} md={6}>
                                 <Form.Group controlId="invUpdated">
-                                    <Form.Label>Update at</Form.Label>
+                                    <Form.Label>{t("labels.updateAt")}</Form.Label>
                                         <Form.Control
                                             type="text"
                                             name="updateAt"

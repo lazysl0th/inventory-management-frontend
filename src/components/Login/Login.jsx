@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Container, Row, Col, Form, Button, Image, Navbar, FloatingLabel, InputGroup} from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, FloatingLabel} from 'react-bootstrap';
+import { useTranslation } from "react-i18next";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { BiArrowBack } from 'react-icons/bi';
 import { FcGoogle } from 'react-icons/fc';
@@ -9,6 +10,7 @@ import { SigninSchema } from '../../utils/validationSchema';
 import { link } from '../../utils/constants'
 
 export default function Register ({ onAuth }) {
+    const { t } = useTranslation("auth");
     const [showPassword, setShowPassword] = useState(false);
     const [initialValues, setIinitialValues] = useState({ email: '', password: '', remember: false })
 
@@ -20,7 +22,7 @@ export default function Register ({ onAuth }) {
                 <Col xs={6} md={3}>
                     <span>
                         <a className='fw-normal text-decoration-underline text-dark' href='/'>
-                            <BiArrowBack/>{' '}Back
+                            <BiArrowBack/>{' '}{t("links.back")}
                         </a>
                     </span>
                 </Col>
@@ -35,14 +37,14 @@ export default function Register ({ onAuth }) {
                                 name='login'
                                 onSubmit={handleSubmit}
                             >                                
-                                <p className='text-start mb-0'>Start your journey</p>
-                                <h2 className='text-start mb-5'>Sign In to The App</h2>
+                                <p className='text-start mb-0'>{t("text.paragraph")}</p>
+                                <h2 className='text-start mb-5'>{t("text.headerSignin")}</h2>
 
                                 
                                 <Form.Group className="mb-3" controlId="formGroup">
                                     <FloatingLabel
                                         controlId="floatingInputEmail"
-                                        label="Email"
+                                        label={t("placeholders.email")}
                                         className="mb-3"
                                     >
                                         <Form.Control 
@@ -60,7 +62,7 @@ export default function Register ({ onAuth }) {
                                         </Form.Control.Feedback>
                                     </FloatingLabel>
                                     <Form.Group className='mb-3 position-relative' controlId='formGroupPassword' >
-                                        <FloatingLabel controlId='floatingLabelPassword' label='Password'>
+                                        <FloatingLabel controlId='floatingLabelPassword' label={t("placeholders.password")}>
                                             <Form.Control 
                                                 type={showPassword ? 'text' : 'password'}
                                                 name='password'
@@ -89,11 +91,11 @@ export default function Register ({ onAuth }) {
                                         checked={values.remember}
                                         name='remember'
                                         id='remember-input'
-                                        label='Remember me'
+                                        label={t("placeholders.remember")}
                                         onChange={handleChangeCheckbox}/>
                                 </Form.Group>
                                 <Button type='submit' variant='dark' disabled={isSubmitting}>
-                                    {isSubmitting ? "Signing In..." : "Sign In"}
+                                    {isSubmitting ? t("buttons.signin")+"..." : t("buttons.signin")}
                                 </Button>
                             </Form>
                         )}
@@ -129,15 +131,15 @@ export default function Register ({ onAuth }) {
             <Row className="text-center py-5">
                 <Col xs={6} md={3}>
                     <span>
-                        Don't have an account?{' '}
+                        {t("text.haveAccount")}{' '}
                         <a className='fw-normal text-decoration-underline text-dark' href={link.SIGNUP}>
-                            Sign{'\u00A0'}up
+                            {t("links.signup")}
                         </a>
                     </span>
                 </Col>
                 <Col xs={6} md={3}>
                     <a href={link.PASSWORD_RESET} className='text-decoration-underline text-dark fw-normal'>
-                        Forgot password?
+                        {t("links.forgotPassword")}
                     </a>
                 </Col>
             </Row>

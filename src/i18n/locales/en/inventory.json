@@ -1,0 +1,171 @@
+{
+    "tabs": {
+        "details": "Details",
+        "customId": "Custom ID",
+        "fields": "Fields",
+        "access": "Access",
+        "items": "Items",
+        "discussion": "Disscussion",
+        "stats": "Stats",
+        "export": "Export"
+    },
+    "labels": {
+        "title": "Title",
+        "description": "Description",
+        "category": "Category",
+        "image": "Image",
+        "tags": "Tags",
+        "owner": "Owner",
+        "createdBy": "Created by",
+        "updateAt": "Update at",
+        "fileNotSelected": "File not selected",
+        "type": "Type",
+        "format": "Format",
+        "separator": "Separator",
+        "position": "Position",
+        "showInTable": "Show in table",
+        "publicAccess": "Public access"
+    },
+    "hints": {
+        "separator": "Adds a prefix or suffix.",
+        "position": "Determines where the separator is added."
+    },
+    "categories": {
+        "Equipment": "Equipment",
+        "Furniture": "Furniture",
+        "Book": "Books",
+        "Other": "Other"
+    },
+    "typesCustomId": {
+        "fixed": {
+            "label": "Fixed",
+            "hint": "A piece of unchanging text. You can use Unicode or emoji.",
+            "formatHint": "Enter a constant value.",
+            "formats": {}
+        },
+        "20bitRandom": {
+            "label": "20-bit random",
+            "hint": "A 20-bit random value. E.g., format as six-digit decimal (D6) or 5-digit hex (X5).",
+            "formatHint": "Choose how to represent the random bits.",
+            "formats": {
+                "D6": "Decimal D6 (000000)",
+                "X5": "Hex X5 (00000..fffff)"
+            }
+        },
+        "32bitRandom": {
+            "label": "32-bit random",
+            "hint": "A 32-bit random value. E.g., format as ten-digit decimal (D10) or 8-digit hex (X8).",
+            "formatHint": "Choose how to represent the random bits.",
+            "formats": {
+                "D10": "Decimal D10 (0000000000)",
+                "X8": "Hex X8 (00000000..ffffffff)"
+            }
+        },
+        "6digitsRandom": {
+            "label": "6-digits random",
+            "hint": "A six-digit random number.",
+            "formatHint": "Fixed length decimal.",
+            "formats": { "D6": "Decimal D6 (000000)" }
+        },
+        "9digitsRandom": {
+            "label": "9-digits random.",
+            "hint": "A nine-digit random number.",
+            "formatHint": "Fixed length decimal.",
+            "formats": { "D9": "Decimal D9 (000000000)" }
+        },
+        "guid": {
+            "label": "GUID",
+            "hint": "Automatically generated UUID v4.",
+            "formatHint": "No format is required.",
+            "formats": {}
+        },
+        "dateTime": {
+            "label": "Date/time",
+            "hint": "An item creation date/time.",
+            "formatHint": "Pick a common pattern or use a custom one.",
+            "formats": {
+                "YYYY": "Year (YYYY)",
+                "YYYYMM": "Year+month (YYYYMM)",
+                "YYYYMMDD": "Date (YYYYMMDD)",
+                "YYYYMMDD-HHmm": "Date-time (YYYYMMDD-HHmm)",
+                "YYYYMMDD-HHmmss": "Date, time, seconds (YYYYMMDD-HHmmss)"
+            }
+        },
+        "sequence": {
+            "label": "Sequence (+1)",
+            "hint": "A sequential index. E.g., with leading zeros (D4) or without (D).",
+            "formatHint": "Choose width: D, D2, D3, D4... and start value",
+            "formats": {
+                "D1": "1, 2, 3",
+                "D2": "01, 02, 03",
+                "D3": "001, 002, 003",
+                "D4": "0001, 0002, 0003"
+            }
+        }
+    },
+    "options": {
+        "selectCategory": "Select category...",
+        "selectType": "Select type...",
+        "before": "before",
+        "after": "after",
+        "publickAccess": "Publick access"
+    },
+    "buttons": {
+        "selectFile": "Select file",
+        "create": "Create",
+        "update": "Update",
+        "send": "Send"
+    },
+    "dndForm":  {
+        "CUSTOM_ID": "Format custom ID",
+        "CUSTOM_FIELDS": "Custom fields",
+        "ADD_PART": "Add element",
+        "ADD_FIELD": "Add field"
+    },
+    "headers": {
+        "usersWithWriteAccess": "Users with write access",
+        "statsOnTextFields": "Stats on text fields",
+        "statsOnNumericFields": "Stats on numeric fields"
+    },
+    "toasts": {
+        "saved": "Инвентарь сохранён",
+        "error": "Ошибка при сохранении",
+        "like": "Only registered users can like",
+        "image": "There was an error loading the image",
+        "field": "Cannot add more fields of type {{fieldTypeLabel}} (limit {{fieldTypeLimit}})"
+    },
+    "badges": {
+        "example": "Example:",
+        "totalItems": "Total items",
+        "position": "Position"
+    },
+    "fieldsTypes": {
+        "TEXT": "Single-line text",
+        "LONGTEXT": "Multi-line text",
+        "NUMBER": "Numeric",
+        "FILE": "File / Image Link",
+        "BOOLEAN": "True / False"
+    },
+    "texts": {
+        "privateAccess": "Only allowed users and admins have access",
+        "publicAccess": "Anyone can view this inventory",
+        "noUsers": "No users have been granted write access.",
+        "discussion": "No comments yet. Be the first to comment",
+        "noStatsNum": "No aggregated data on numeric fields available yet",
+        "noStatsText": " No aggregated data on numeric fields available yet.",
+        "category": "Value definition develop (enum).",
+        "noPartsCustomID": "No parts defined for this Custom ID.",
+        "moFields": "No custom fields defined for this inventory."
+    },
+    "placeholders": {
+        "writeComment": "Write a comment...",
+        "noImage": "No image",
+        "descriptionInventory": "Enter text (Markdown supported)...",
+        "descriptionField": "Description (optional)",
+        "initialValue": "Initial value",
+        "customFormat": "Custom format",
+        "title": "Enter title",
+        "tagsNoFound": "Not found",
+        "tagsEnter": "Start typing to search"
+    }
+}

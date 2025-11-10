@@ -1,0 +1,16 @@
+{
+    "deleteUserData": {
+        "header": "Eliminando datos de usuario",
+        "paragraphPrefix": "Para eliminar sus datos, envíe una solicitud a",
+        "paragraphSuffix": "Eliminaremos todos sus datos en un plazo de 24 horas.",
+        "link": "Atrás"
+    },
+    "privacy": {
+        "header": "Privacidad",
+        "paragraphPrefix": "Para obtener las políticas de privacidad, envíe una solicitud a ",
+        "paragraphSuffix": "Le enviaremos todas las políticas de privacidad en un plazo de 24 horas."
+    },
+    "links": {
+        "back": "Atrás"
+    }
+}

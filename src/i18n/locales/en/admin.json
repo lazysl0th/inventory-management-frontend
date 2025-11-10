@@ -1,0 +1,11 @@
+{
+    "modals":{
+        "blocked": "User blocked success",
+        "unblocked": "User unblocked success",
+        "grant": "User(s) have been granted administrator privileges",
+        "revoke": "User(s) have been revoked administrator privileges"
+    },
+    "links": {
+        "admin": "Admin panel"
+    }
+}

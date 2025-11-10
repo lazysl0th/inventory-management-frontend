@@ -1,0 +1,22 @@
+{
+    "labels": {
+        "name": "Ім'я",
+        "email": "Електронна пошта",
+        "interface": "Інтерфейс",
+        "language": "Мова"
+    },
+    "options": {
+        "english": "Англійська",
+        "spanish": "Іспанська",
+        "ukrainian": "Українська"
+    },
+    "placeholders": {
+        "email": "Електронна пошта",
+        "name": "Ім'я"
+    },
+    "buttons": {
+        "dark": "Темний",
+        "light": "Світлий",
+        "changePassword": "Змінити пароль"
+    }
+}

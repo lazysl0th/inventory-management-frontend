@@ -3,15 +3,17 @@ import DndForm from "../../DndForm/DndForm";
 import DndFormField from "../../DndForm/DndFormField/DndFormField";
 import ItemFieldsForm from '../../ItemFieldsForm/ItemFieldsForm';
 import { hasOrderChanged } from "../../../utils/utils";
-import { FIELD_TYPES } from '../../../utils/constants'
+import { FIELD_TYPES, DND_FORM } from '../../../utils/constants'
+import { useTranslation } from "react-i18next";
 
 
 export default function FieldsTab({ itemFields, handlerChangeFields, onShowToast, disabled }) {
+    const { t } = useTranslation("inventory");
 
     function createNewField(fields, type = "TEXT") {
         const countOfType = fields.filter(field => field.type === type).length;
         if (countOfType >= FIELD_TYPES[type]?.limit) {
-            onShowToast(`Нельзя добавить больше полей типа "${FIELD_TYPES[type].label}" (лимит ${FIELD_TYPES[type]?.limit})`, 'bottom-center');
+            onShowToast(t('toasts.field', { fieldTypeLabel: t(`fieldsTypes.${FIELD_TYPES[type].label}`), fieldTypeLimit: FIELD_TYPES[type]?.limit }), 'bottom-center');
         return null;
         }
 
@@ -34,14 +36,14 @@ export default function FieldsTab({ itemFields, handlerChangeFields, onShowToast
     return (
         <div className="p-3">
             { false
-                ? <Alert variant="secondary" className="m-3">No custom fields defined for this inventory.</Alert>
+                ? <Alert variant="secondary" className="m-3">{t("texts.noFields")}</Alert>
                 : ( <DndForm
-                        title="Настраиваемые поля"
+                        title={DND_FORM.CUSTOM_FIELDS.TITLE}
                         fields={itemFields}
                         onChange={handlerChange}
                         createNewItem={createNewField}
                         disabled={disabled}
-                        addLabel="Добавить поле"
+                        addLabel={DND_FORM.CUSTOM_FIELDS.ADD_FIELD}
                         renderItem={({ field, index, total, onUpdate, onMove }) => {
                             return (
                                 <DndFormField id={field.guid || field.id}>

@@ -54,8 +54,8 @@ export const messageInfoTooltip = {
         }
     },
     RESULT_SEARCH: {
-        prefix: 'No results found for ',
-        suffix: '. Try another search term.'
+        prefix: 'results.prefix',
+        suffix: 'results.suffix'
     },
 }
 
@@ -92,73 +92,70 @@ export const queryParams = {
     }
 }
 
-export const nameList = {
-    LATEST: 'Latest inventories',
-    TOP_ITEMS: 'Top 5 by number of items',
-    SEARCH: 'Search result',
-    OWNER: 'My inventories',
-    WRITE_ACCESS: 'Inventories with write access',
-    ACCESS: 'Users with write access',
-    ITEMS: 'Items',
-    USERS: 'Users',
-    INVENTORIES: 'Inventories',
-    NUM_STATS: 'Stats on numeric fields',
-    TEXT_STATS: 'Stats on text fields'
+export const NAME_LIST = {
+    LATEST: 'LATEST',
+    TOP_ITEMS: 'TOP_ITEMS',
+    SEARCH: 'SEARCH',
+    OWNER: 'OWNER',
+    WRITE_ACCESS: 'WRITE_ACCESS',
+    ACCESS: 'ACCESS',
+    ITEMS: 'ITEMS',
+    USERS: 'USERS',
+    INVENTORIES: 'INVENTORIES',
+    NUM_STATS: 'NUM_STATS',
+    TEXT_STATS: 'TEXT_STATS'
 }
 
-export const TAGS_CLOUD_SOLOR = {
+export const DND_FORM = {
+    CUSTOM_ID: {
+        TITLE: 'CUSTOM_ID',
+        ADD_PART: 'ADD_PART',
+    },
+    CUSTOM_FIELDS: {
+        TITLE: 'CUSTOM_FIELDS',
+        ADD_FIELD: 'ADD_FIELD',
+    }
+}
+
+export const TAGS_CLOUD_COLOR = {
     luminosity: 'dark',
     hue: 'monochrome',
 }
 
 export const RECORDS_LIST_HEADS = {
     'Inventory': [
-        { id: 'title', header: 'Title', highlightKey: 'highlightedTitle' },
-        { id: 'description', header: 'Description', highlightKey: 'highlightedDescription' },
-        { id: 'category', header: 'Category' },
-        { id: 'owner', header: 'Owner', accessor: value => value?.name },
+        { id: 'title', header: 'inventory.title', highlightKey: 'highlightedTitle' },
+        { id: 'description', header: 'inventory.description', highlightKey: 'highlightedDescription' },
+        { id: 'category', header: 'inventory.category' },
+        { id: 'owner', header: 'inventory.owner', accessor: value => value?.name },
     ],
     'InventorySearchResult': [
-        { id: 'title', header: 'Title', highlightKey: 'highlightedTitle' },
-        { id: 'description', header: 'Description', highlightKey: 'highlightedDescription' },
-        { id: 'category', header: 'Category' },
-        { id: 'owner', header: 'Owner', accessor: value => value?.name },
+        { id: 'title', header: 'inventorySearchResult.title', highlightKey: 'highlightedTitle' },
+        { id: 'description', header: 'inventorySearchResult.description', highlightKey: 'highlightedDescription' },
+        { id: 'category', header: 'inventorySearchResult.category' },
+        { id: 'owner', header: 'inventorySearchResult.owner', accessor: value => value?.name },
     ],
     'Item': { fieldIdKey: 'id', fieldTitleKey: 'title', fieldValueKey: 'value', fieldCustomIdKey: 'Custom ID'},
     'NumStats': [
-        { id: 'field', header: 'Field' },
-        { id: 'average', header: 'Average' },
-        { id: 'max', header: 'Max' },
-        { id: 'min', header: 'Min' },
+        { id: 'field', header: 'numStats.field' },
+        { id: 'average', header: 'numStats.average' },
+        { id: 'max', header: 'numStats.max' },
+        { id: 'min', header: 'numStats.min' },
     ],
     'TextStats': [
-        { id: 'field', header: 'Field' },
-        { id: 'value', header: 'Value' },
-        { id: 'count', header: 'Count' },
-    ],
-    'CustomIdPart': [
-        { id: 'type', header: 'Type' },
-        { id: 'value', header: 'Value' },
-        { id: 'format', header: 'Format' },
-        { id: 'digits', header: 'Digits' },
-    ],
-    'InventoryField': [
-        { id: 'title', header: 'Title' },
-        { id: 'type', header: 'Type' },
-        { id: 'description', header: 'Description' },
-        { id: 'visible', header: 'Show in Table' },
-        { id: 'order', header: 'Order' },
-        { id: 'status', header: 'Status' },
+        { id: 'field', header: 'textStats.field' },
+        { id: 'value', header: 'textStats.value' },
+        { id: 'count', header: 'textStats.count' },
     ],
     'User': [
-        { id: 'name', header: 'Name' },
-        { id: 'email', header: 'Email' },
+        { id: 'name', header: 'user.name' },
+        { id: 'email', header: 'user.email' },
     ],
     'AdminUser': [
-        { id: 'name', header: 'Name' },
-        { id: 'email', header: 'Email' },
-        { id: 'status', header: 'Status' },
-        { id: 'roles', header: 'Roles', accessor: value => value?.map(role => role.role?.name).join(', ') || '-' },
+        { id: 'name', header: 'adminUser.name' },
+        { id: 'email', header: 'adminUser.email' },
+        { id: 'status', header: 'adminUser.status' },
+        { id: 'roles', header: 'adminUser.roles', accessor: value => value?.map(role => role.role?.name).join(', ') || '-' },
     ]
 };
 
@@ -169,20 +166,20 @@ export const roles = {
 
 export const PART_DEFINITIONS = {
     TEXT: {
-        label: "Fixed",
-        help: "A piece of unchanging text. You can use Unicode or emoji.",
-        formatHelp: "Optional. Leave empty, value will be used as-is.",
+        label: "typesCustomId.fixed.label",
+        help: 'typesCustomId.fixed.hint',
+        formatHelp: "typesCustomId.fixed.formatHint",
         formats: null,
         gen: (part) => String(part.format ?? ""),
     },
 
     RANDOM20: {
-        label: "20-bit random",
-        help: "A random value. E.g., format as six-digit decimal (D6) or 5-digit hex (X5).",
-        formatHelp: "Choose how to represent the random bits.",
+        label: "typesCustomId.20bitRandom.label",
+        help: "typesCustomId.20bitRandom.hint",
+        formatHelp: "typesCustomId.20bitRandom.formatHint",
         formats: [
-            { value: "D6",  label: "Decimal D6 (000000)" },
-            { value: "X5",  label: "Hex X5 (00000..fffff)" },
+            { value: "D6", label: "typesCustomId.20bitRandom.formats.D6" },
+            { value: "X5", label: "typesCustomId.20bitRandom.formats.X5" },
         ],
         gen: (part) => { 
                 if (part.format === "D6") return generateNBitRandomNumber(20);
@@ -191,12 +188,12 @@ export const PART_DEFINITIONS = {
     },
 
     RANDOM32: {
-        label: "32-bit random",
-        help: "A 32-bit random. Format as decimal (D10) or hex (X8).",
-        formatHelp: "Choose the representation.",
+        label: "typesCustomId.32bitRandom.label",
+        help: "typesCustomId.32bitRandom.hint",
+        formatHelp: "typesCustomId.32bitRandom.formatHint",
         formats: [
-            { value: "D10", label: "Decimal D10 (0000000000)" },
-            { value: "X8",  label: "Hex X8 (00000000..ffffffff)" },
+            { value: "D10", label: "typesCustomId.32bitRandom.formats.D10" },
+            { value: "X8",  label: "typesCustomId.32bitRandom.formats.X8" },
         ],
         gen: (part) => {
             if (part.format === "D10") return generateNBitRandomNumber(32);
@@ -205,52 +202,52 @@ export const PART_DEFINITIONS = {
     },
 
     RANDOM6: {
-        label: "6-digit random",
-        help: "A six-digit random number.",
-        formatHelp: "Fixed length decimal.",
-        formats: [{ value: "D6", label: "Decimal D6 (000000)" }],
+        label: "typesCustomId.6digitsRandom.label",
+        help: "typesCustomId.6digitsRandom.hint",
+        formatHelp: "typesCustomId.6digitsRandom.formatHint",
+        formats: [{ value: "D6", label: "typesCustomId.6digitsRandom.formats.D6" }],
         gen: () => cryptoRandomString({ length: 6, type: "numeric" }),
     },
 
     RANDOM9: {
-        label: "9-digit random",
-        help: "A nine-digit random number.",
-        formatHelp: "Fixed length decimal.",
-        formats: [{ value: "D9", label: "Decimal D9 (000000000)" }],
+        label: "typesCustomId.9digitsRandom.label",
+        help: "typesCustomId.9digitsRandom.hint",
+        formatHelp: "typesCustomId.9digitsRandom.formatHint",
+        formats: [{ value: "D9", label: "typesCustomId.9digitsRandom.formats.D9" }],
         gen: () => cryptoRandomString({ length: 9, type: "numeric" }),
     },
 
     GUID: {
-        label: "GUID",
-        help: "Automatically generated UUID v4.",
-        formatHelp: "No format is required.",
+        label: "typesCustomId.guid.label",
+        help: "typesCustomId.guid.hint",
+        formatHelp: "typesCustomId.guid.formatHint",
         formats: null,
         gen: () => crypto.randomUUID()
     },
 
     DATETIME: {
-        label: "Date/time",
-        help: "An item creation date/time.",
-        formatHelp: "Pick a common pattern or use a custom one.",
+        label: "typesCustomId.dateTime.label",
+        help: "typesCustomId.dateTime.hint",
+        formatHelp: "typesCustomId.dateTime.formatHint",
         formats: [
-            { value: "YYYY",           label: "YYYY" },
-            { value: "YYYYMM",         label: "YYYYMM" },
-            { value: "YYYYMMDD",       label: "YYYYMMDD" },
-            { value: "YYYYMMDD-HHmm",  label: "YYYYMMDD-HHmm" },
-            { value: "YYYYMMDD-HHmmss",label: "YYYYMMDD-HHmmss" },
+            { value: "YYYY",           label: "typesCustomId.dateTime.formats.YYYY" },
+            { value: "YYYYMM",         label: "typesCustomId.dateTime.formats.YYYYMM" },
+            { value: "YYYYMMDD",       label: "typesCustomId.dateTime.formats.YYYYMMDD" },
+            { value: "YYYYMMDD-HHmm",  label: "typesCustomId.dateTime.formats.YYYYMMDD-HHmm" },
+            { value: "YYYYMMDD-HHmmss",label: "typesCustomId.dateTime.formats.YYYYMMDD-HHmmss" },
         ],
         gen: (part) => dayjs().format(part.format || "YYYYMMDD"),
     },
 
     SEQUENCE: {
-        label: "Sequence (+1)",
-        help: "A sequential index. E.g., with leading zeros (D4) or without (D).",
-        formatHelp: "Choose width: D, D2, D3, D4…",
+        label: "typesCustomId.sequence.label",
+        help: "typesCustomId.sequence.hint",
+        formatHelp: "typesCustomId.sequence.formatHint",
         formats: [
-            { value: "D1",  label: "1, 2, 3" },
-            { value: "D2", label: "01, 02, 03" },
-            { value: "D3", label: "001, 002, 003" },
-            { value: "D4", label: "0001, 0002, 0003" },
+            { value: "D1",  label: "typesCustomId.sequence.formats.D1" },
+            { value: "D2", label: "typesCustomId.sequence.formats.D2" },
+            { value: "D3", label: "typesCustomId.sequence.formats.D3" },
+            { value: "D4", label: "typesCustomId.sequence.formats.D4" },
         ],
         gen: (part, value = 0) => {
             const len = parseInt(part.format.slice(1), 10);
@@ -260,9 +257,9 @@ export const PART_DEFINITIONS = {
 };
 
 export const FIELD_TYPES = {
-    TEXT: { label: "Single-line text", limit: 3, },
-    LONGTEXT: { label: "Multi-line text", limit: 3,},
-    NUMBER: { label: "Numeric", limit: 3, },
-    FILE: { label: "File / Image Link", limit: 3, },
-    BOOLEAN: { label: "True / False", limit: 3, },
+    TEXT: { label: 'TEXT', limit: 3, },
+    LONGTEXT: { label: 'LONGTEXT', limit: 3,},
+    NUMBER: { label: 'NUMBER', limit: 3, },
+    FILE: { label: 'FILE', limit: 3, },
+    BOOLEAN: { label: 'BOOLEAN', limit: 3, },
 };

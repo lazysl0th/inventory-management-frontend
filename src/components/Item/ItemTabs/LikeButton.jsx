@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { FaHeart } from "react-icons/fa";
+import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from "@apollo/client/react";
 import { TOGGLE_LIKE, GET_ITEM_LIKES } from "../../../graphql/queries";
 
 export default function LikeButton({ itemId, readAccess, onShowToast }) {
+    const { t } = useTranslation("item");
     const { data, loading: loadingLikes, error } = useQuery(GET_ITEM_LIKES, {
         variables: { id: itemId },
         skip: !itemId,
@@ -49,7 +51,7 @@ export default function LikeButton({ itemId, readAccess, onShowToast }) {
     }
 
     const handleLike = async () => {
-        if (!readAccess) return onShowToast("Нельзя", "bottom-center")
+        if (!readAccess) return onShowToast(t("toasts.like"), "bottom-center")
         const optimistic = {
             likedByMe: !localState.likedByMe,
             likesCount: localState.likedByMe
@@ -61,7 +63,7 @@ export default function LikeButton({ itemId, readAccess, onShowToast }) {
         like(optimistic);
         } catch (e) {
             console.error(e);
-            onShowToast("Ошибка при лайке", "bottom-center");
+            onShowToast(t("toasts.errorLike"), "bottom-center");
             if (data?.item) {
                 setLocalState({
                     likesCount: data.item.likesCount,

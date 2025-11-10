@@ -1,0 +1,22 @@
+{
+    "labels": {
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "interface": "Interfaz",
+        "language": "Idioma"
+    },
+    "options": {
+        "english": "Inglés",
+        "spanish": "Español",
+        "ukrainian": "Ucraniano"
+    },
+    "placeholders": {
+        "email": "Correo electrónico",
+        "name": "Nombre"
+    },
+    "buttons": {
+        "dark": "Oscuro",
+        "light": "Claro",
+        "changePassword": "Cambiar contraseña"
+    }
+}

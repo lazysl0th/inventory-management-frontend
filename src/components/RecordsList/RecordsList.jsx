@@ -13,11 +13,12 @@ import {
     flexRender
 } from "@tanstack/react-table";
 import parse from "html-react-parser";
+import { useTranslation } from "react-i18next";
 import "./RecordsList.css";
 import EditableCell from "./EditableRecord/EditableRecord";
 import IndeterminateCheckbox from "../IndeterminateCheckbox/IndeterminateCheckbox";
 import Record from "./Record/Record";
-import { nameList, RECORDS_LIST_HEADS } from "../../utils/constants";
+import { NAME_LIST, RECORDS_LIST_HEADS } from "../../utils/constants";
 
 export default function RecordsList({
     type,
@@ -37,6 +38,8 @@ export default function RecordsList({
     const [globalFilter, setGlobalFilter] = useState("");
     const [sorting, setSorting] = useState([]);
     const columnHelper = createColumnHelper();
+    const { t } = useTranslation("table");
+
 
     const onDisabled = () => Object.values(rowSelection).some(Boolean);
 
@@ -69,7 +72,7 @@ export default function RecordsList({
         setRowSelection({});
     }
 
-    const handleDelete = () => (type === "Inventory" || type === 'Item' || nameRecordList == nameList.USERS) ? handleDeleteRecord() : handleDeleteRow();
+    const handleDelete = () => (type === "Inventory" || type === 'Item' || nameRecordList == NAME_LIST.USERS) ? handleDeleteRecord() : handleDeleteRow();
 
     const handleChangeCell = (rowKey, changes) => {
         if (Object.prototype.hasOwnProperty.call(changes, "id") && changes.id != null) {
@@ -165,7 +168,7 @@ export default function RecordsList({
             columnHelper.accessor(
                 (row) => columnSchema.accessorFn(row, column, RECORDS_LIST_HEADS[type]), {
                     id: column.id,
-                    header: column.header,
+                    header: t(`${column.header}`),
                     cell: (info) => cellRenderer(info, column, type)
                 }
             )
@@ -217,7 +220,7 @@ export default function RecordsList({
             globalFilter,
             sorting,
             columnVisibility: {
-                select: ([nameList.OWNER, nameList.ACCESS, nameList.USERS, nameList.INVENTORIES].includes(nameRecordList) || (type == 'Item'))
+                select: ([NAME_LIST.OWNER, NAME_LIST.ACCESS, NAME_LIST.USERS, NAME_LIST.INVENTORIES].includes(nameRecordList) || (type == 'Item'))
             }
         },
         onRowSelectionChange: setRowSelection,
@@ -231,12 +234,12 @@ export default function RecordsList({
 
     return (
         <Container>
-                {nameRecordList && <h3 className="mb2 mt-4">{nameRecordList}</h3>}
+                {nameRecordList && <h3 className="mb2 mt-4">{t(`nameList.${nameRecordList}`)}</h3>}
                 <Row className="mb-3 align-items-center">
-                    {(nameRecordList === nameList.OWNER || nameRecordList === nameList.ACCESS
+                    {(nameRecordList === NAME_LIST.OWNER || nameRecordList === NAME_LIST.ACCESS
                         || type == 'Item'
                         || location.pathname === "/admin") && ( <Col md="auto" className="d-flex gap-2">
-                                {(nameRecordList === nameList.USERS )
+                                {(nameRecordList === NAME_LIST.USERS )
                                     ? (<fieldset disabled={disabled}>
                                             <OverlayTrigger
                                                 placement="top"
@@ -299,7 +302,7 @@ export default function RecordsList({
                             : ( (type !== 'NumStats' && type !== 'TextStats') && <Col md className="d-flex justify-content-end">
                                 <Form.Control
                                     type="text"
-                                    placeholder="Filter..."
+                                    placeholder={t("placeholders.filter")}
                                     value={globalFilter}
                                     onChange={handelFilterChange}
                                     style={{ width: "200px" }}

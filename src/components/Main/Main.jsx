@@ -4,7 +4,7 @@ import { TagCloud } from 'react-tagcloud';
 import { GET_INVENTORIES } from '../../graphql/queries';
 import { Spinner, Alert, Container, Row, Col } from 'react-bootstrap';
 import RecordsList from '../RecordsList/RecordsList';
-import { queryParams, nameList, TAGS_CLOUD_SOLOR } from '../../utils/constants';
+import { queryParams, NAME_LIST, TAGS_CLOUD_COLOR } from '../../utils/constants';
 
 export default function Main({ handlerClickRecord, loadTags, resultTags }) {
 
@@ -37,7 +37,7 @@ export default function Main({ handlerClickRecord, loadTags, resultTags }) {
                             ? <Alert variant="danger" className="align-self-center">{latestInventoriesError.message}</Alert>
                             : <RecordsList
                                 type='Inventory'
-                                nameRecordList={nameList.LATEST}
+                                nameRecordList={NAME_LIST.LATEST}
                                 records={latestInventories.inventories}
                                 handlerClickRecord={handlerClickRecord} /> }
 
@@ -47,7 +47,7 @@ export default function Main({ handlerClickRecord, loadTags, resultTags }) {
                             ? <Alert variant="danger" className="align-self-center">{topInventoriestopError.message}</Alert>
                             : <RecordsList
                                 type='Inventory'
-                                nameRecordList={nameList.TOP_ITEMS}
+                                nameRecordList={NAME_LIST.TOP_ITEMS}
                                 records={topInventories.inventories} 
                                 handlerClickRecord={handlerClickRecord} /> }
                 </Col>
@@ -56,7 +56,7 @@ export default function Main({ handlerClickRecord, loadTags, resultTags }) {
                         minSize={12}
                         maxSize={35}
                         tags={resultTags?.data?.tags?.map((tag) => ({ value: tag.name, count: tag.inventoriesCount })) || []}
-                        colorOptions={TAGS_CLOUD_SOLOR}
+                        colorOptions={TAGS_CLOUD_COLOR}
                     />
                 </Col>
             </Row>
