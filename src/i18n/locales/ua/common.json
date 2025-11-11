@@ -19,7 +19,9 @@
             "update": "Оновити",
             "textUpdate": "завантажити останню версію даних із сервера",
             "rewrite": "Переписати",
-            "textRewrite": "зберегти зміни поверх поточних",
+            "textRewrite": "зберегти зміни поверх поточних"
+        },
+        "modals":{
             "updateSuccess": "Дані оновлено",
             "updateFailed": "Не вдалося оновити дані",
             "rewriteSuccess": "Зміни збережено."
@@ -33,6 +35,9 @@
         "titleSuccess": "Успішно!",
         "titleError": "Помилка",
         "messageError": "Щось пішло не так! Спробуйте ще раз."
+    },
+    "toasts": {
+        "saveError": "Помилка збереження"
     },
     "records": {
         "delete": "{{recordType}}(s) успішно видалено",

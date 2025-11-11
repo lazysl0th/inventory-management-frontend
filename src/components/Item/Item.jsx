@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { Modal, Button, Spinner, Alert } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import ItemDetailsTab from './ItemTabs/ItemDetailTabs';
 import { initialStateItem, titleInfoTooltip } from '../../utils/constants';
 import { GET_ITEM, UPDATE_ITEM } from '../../graphql/itemQuery';
@@ -24,6 +25,7 @@ function Item({
     const timerRef = useRef(null);
     const [item, setItem] = useState(initialStateItem)
     const [version, setVersion] = useState();
+    const { t } = useTranslation("item");
 
     const [loadItem, { data: dataItem, loading: loadingItem, error, reset }] = useLazyQuery(GET_ITEM);
     const [loadInventory, { data: dataInventory, loading: loadingInventory}] = useLazyQuery(GET_INVENTORY_INFO);

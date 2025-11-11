@@ -20,9 +20,11 @@
         "textUpdate": "Descargar la última versión de los datos del servidor",
         "rewrite": "Reescribir",
         "textRewrite": "Guardar los cambios sobre los actuales",
-        "updateSuccess": "Datos actualizados",
-        "updateFailed": "Error al actualizar los datos",
-        "rewriteSuccess": "Cambios sobrescritos."
+        "modals":{
+            "updateSuccess": "Datos actualizados",
+            "updateFailed": "Error al actualizar los datos",
+            "rewriteSuccess": "Cambios sobrescritos."
+        }
     },
     "buttons": {
         "update": "Actualizar",
@@ -32,6 +34,9 @@
         "titleSuccess": "¡Éxito!",
         "titleError": "Error",
         "messageError": "¡Algo salió mal! Inténtalo de nuevo."
+    },
+    "toasts": {
+        "saveError": "Error al guardar"
     },
     "records": {
         "delete": "{{recordType}} eliminados correctamente",

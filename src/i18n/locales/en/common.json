@@ -19,7 +19,9 @@
             "update": "Update",
             "textUpdate": "download the latest version of data from the server",
             "rewrite": "Rewrite",
-            "textRewrite": "save your changes over the current ones",
+            "textRewrite": "save your changes over the current ones"
+        },
+        "modals":{
             "updateSuccess": "Data updated",
             "updateFailed": "Failed to update data",
             "rewriteSuccess": "Changes saved over."

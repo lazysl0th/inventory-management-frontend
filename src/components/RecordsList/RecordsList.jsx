@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { Table, Container, Row, Col, OverlayTrigger, Tooltip, Button, Form } from "react-bootstrap";
+import { Table, Container, Row, Col, OverlayTrigger, Tooltip, Button, Form, ButtonGroup } from "react-bootstrap";
 import { CiLock, CiUnlock } from "react-icons/ci";
 import { BsSortDown, BsSortUp, BsFillTrashFill } from "react-icons/bs";
 import { VscAdd } from "react-icons/vsc";
@@ -244,6 +244,7 @@ export default function RecordsList({
                         || location.pathname === "/admin") && ( <Col md="auto" className="d-flex gap-2">
                                 {(nameRecordList === NAME_LIST.USERS )
                                     ? (<fieldset disabled={disabled}>
+                                        <ButtonGroup>
                                             <OverlayTrigger
                                                 placement="top"
                                                 overlay={<Tooltip id="tooltip-add">Block</Tooltip>}
@@ -279,6 +280,7 @@ export default function RecordsList({
                                                     <MdAdminPanelSettings />
                                                 </Button>
                                             </OverlayTrigger>
+                                            </ButtonGroup>
                                         </fieldset>)
 
                                     : (<OverlayTrigger

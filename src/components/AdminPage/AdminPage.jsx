@@ -49,7 +49,7 @@ export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerCl
             const usersIds = Object.keys(rowSelection).map(id => Number(id));
             const deletedUsers = await userApi.deleteUsers(usersIds);
             setUsers(prev => prev.filter(user => !deletedUsers.deletedUsers.map(deletedUser => deletedUser.id).includes(user.id)));
-            onOpenTooltip(tc(`${titleInfoTooltip.SUCCESS}`), t('records.delete', { recordType: "User" }))
+            onOpenTooltip(tc(`${titleInfoTooltip.SUCCESS}`), tc('records.delete', { recordType: "User" }))
         } catch (e) {
           console.log(e);
           onOpenTooltip(tc(`${titleInfoTooltip.ERROR}`), e.message);

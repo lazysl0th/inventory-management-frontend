@@ -223,18 +223,18 @@ function App() {
     const handlerReloadInventory = async() => {
         try {
             await client.refetchQueries({ include: [{ query: GET_INVENTORY, variables: { id: selectedInventoryId },}] });
-            openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), t("versionConflict.updateSuccess"));
+            openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), t("versionConflict.modals.updateSuccess"));
         } catch (e) {
-            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t("versionConflict.updateFailed"));
+            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t("versionConflict.modals.updateFailed"));
         }
     };
 
     const handlerReloadItem = async() => {
         try {
             await client.refetchQueries({ include: [{ query: GET_ITEM, variables: { id: selectedItemId } }] });
-            openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), t("versionConflict.updateSuccess"));
+            openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), t("versionConflict.modals.updateSuccess"));
         } catch (e) {
-            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t("versionConflict.updateFailed"));
+            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t("versionConflict.modals.updateFailed"));
         }
     };
 
@@ -243,7 +243,7 @@ function App() {
     const handlerForceSaveRecord = async () => {
         try {
             selectedItemId ? itemRef.current?.forceSaveItem() : inventoryRef.current?.forceSaveInventory();
-            openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), t("versionConflict.rewriteSuccess"));
+            openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), t("versionConflict.modals.rewriteSuccess"));
         } catch (e) {
             openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t("modals.messageError"));
         }
