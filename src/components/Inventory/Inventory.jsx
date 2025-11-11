@@ -2,7 +2,8 @@ import { useState, useEffect, useContext, forwardRef, useImperativeHandle, useRe
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { Modal, Button, Spinner, Alert, Tabs, Tab } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { GET_INVENTORY, UPDATE_INVENTORY_NEW, GET_ITEMS } from '../../graphql/queries';
+import { GET_INVENTORY, UPDATE_INVENTORY } from '../../graphql/inventoryQueries';
+import { GET_ITEMS } from '../../graphql/itemQuery';
 import { useAutoSave } from '../../hooks/useAutoSave';
 import FormValidation from '../FormValidator/FormValidator';
 import InventoryDetailsTab from './InventoryTabs/InventoryDetailsTab';
@@ -40,9 +41,9 @@ function Inventory({
     const [activeTab, setActiveTab] = useState('details');
     const { readOnly, readAccess, writeAccess } = useAccess([inventory]);
     const { t } = useTranslation("inventory");
-
+    const { t: tc } = useTranslation("common");
     const [loadInventory, { data, loading, error, reset }] = useLazyQuery(GET_INVENTORY);
-    const [updateInventory] = useMutation(UPDATE_INVENTORY_NEW, {
+    const [updateInventory] = useMutation(UPDATE_INVENTORY, {
             refetchQueries: [{ query: GET_ITEMS, variables: { inventoryId: inventoryId } }],
             awaitRefetchQueries: true,
         });
@@ -103,6 +104,7 @@ function Inventory({
     }
 
     const handleUpdateInventory = async(updatedInventory = inventory, expectedVersion) => {
+        console.log(inventory)
         const { createdAt, updatedAt, ...data } = updatedInventory;
         try {
             const { data: res } = await updateInventory({
@@ -123,14 +125,14 @@ function Inventory({
                             order: field.order,
                             isDeleted: field.isDeleted, 
                         })),
-                        allowedUsers: data.allowedUsers.filter((user) => !isNaN(user.id)).map((user) => ({ id: user.id })),
+                        allowedUsers: data.allowedUsers.filter((user) => user?.id != null && user.id !== '' && !Number.isNaN(+user.id)).map((user) => ({ id: user.id })),
                     }
                 },
             });
             setVersion(res.updateInventory.version);
         } catch (e) {
             console.log(e);
-            onOpenTooltip((titleInfoTooltip.ERROR), e.message);
+            onOpenTooltip(tc(`${titleInfoTooltip.ERROR}`), e.message);
         }
     }
 
@@ -155,7 +157,7 @@ function Inventory({
         const errors = await formikRef.current.validateForm();
         formikRef.current.setTouched(Object.keys(errors).reduce((acc, key) => ({ ...acc, [key]: true }), {}));
         if (Object.keys(errors).length === 0) formikRef.current.handleSubmit()
-        else onShowToast('Заполните обязательные поля', 'bottom-center');
+        else onShowToast(t("toast.requiredFields"), 'bottom-center');
     }
 
     useImperativeHandle(ref, () => ({ forceSaveInventory }));
@@ -211,7 +213,7 @@ function Inventory({
                                             handlerChangeDetails={handlerChangeInventory}
                                             onUploadImage={onUploadImage}
                                             onShowToast={onShowToast}
-                                            disabled={readOnly && !writeAccess}
+                                            disabled={!!(readOnly && !writeAccess && inventoryId)}
                                         />}
                             </Tab>
                             <Tab eventKey="customId" title="Custom ID">
@@ -228,7 +230,7 @@ function Inventory({
                                             handlerChangeCustomIdFormat={handlerChangeInventory}
                                             loading={loading}
                                             error={error}
-                                            disabled={readOnly && !writeAccess}
+                                            disabled={!!(readOnly && !writeAccess && inventoryId)}
                                         />}
                             </Tab>
                             <Tab eventKey="fields" title="Fields">
@@ -246,7 +248,7 @@ function Inventory({
                                             onShowToast={onShowToast}
                                             loading={loading}
                                             error={error}
-                                            disabled={readOnly}
+                                            disabled={!!(readOnly && inventoryId)}
                                         />)}
                             </Tab>
                             <Tab eventKey="access" title="Access">
@@ -257,7 +259,7 @@ function Inventory({
                                         : <AccessTab
                                             inventory={inventory}
                                             handlerChangeAllowedUsers={handlerChangeInventory}
-                                            disabled={readOnly}
+                                            disabled={!!(readOnly && inventoryId)}
                                         /> }
                             </Tab>
                             <Tab eventKey="items" title="Items" mountOnEnter>
@@ -267,7 +269,7 @@ function Inventory({
                                     handlerAddRecord={handlerAddRecord}
                                     handlerDeleteRecords={handlerDeleteRecords}
                                     itemFields={inventory.fields}
-                                    disabled={readOnly && !writeAccess}
+                                    disabled={!!(readOnly && !writeAccess && inventoryId)}
                                 />
                             </Tab>
                             <Tab eventKey="discussion" title="Discussion" mountOnEnter>
@@ -295,10 +297,10 @@ function Inventory({
                         {isSaving && <Spinner animation="border" size="sm" />}
                         {errorAutoSave && onShowToast(errorAutoSave, 'bottom-center')}
                         <Button
-                            variant="primary"
+                            variant="dark"
                             onClick={validation}
-                            disabled={!isDirty}
-                        > { inventoryId ? 'Update' : 'Create' } </Button>
+                            disabled={!isDirty && inventoryId}
+                        > { inventoryId ? t("buttons.update") : t("buttons.create") } </Button>
                     </Modal.Footer>
                 </>)}
             </FormValidation>

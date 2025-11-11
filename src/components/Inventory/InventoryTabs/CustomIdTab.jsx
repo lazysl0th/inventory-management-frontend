@@ -8,7 +8,6 @@ import { PART_DEFINITIONS, DND_FORM } from "../../../utils/constants";
 
 export default function CustomIdTab({ customIdFormat, handlerChangeCustomIdFormat, loading, error, disabled}) {
     const { t } = useTranslation("inventory");
-
     const createNewPart = () => ({
         guid: crypto.randomUUID(),
         type: 'TEXT',
@@ -38,7 +37,7 @@ export default function CustomIdTab({ customIdFormat, handlerChangeCustomIdForma
                     </div>)
                 :(<div className="p-3">
                     {customIdFormat?.part?.length === 0 
-                        ? ( <Alert variant="light" className="border">{t(texts.noPartsCustomID)}</Alert>)
+                        ? ( <Alert variant="light" className="border">{t("texts.noPartsCustomID")}</Alert>)
                         : ( <DndForm
                                 title={DND_FORM.CUSTOM_ID.TITLE}
                                 fields={customIdFormat?.parts}
@@ -47,19 +46,19 @@ export default function CustomIdTab({ customIdFormat, handlerChangeCustomIdForma
                                 addLabel={DND_FORM.CUSTOM_ID.ADD_PART}
                                 onChange={handlerChange}
                                 disabled={disabled}
-                                renderItem={({ field, index, total, onUpdate, onMove }) => {
+                                renderItem={({ field, index, total, onUpdate, onMove, disabled}) => {
                                     return (
-                                        <fieldset disabled={disabled}>
-                                            <DndFormField id={field.guid}>
+                                        <DndFormField id={field.guid} disabled={disabled}>
+
                                                 <CustomIdForm
                                                     part={field}
                                                     index={index}
                                                     total={total}
                                                     onUpdate={onUpdate}
                                                     onMove={onMove}
-                                                    />
-                                            </DndFormField>
-                                        </fieldset>
+                                                    disabled={disabled}
+                                                />
+                                        </DndFormField>
                                     );
                                 }}
                             />)}

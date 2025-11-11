@@ -21,7 +21,7 @@ function Header({ onLog }) {
     const [initialValues] = useState({ searchQuery: '' })
     const [expanded, setExpanded] = useState(false);
 
-    const isPageWithoutHeader = [link.SIGNIN, link.SIGNUP, link.DELETE_USER_DATA].includes(location.pathname);
+    const isPageWithoutHeader = [link.SIGNIN, link.SIGNUP, link.DELETE_USER_DATA, link.PASSWORD_RESET, link.PASSWORD_CHANGE].includes(location.pathname);
 
     const expandedHadle = () => setExpanded(false);
 
@@ -36,7 +36,7 @@ function Header({ onLog }) {
     return (
         <Navbar variant='light' expand='md' expanded={expanded} onToggle={setExpanded} className='pt-5 pb-3'>
             <Container>
-                <Navbar.Brand href='/' className='text-wrap flex-grow-1 flex-md-basis-0'>Inventory Management</Navbar.Brand>
+                <Navbar.Brand href='/' className='text-wrap flex-grow-1 flex-md-basis-0'><h2 className='mb-0'>Inventory Management</h2></Navbar.Brand>
                 <Navbar.Toggle aria-controls='main-navbar-nav' />
                 <Navbar.Collapse id='main-navbar-nav' className='justify-content-end'>
                     <Nav className='align-items-end align-items-md-center'>
@@ -87,7 +87,7 @@ function Header({ onLog }) {
                                             {ta("text.signedInAs")}: <a href="/profile">{currentUser?.name}</a>
                                         </Navbar.Text>
                                         <Navbar.Text className='ps-2'>
-                                            {ta("text.email")}: <a href={`mailto:${currentUser?.email}`}>{currentUser?.email}</a>
+                                            {ta("text.headerEmail")}: <a href={`mailto:${currentUser?.email}`}>{currentUser?.email}</a>
                                         </Navbar.Text>
                                     </> )
                                     : (hasAdminRole([roles.ADMIN], currentUser)

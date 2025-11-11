@@ -11,8 +11,6 @@ export default function FormValidation ({ initialValues, validationSchema, onSub
         }
     }
 
-    
-
     return (
         <Formik
             initialValues={initialValues}
@@ -20,6 +18,7 @@ export default function FormValidation ({ initialValues, validationSchema, onSub
             validationSchema={validationSchema}
             onSubmit={submitHandler}
             validateOnMount={validateOnMount}
+            enableReinitialize
         >
             {(formikProps) => {
                 const { setFieldValue } = formikProps;

@@ -44,7 +44,7 @@ export default function FieldsTab({ itemFields, handlerChangeFields, onShowToast
                         createNewItem={createNewField}
                         disabled={disabled}
                         addLabel={DND_FORM.CUSTOM_FIELDS.ADD_FIELD}
-                        renderItem={({ field, index, total, onUpdate, onMove }) => {
+                        renderItem={({ field, index, total, onUpdate, onMove, disabled }) => {
                             return (
                                 <DndFormField id={field.guid || field.id}>
                                     <ItemFieldsForm field={field} index={index} total={total} onUpdate={onUpdate} onMove={onMove} disabled={disabled} />

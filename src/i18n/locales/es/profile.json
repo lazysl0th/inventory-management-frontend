@@ -16,7 +16,10 @@
     },
     "buttons": {
         "dark": "Oscuro",
-        "light": "Claro",
-        "changePassword": "Cambiar contraseña"
+        "light": "Claro"
+    },
+    "toasts": {
+        "updateUserSucces": "Datos actualizados correctamente",
+        "updateUserFailed": "Los datos no se han actualizado."
     }
 }

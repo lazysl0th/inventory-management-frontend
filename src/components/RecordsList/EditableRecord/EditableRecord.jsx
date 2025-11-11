@@ -1,7 +1,7 @@
 import { useRef, useEffect, useCallback, useMemo } from "react";
 import AsyncSelect from "react-select/async";
 import { useLazyQuery } from "@apollo/client/react";
-import { SEARCH_USERS } from "../../../graphql/queries";
+import { SEARCH_USERS } from "../../../graphql/commonQuery";
 import { useTranslation } from "react-i18next";
 
 

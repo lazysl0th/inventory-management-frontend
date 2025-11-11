@@ -27,30 +27,30 @@ export const initialStateItem = {
 
 
 export const titleInfoTooltip = {
-    SUCCESS: 'Success!',
-    ERROR: 'Error',
+    SUCCESS: 'modals.titleSuccess',
+    ERROR: 'modals.titleError',
 }
 
 export const messageInfoTooltip = {
-    ERROR: 'Something went wrong! Try again.',
+    ERROR: 'modals.messageError',
     RECORD: {
-        DELETE: (recordType) => (`${recordType}(s) deleted success`),
-        CREATE: (recordType) => (`${recordType} successfully created!`),
-        ERROR: (recordType) => (`An error occurred while creating ${recordType}.`),
+        DELETE: 'records.delete',
+        CREATE: 'records.create',
+        ERROR: 'records.error',
     },
     USER: {
-        BLOCKED: 'User blocked success',
-        UNBLOCKED: 'User unblocked success',
+        BLOCKED: 'modals.blocked',
+        UNBLOCKED: 'modals.unblocked',
         REGISTRATION: {
-            success: 'Registration completed successfully!',
+            success: 'modals.registrationSuccess',
         },
         PERMISSION: {
-            GRANT: 'User(s) have been granted administrator privileges',
-            REVOKE: 'User(s) have been revoked administrator privileges',
+            GRANT: 'modals.grant',
+            REVOKE: 'modals.revoke',
         },
         PASSWORD: {
-            RESET: 'Password reset request completed successfully',
-            UPDATE: 'The password has been updated successfully',
+            RESET: 'modals.resetPassword',
+            UPDATE: 'modals.updatePassword',
         }
     },
     RESULT_SEARCH: {
@@ -67,8 +67,9 @@ export const link = {
     SIGNUP: import.meta.env.VITE_SIGNUP_URL ? `${import.meta.env.VITE_SIGNUP_URL}` : '/sign-up',
     DELETE_USER_DATA: import.meta.env.DELETE_USER_DATA ? `${import.meta.env.DELETE_USER_DATA}` : '/delete-user-data',
     PAGE_NOT_FOUND: import.meta.env.PAGE_NOT_FOUND ? `${import.meta.env.PAGE_NOT_FOUND}` : '*',
-    PASSWORD_RESET: import.meta.env.VITE_SINGIN_URL ? `${import.meta.env.VITE_SINGIN_URL}` : '/reset-password',
-    SEARCH: import.meta.env.VITE_SINGIN_URL ? `${import.meta.env.VITE_SINGIN_URL}` : '/search',
+    PASSWORD_RESET: import.meta.env.VITE_PASSWORD_RESET ? `${import.meta.env.VITE_PASSWORD_RESET}` : '/reset-password',
+    PASSWORD_CHANGE: import.meta.env.VITE_PASSWORD_CHANGE ? `${import.meta.env.VITE_PASSWORD_CHANGE}` : '/change-password',
+    SEARCH: import.meta.env.VITE_SEARCH ? `${import.meta.env.VITE_SEARCH}` : '/search',
 
 }
 

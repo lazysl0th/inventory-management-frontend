@@ -234,7 +234,7 @@ export default function RecordsList({
 
     return (
         <Container>
-                {nameRecordList && <h3 className="mb2 mt-4">{t(`nameList.${nameRecordList}`)}</h3>}
+                {nameRecordList && <h3 className="mb2 mt-3">{t(`nameList.${nameRecordList}`)}</h3>}
                 <Row className="mb-3 align-items-center">
                     {(nameRecordList === NAME_LIST.OWNER || nameRecordList === NAME_LIST.ACCESS
                         || type == 'Item'

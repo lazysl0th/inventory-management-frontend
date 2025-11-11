@@ -2,21 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { Routes, Route, useNavigate, useSearchParams } from 'react-router-dom';
 import { useApolloClient } from "@apollo/client/react";
+import { useTranslation } from 'react-i18next';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import './App.css'
-import {
-    GET_CATEGORIES,
-    GET_TAGS,
-    GET_INVENTORIES,
-    CREATE_INVENTORY,
-    DELETE_INVENTORIES,
-    CREATE_ITEM,
-    GET_ITEMS,
-    DELETE_ITEMS,
-    GET_INVENTORY,
-    GET_ITEM
-} from '../../graphql/queries';
-import { register, login, checkToken } from '../../utils/usersApi';
+import { GET_INVENTORIES, CREATE_INVENTORY, DELETE_INVENTORIES, GET_INVENTORY } from '../../graphql/inventoryQueries';
+import { GET_ITEM, GET_ITEMS, DELETE_ITEMS, CREATE_ITEM } from '../../graphql/itemQuery';
+import { GET_CATEGORIES, GET_TAGS, } from '../../graphql/commonQuery';
+import { register, login, checkToken, resetPassword, changePassword } from '../../utils/usersApi';
 import { uploadImage } from '../../utils/imageApi';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
@@ -33,6 +25,8 @@ import InfoToast from '../InfoToast/InfoToast';
 import PageDeleteUserData from '../PageDeleteUserData/PageDeleteUserData';
 import PagePrivacy from '../PagePrivacy/PagePrivacy'
 import PageNotFound from '../PageNotFound/PageNotFound';
+import ResetPassword from '../ResetPassword/ResetPassword';
+import ChangePassword from '../ChangePassword/ChangePassword';
 import { titleInfoTooltip, messageInfoTooltip, queryParams } from '../../utils/constants';
 
 function App() {
@@ -50,10 +44,12 @@ function App() {
     const [selectedInventoryId, setSelectedInventoryId] = useState(null);
     const [selectedItemId, setSelectedItemId] = useState(null);
     const [searchParams] = useSearchParams();
-    const [access, setAccess] = useState(true);
     const client = useApolloClient();
     const inventoryRef = useRef(null);
     const itemRef = useRef(null);
+    const { t } = useTranslation("common");
+    const { t: ta } = useTranslation("auth");
+
 
     useEffect( () => { handleVerifyUser() }, [navigate])
     useEffect( () => { handlerSignInSocialSubmit() }, [])
@@ -164,13 +160,13 @@ function App() {
             const { data } = await createInventory({ variables: { input: newInventory } });
             if (data.createInventory.id) {
                 setSelectedInventoryId(data.createInventory.id)
-                openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORD.CREATE('Inventory'));
+                openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), t('records.create', { recordType: "Inventory" }));
             } else {
-                openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORD.ERROR('Inventory'));
+                openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t('records.error', { recordType: "Inventory" }));
             }
         } catch(e) {
             console.log(e);
-            openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORD.ERROR('Inventory'));
+            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t('records.error', { recordType: "Inventory" }));
 
         }
     }
@@ -180,13 +176,13 @@ function App() {
             const { data } = await createItem({ variables: { input: newItem } });
             if (data.createItem.id) {
                 setSelectedItemId(data.createItem.id)
-                openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORD.CREATE('Item'));
+                openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), t('records.create', { recordType: "Item" }));
             } else {
-                openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.RECORD.ERROR('Item'));
+                openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t('records.error', { recordType: "Item" }));
             }
         } catch(e) {
             console.log(e);
-            openInfoTooltip(titleInfoTooltip.ERROR, e.message);
+            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t('records.error', { recordType: "Item" }));
         }
     }
 
@@ -194,10 +190,10 @@ function App() {
         try {
             const selectedIds = Object.keys(rowSelection).map(Number);
             await deleteInventories({ variables: { ids: selectedIds } });
-            openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORD.DELETE('Inventory'))
+            openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), t('records.delete', { recordType: "Inventory" }))
         } catch (e) {
             console.log(e);
-            openInfoTooltip(titleInfoTooltip.ERROR, e.message)
+            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), e.message)
         }
     }
 
@@ -205,16 +201,54 @@ function App() {
         try {
             const selectedIds = Object.keys(rowSelection).map(Number);
             await deleteItems({ variables: { ids: selectedIds } });
-            openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORD.DELETE('Item'))
+            openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), t('records.delete', { recordType: "Item" }))
         } catch (e) {
             console.log(e);
-            openInfoTooltip(titleInfoTooltip.ERROR, e.message)
+            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), e.message)
         }
     }
     
     const handlerDeleteRecords = {
         Inventory: hendlerDeleteInventories,
         Item: hendlerDeleteItems,
+    }
+
+    const handlerUploadImage = (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        const data = uploadImage(formData);
+        return data;
+    }
+
+    const handlerReloadInventory = async() => {
+        try {
+            await client.refetchQueries({ include: [{ query: GET_INVENTORY, variables: { id: selectedInventoryId },}] });
+            openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), t("versionConflict.updateSuccess"));
+        } catch (e) {
+            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t("versionConflict.updateFailed"));
+        }
+    };
+
+    const handlerReloadItem = async() => {
+        try {
+            await client.refetchQueries({ include: [{ query: GET_ITEM, variables: { id: selectedItemId } }] });
+            openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), t("versionConflict.updateSuccess"));
+        } catch (e) {
+            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t("versionConflict.updateFailed"));
+        }
+    };
+
+    const handlerReloadRecord = () => selectedItemId ? handlerReloadItem() : handlerReloadInventory();
+
+    const handlerForceSaveRecord = async () => {
+        try {
+            selectedItemId ? itemRef.current?.forceSaveItem() : inventoryRef.current?.forceSaveInventory();
+            openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), t("versionConflict.rewriteSuccess"));
+        } catch (e) {
+            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t("modals.messageError"));
+        }
+        
+        
     }
 
     const handleVerifyUser = async () => {
@@ -237,13 +271,13 @@ function App() {
         try {
             const data = await register(values);
             if (data.user) {
-                openInfoTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.USER.REGISTRATION.success);
+                openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), ta(`${messageInfoTooltip.USER.REGISTRATION.success}`));
                 handlerSignInSubmit(data.user);
             } else {
-                openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.ERROR);
+                openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t(`${titleInfoTooltip.ERROR}`));
             }
         } catch (e) {
-            openInfoTooltip(titleInfoTooltip.ERROR, e.message)
+            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), e.message)
         }
     }
 
@@ -268,10 +302,10 @@ function App() {
                 }))
                 navigate('/profile');
             } else {
-                openInfoTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.ERROR);
+                openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t(`${titleInfoTooltip.ERROR}`));
             }
         } catch (e) {
-            openInfoTooltip(titleInfoTooltip.ERROR, e.message)
+            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), e.message);
         }
     }
 
@@ -281,36 +315,36 @@ function App() {
         navigate('/sign-in', { replace: true });
     }
 
-    const handlerUploadImage = (file) => {
-        const formData = new FormData();
-        formData.append("file", file);
-        const data = uploadImage(formData);
-        return data;
+    const handlerResetPassword = async(values) => {
+        try {
+            if (!values.email) return
+            const userData = await resetPassword(values)
+            if(userData) {
+                openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), ta(`${messageInfoTooltip.USER.PASSWORD.RESET}`));
+                navigate('/profile');
+            } else {
+                openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t(`${titleInfoTooltip.ERROR}`));
+            }
+        } catch (e) {
+            console.log(e);
+            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), e.message);
+        }
     }
 
-    const handlerReloadInventory = async() => {
+    const handlerChangePassword = async(values) => {
         try {
-            await client.refetchQueries({ include: [{ query: GET_INVENTORY, variables: { id: selectedInventoryId },}] });
-            openInfoTooltip(titleInfoTooltip.SUCCESS, "Данные обновлены");
+          if (!values.password) return
+          const userData = await changePassword(values)
+          if(userData) {
+                openInfoTooltip(t(`${titleInfoTooltip.SUCCESS}`), ta(`${messageInfoTooltip.USER.PASSWORD.UPDATE}`));
+                navigate('/');
+          } else {
+                openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t(`${titleInfoTooltip.ERROR}`));
+          }
         } catch (e) {
-            openInfoTooltip(titleInfoTooltip.ERROR, "Не удалось обновить данные");
+            console.log({e});
+            openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), e.message);
         }
-    };
-
-    const handlerReloadItem = async() => {
-        try {
-            await client.refetchQueries({ include: [{ query: GET_ITEM, variables: { id: selectedItemId } }] });
-            openInfoTooltip(titleInfoTooltip.SUCCESS, "Данные обновлены");
-        } catch (e) {
-            openInfoTooltip(titleInfoTooltip.ERROR, "Не удалось обновить данные");
-        }
-    };
-
-    const handlerReloadRecord = () => selectedItemId ? handlerReloadItem() : handlerReloadInventory();
-
-    const handlerForceSaveRecord = async () => {
-        selectedItemId ? itemRef.current?.forceSaveItem() : inventoryRef.current?.forceSaveInventory();
-        openInfoTooltip(titleInfoTooltip.SUCCESS, "Изменения сохранены поверх.");
     }
 
     return (
@@ -321,6 +355,8 @@ function App() {
                 <Route path="/search" element={<SearchPage handlerClickRecord={handlerClickRecord}/>} />
                 <Route path="/sign-in" element={<Login onAuth={handlerSignInSubmit}/>} />
                 <Route path="/sign-up" element={<Register onReg={handlerSignUpSubmit}/>} />
+                <Route path="/reset-password" element={<ResetPassword handlerResetPassword={handlerResetPassword}/>} />
+                <Route path="/change-password" element={<ChangePassword handlerChangePassword={handlerChangePassword}/>} />
                 <Route path="/delete-user-data" element={<PageDeleteUserData />} />
                 <Route path="/privacy" element={<PagePrivacy />} />
                 <Route
@@ -330,7 +366,8 @@ function App() {
                             <Profile 
                                 handlerClickRecord={handlerClickRecord}
                                 handlerDeleteRecords={handlerDeleteRecords.Inventory}
-                                handlerAddRecord={handlerAddRecord.Inventory} />
+                                handlerAddRecord={handlerAddRecord.Inventory}
+                                onShowToast={showInfoToats} />
                         </ProtectedRoute>
                     }/>
                 <Route

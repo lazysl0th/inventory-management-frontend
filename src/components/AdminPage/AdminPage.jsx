@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { Spinner, Alert, Container, Row, Col } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import RecordsList from '../RecordsList/RecordsList';
 import { NAME_LIST, titleInfoTooltip, messageInfoTooltip} from '../../utils/constants';
 import * as userApi from '../../utils/usersApi';
-import { GET_INVENTORIES } from '../../graphql/queries';
+import { GET_INVENTORIES } from '../../graphql/inventoryQueries';
 
 export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerClickRecord, handlerAddRecord, handlerDeleteRecords }) {
     const [users, setUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-
+    const { t } = useTranslation("admin");
+    const { t: tc } = useTranslation("common");
 
     useEffect(() => { loadUsers() }, [])
     
@@ -34,10 +36,10 @@ export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerCl
             const usersIds = Object.keys(rowSelection).map(id => Number(id));
             const blockUsers = await userApi.changeUsersStatus(usersIds, status);
             setUsers(prev => prev.map(user => ({ ...user, ...(blockUsers.requestUpdateStatusUsers.find(updateStatusUser => updateStatusUser.id === user.id) || {}) })));
-            onOpenTooltip(titleInfoTooltip.SUCCESS, status === 'Blocked' ? messageInfoTooltip.USER_BLOCKED : messageInfoTooltip.USER_UNBLOCKED)
+            onOpenTooltip(tc(`${titleInfoTooltip.SUCCESS}`), status === 'Blocked' ? t(`${messageInfoTooltip.USER_BLOCKED}`) : t(`${messageInfoTooltip.USER_UNBLOCKED}`))
         } catch (e) {
             console.log(e);
-            onOpenTooltip(titleInfoTooltip.ERROR, e.message)
+            onOpenTooltip(tc(`${titleInfoTooltip.ERROR}`), e.message)
         }
     }
 
@@ -47,10 +49,10 @@ export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerCl
             const usersIds = Object.keys(rowSelection).map(id => Number(id));
             const deletedUsers = await userApi.deleteUsers(usersIds);
             setUsers(prev => prev.filter(user => !deletedUsers.deletedUsers.map(deletedUser => deletedUser.id).includes(user.id)));
-            onOpenTooltip(titleInfoTooltip.SUCCESS, messageInfoTooltip.RECORDS.DELETE)
+            onOpenTooltip(tc(`${titleInfoTooltip.SUCCESS}`), t('records.delete', { recordType: "User" }))
         } catch (e) {
           console.log(e);
-          onOpenTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.e.message);
+          onOpenTooltip(tc(`${titleInfoTooltip.ERROR}`), e.message);
         }
     }
 
@@ -69,9 +71,9 @@ export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerCl
                     })
                 )
             ))
-            onOpenTooltip(titleInfoTooltip.SUCCESS, roles === '1' ? messageInfoTooltip.USER.PERMISSION.GRANT : messageInfoTooltip.USER.PERMISSION.REVOKE)
+            onOpenTooltip(tc(`${titleInfoTooltip.SUCCESS}`), roles === '1' ? t(`${messageInfoTooltip.USER.PERMISSION.GRANT}`) : t(`${messageInfoTooltip.USER.PERMISSION.REVOKE}`))
         } catch (e) {
-            onOpenTooltip(titleInfoTooltip.ERROR, messageInfoTooltip.e.message);
+            onOpenTooltip(tc(`${titleInfoTooltip.ERROR}`), e.message);
         }
     }
 
@@ -82,7 +84,7 @@ export default function AdminPage({ onOpenTooltip, onCheckCurrentUser, handlerCl
                     { isLoading 
                         ? <Spinner animation="border" className="align-self-center"/>
                         : users.length === 0
-                            ? <Alert variant="danger" className="align-self-center">Ошибка загрузки пользователей</Alert>
+                            ? <Alert variant="danger" className="align-self-center">{t("alerts.users")}</Alert>
                             : <RecordsList
                                 type='AdminUser'
                                 nameRecordList={NAME_LIST.USERS}

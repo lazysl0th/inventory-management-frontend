@@ -132,7 +132,8 @@
         "error": "Ошибка при сохранении",
         "like": "Only registered users can like",
         "image": "There was an error loading the image",
-        "field": "Cannot add more fields of type {{fieldTypeLabel}} (limit {{fieldTypeLimit}})"
+        "field": "Cannot add more fields of type {{fieldTypeLabel}} (limit {{fieldTypeLimit}})",
+        "requiredFields": "Please fill in the required fields"
     },
     "badges": {
         "example": "Example:",

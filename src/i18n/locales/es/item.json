@@ -1,16 +1,10 @@
 {
-
-"labels": {
-
-"owner": "Propietario",
-
-"createdBy": "Creado por",
-
-"updateAt": "Actualizar el",
-
-"customId": "ID"
-
-},
+    "labels": {
+        "owner": "Propietario",
+        "createdBy": "Creado por",
+        "updateAt": "Actualizar el",
+        "customId": "ID"
+    },
     "butons": {
         "selectFile": "Seleccionar archivo",
         "create": "Crear",

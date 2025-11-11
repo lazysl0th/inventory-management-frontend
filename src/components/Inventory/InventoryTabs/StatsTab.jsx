@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLazyQuery } from "@apollo/client/react";
 import { Badge, Alert } from "react-bootstrap";
-import { GET_INVENTORY_STATS } from '../../../graphql/queries';
+import { GET_INVENTORY_STATS } from '../../../graphql/inventoryQueries';
 import RecordsList from "../../RecordsList/RecordsList";
 import { NAME_LIST } from "../../../utils/constants";
 import { useTranslation } from 'react-i18next';

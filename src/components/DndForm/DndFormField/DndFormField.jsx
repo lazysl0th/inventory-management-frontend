@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-export default function DndFormField({ id, children, }) {
+export default function DndFormField({ id, disabled, children, }) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
 
     const style = {
@@ -18,7 +18,7 @@ export default function DndFormField({ id, children, }) {
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        <div ref={setNodeRef} style={style} {...attributes} {...(!disabled ? listeners : {})}>
             {children}
         </div>
     );

@@ -16,7 +16,10 @@
     },
     "buttons": {
         "dark": "Темний",
-        "light": "Світлий",
-        "changePassword": "Змінити пароль"
+        "light": "Світлий"
+    },
+    "toasts": {
+        "updateUserSucces": "Дані успішно оновлено",
+        "updateUserFailed": "Дані не оновлено."
     }
 }

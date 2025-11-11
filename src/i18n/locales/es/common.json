@@ -12,5 +12,31 @@
     },
     "links": {
         "back": "Atrás"
+    },
+    "versionConflict": {
+    "paragraph": "Otro usuario ha modificado los datos del inventario. Puede:",
+    "listItems": {
+        "update": "Actualizar",
+        "textUpdate": "Descargar la última versión de los datos del servidor",
+        "rewrite": "Reescribir",
+        "textRewrite": "Guardar los cambios sobre los actuales",
+        "updateSuccess": "Datos actualizados",
+        "updateFailed": "Error al actualizar los datos",
+        "rewriteSuccess": "Cambios sobrescritos."
+    },
+    "buttons": {
+        "update": "Actualizar",
+        "rewrite": "Reescribir"
+    },
+    "modals": {
+        "titleSuccess": "¡Éxito!",
+        "titleError": "Error",
+        "messageError": "¡Algo salió mal! Inténtalo de nuevo."
+    },
+    "records": {
+        "delete": "{{recordType}} eliminados correctamente",
+        "create": "¡{{recordType}} creado correctamente!",
+        "error": "Se produjo un error al crear {{recordType}}."
+        }
     }
 }

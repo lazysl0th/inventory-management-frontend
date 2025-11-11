@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { Spinner, Alert } from 'react-bootstrap';
-import { GET_ITEMS, } from '../../../graphql/queries';
+import { GET_ITEMS } from '../../../graphql/itemQuery';
 import RecordsList from '../../RecordsList/RecordsList';
 
 export default function ItemsTab({

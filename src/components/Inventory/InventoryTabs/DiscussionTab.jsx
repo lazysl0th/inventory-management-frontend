@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { GET_COMMENTS, CREATE_COMMENT, COMMENT_ADDED} from "../../../graphql/queries";
+import { GET_COMMENTS, CREATE_COMMENT, COMMENT_ADDED} from "../../../graphql/commonQuery";
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
 
 export default function DiscussionTab({ inventoryId, disabled }) {

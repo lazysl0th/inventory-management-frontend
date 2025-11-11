@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useQuery } from "@apollo/client/react";
 import { TagCloud } from 'react-tagcloud';
-import { GET_INVENTORIES } from '../../graphql/queries';
+import { GET_INVENTORIES } from '../../graphql/inventoryQueries';
 import { Spinner, Alert, Container, Row, Col } from 'react-bootstrap';
 import RecordsList from '../RecordsList/RecordsList';
 import { queryParams, NAME_LIST, TAGS_CLOUD_COLOR } from '../../utils/constants';

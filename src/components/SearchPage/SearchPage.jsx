@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client/react";
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
-import { SEARCH_INVENTORIES } from '../../graphql/queries';
+import { SEARCH_INVENTORIES } from '../../graphql/inventoryQueries';
 import { Spinner, Alert, Container } from 'react-bootstrap';
 import RecordsList from '../RecordsList/RecordsList';
 import { messageInfoTooltip, NAME_LIST, queryParams } from '../../utils/constants';

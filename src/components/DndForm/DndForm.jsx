@@ -62,7 +62,7 @@ export default function DndForm({
             {title && <h5 className="mb-3">{t(`dndForm.${title}`)}</h5>}
 
             <div ref={formRef}>
-                <DndContext sensors={disabled ? undefined : sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                     <SortableContext items={fields?.map(getKey)?.filter(Boolean)} strategy={verticalListSortingStrategy} disabled={disabled}>
                         {fields?.toSorted((a, b) => a.order - b.order).map((field, index) => (
                             <div key={getKey(field)}>
@@ -72,6 +72,7 @@ export default function DndForm({
                                     total: fields.length,
                                     onUpdate: handleUpdate,
                                     onMove: handleMove,
+                                    disabled: disabled
                                 })}
                             </div>))}
                     </SortableContext>

@@ -3,7 +3,7 @@ import { Button, Spinner } from "react-bootstrap";
 import { FaHeart } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from "@apollo/client/react";
-import { TOGGLE_LIKE, GET_ITEM_LIKES } from "../../../graphql/queries";
+import { TOGGLE_LIKE, GET_ITEM_LIKES } from "../../../graphql/commonQuery";
 
 export default function LikeButton({ itemId, readAccess, onShowToast }) {
     const { t } = useTranslation("item");
@@ -81,7 +81,7 @@ export default function LikeButton({ itemId, readAccess, onShowToast }) {
         className="d-flex align-items-center gap-1"
         onClick={handleLike}
         disabled={loadingMutation}
-        variant='primary'
+        variant='dark'
     >
         <FaHeart className={localState.likedByMe ? "text-danger" : ""} />
         <span>{localState.likesCount}</span>

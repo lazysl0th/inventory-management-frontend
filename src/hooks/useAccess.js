@@ -10,7 +10,7 @@ export default function useAccess(objects) {
         const auth = currentUser.loggedIn
         const owner = isOwner(objects, currentUser);
         const writeAccess = hasAccess(objects, currentUser);
-        const admin = hasAdminRole(roles.ADMIN, currentUser)
+        const admin = hasAdminRole([roles.ADMIN], currentUser)
         const canEdit = owner || admin;
         return { readOnly: !canEdit, isAdmin: admin, readAccess: auth, writeAccess: writeAccess };
     }, [objects, currentUser]);

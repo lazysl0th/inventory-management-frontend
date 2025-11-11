@@ -7,5 +7,8 @@
     },
     "links": {
         "admin": "Panel de administración"
+    },
+    "alerts": {
+        "users": "Error al cargar usuarios"
     }
 }

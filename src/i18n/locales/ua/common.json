@@ -12,5 +12,31 @@
     },
     "links": {
         "back": "Назад"
+    },
+    "versionConflict": {
+        "paragraph": "Дані інвентаризації були змінені іншим користувачем. Ви можете:",
+        "listItems": {
+            "update": "Оновити",
+            "textUpdate": "завантажити останню версію даних із сервера",
+            "rewrite": "Переписати",
+            "textRewrite": "зберегти зміни поверх поточних",
+            "updateSuccess": "Дані оновлено",
+            "updateFailed": "Не вдалося оновити дані",
+            "rewriteSuccess": "Зміни збережено."
+        },
+        "buttons": {
+            "update": "Оновити",
+            "rewrite": "Переписати"
+        }
+    },
+    "modals": {
+        "titleSuccess": "Успішно!",
+        "titleError": "Помилка",
+        "messageError": "Щось пішло не так! Спробуйте ще раз."
+    },
+    "records": {
+        "delete": "{{recordType}}(s) успішно видалено",
+        "create": "{{recordType}} успішно створено!",
+        "error": "Під час створення {{recordType}} сталася помилка."
     }
 }

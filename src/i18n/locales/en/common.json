@@ -12,5 +12,31 @@
     },
     "links": {
         "back": "Back"
+    },
+    "versionConflict": {
+        "paragraph": "Inventory data has been modified by another user. You can:",
+        "listItems": {
+            "update": "Update",
+            "textUpdate": "download the latest version of data from the server",
+            "rewrite": "Rewrite",
+            "textRewrite": "save your changes over the current ones",
+            "updateSuccess": "Data updated",
+            "updateFailed": "Failed to update data",
+            "rewriteSuccess": "Changes saved over."
+        },
+        "buttons": {
+            "update": "Update",
+            "rewrite": "Rewrite"
+        }
+    },
+    "modals": {
+        "titleSuccess": "Success!",
+        "titleError": "Error",
+        "messageError": "Something went wrong! Try again."
+    },
+    "records": {
+        "delete": "{{recordType}}(s) deleted success",
+        "create": "{{recordType}} successfully created!",
+        "error": "An error occurred while creating {{recordType}}."
     }
 }

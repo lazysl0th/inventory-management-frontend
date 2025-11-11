@@ -74,16 +74,31 @@ export const changeAccess = async(usersIds, roleIds) => {
     return await checkResponse(res);
 }
 
+export const resetPassword = async({ email }) => {
+  const res = await fetch(`${apiConfig.baseUrl}/resetpassword`, {
+    method: 'POST',
+    headers: apiConfig.headers(),
+    body: JSON.stringify({ email })
+  });
+  return checkResponse(res);
+}
 
+export const changePassword = async({ password, token }) => {
+    const res = await fetch(`${apiConfig.baseUrl}/changepassword`, {
+        method: 'POST',
+        headers: apiConfig.headers(),
+        body: JSON.stringify({ password, token})
+    });
+    return checkResponse(res);
+}
 
-export function updateProfile({ name, email }) {
-  return fetch(`${apiConfig.baseUrl}/users/me`, {
-    method: 'PATCH',
-    credentials: 'include',
-    headers: apiConfig.headers,
-    body: JSON.stringify({ name, email })
-  })
-    .then((res) => checkResponse(res))
+export const updateProfile = async ({ name, email }) => {
+    const res = await fetch(`${apiConfig.baseUrl}/users/me`, {
+        method: 'PATCH',
+        headers: apiConfig.headers(),
+        body: JSON.stringify({ name, email })
+    })
+    return checkResponse(res);
 }
 
 

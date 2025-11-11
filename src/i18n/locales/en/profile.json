@@ -11,12 +11,15 @@
         "ukrainian": "Ukrainian"
     },
     "placeholders": {
-        "email": "Email",
-        "name": "Name"
+        "email": "Enter email",
+        "name": "Enter name"
     },
     "buttons": {
         "dark": "Dark",
-        "light": "Light",
-        "changePassword": "Change password"
+        "light": "Light"
+    },
+    "toasts": {
+        "updateUserSucces": "Data updated successfully",
+        "updateUserFailed": "The data has not been updated."
     }
 }

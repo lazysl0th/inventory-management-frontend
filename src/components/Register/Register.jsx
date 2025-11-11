@@ -48,7 +48,7 @@ export default function Register ({ onReg }) {
                                         <Form.Control 
                                             type="text" 
                                             name="name"
-                                            placeholder="Name" 
+                                            placeholder={t("placeholders.name")} 
                                             value={values.name}
                                             onChange={handleChange}
                                             onBlur={handleBlur}

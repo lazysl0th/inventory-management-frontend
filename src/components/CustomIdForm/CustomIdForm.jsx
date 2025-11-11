@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 
 
-export default function CustomIdForm({ part, index, total, onUpdate, onMove }) {
+export default function CustomIdForm({ part, index, total, onUpdate, onMove, disabled }) {
     const target = useRef(null);
     const [showPicker, setShowPicker] = useState(false);
     const partDefinition = PART_DEFINITIONS[part.type] || {};
@@ -40,34 +40,60 @@ export default function CustomIdForm({ part, index, total, onUpdate, onMove }) {
         }
     }
     return (
-        <Row className="align-items-start g-3 gy-4">
-            <Col xs={12} md={6}>
-                <Form.Group>
-                    <Form.Label className="fw-semibold">{t("labels.type")}</Form.Label>
-                    <Form.Select
-                            value={part?.type}
-                            onMouseDown={stop}
-                            name='type'
-                            onChange={handleChange(part?.guid)}
-                    >
-                        <option value="">{t("options.selectType")}</option>
-                            {getAvailableParts(PART_DEFINITIONS).map((part) => (
-                                <option key={part.type} value={part.type}>
-                                    {t(`${part.label}`)}
-                                </option>))}
-                    </Form.Select>
-                    <Form.Text className="text-muted small d-block mt-1">
-                        {t(`${partDefinition?.help}`)}
-                    </Form.Text>
-                </Form.Group>
-            </Col>
-            <Col xs={12} md={6}>
-                <Form.Group>
-                        <Form.Label className="fw-semibold">{t("labels.format")}</Form.Label>
-                        {part.type === 'SEQUENCE'
-                            ? (<>
-                                    <InputGroup>
-                                        <Form.Select
+        <fieldset disabled={disabled}>
+            <Row className="align-items-start g-3 gy-4">
+                <Col xs={12} md={6}>
+                    <Form.Group>
+                        <Form.Label className="fw-semibold">{t("labels.type")}</Form.Label>
+                        <Form.Select
+                                value={part?.type}
+                                onMouseDown={stop}
+                                name='type'
+                                onChange={handleChange(part?.guid)}
+                        >
+                            <option value="">{t("options.selectType")}</option>
+                                {getAvailableParts(PART_DEFINITIONS).map((part) => (
+                                    <option key={part.type} value={part.type}>
+                                        {t(`${part.label}`)}
+                                    </option>))}
+                        </Form.Select>
+                        <Form.Text className="text-muted small d-block mt-1">
+                            {t(`${partDefinition?.help}`)}
+                        </Form.Text>
+                    </Form.Group>
+                </Col>
+                <Col xs={12} md={6}>
+                    <Form.Group>
+                            <Form.Label className="fw-semibold">{t("labels.format")}</Form.Label>
+                            {part.type === 'SEQUENCE'
+                                ? (<>
+                                        <InputGroup>
+                                            <Form.Select
+                                                value={part?.format || ''}
+                                                name="format"
+                                                onMouseDown={stop}
+                                                onChange={handleChange(part?.guid)}
+                                            >
+                                                {formats.map((format) => (
+                                                    <option key={format.value} value={format.value}>
+                                                        {t(`${format.label}`)}
+                                                    </option>
+                                                ))}
+                                            </Form.Select>
+                                            <Form.Control
+                                                type="number"
+                                                name="value"
+                                                value={part?.value || ''}
+                                                placeholder={t("placeholders.initialValue")}
+                                                min="0"
+                                                onMouseDown={stop}
+                                                onChange={handleChange(part?.guid)
+                                                }
+                                            />
+                                        </InputGroup>
+                                    </>)
+                                : formats.length > 0 
+                                    ? (<Form.Select
                                             value={part?.format || ''}
                                             name="format"
                                             onMouseDown={stop}
@@ -78,135 +104,111 @@ export default function CustomIdForm({ part, index, total, onUpdate, onMove }) {
                                                     {t(`${format.label}`)}
                                                 </option>
                                             ))}
-                                        </Form.Select>
-                                        <Form.Control
-                                            type="number"
-                                            name="value"
-                                            value={part?.value || ''}
-                                            placeholder={t("placeholders.initialValue")}
-                                            min="0"
-                                            onMouseDown={stop}
-                                            onChange={handleChange(part?.guid)
-                                            }
-                                        />
-                                    </InputGroup>
-                                </>)
-                            : formats.length > 0 
-                                ? (<Form.Select
-                                        value={part?.format || ''}
-                                        name="format"
-                                        onMouseDown={stop}
-                                        onChange={handleChange(part?.guid)}
-                                    >
-                                        {formats.map((format) => (
-                                            <option key={format.value} value={format.value}>
-                                                {t(`${format.label}`)}
-                                            </option>
-                                        ))}
-                                    </Form.Select>)
-                                : (<>
-                                        <InputGroup>
-                                            <Form.Control
-                                                type="text"
-                                                name="format"
-                                                value={part?.format || ''}
-                                                placeholder={t("placeholders.customFormat")}
-                                                onMouseDown={stop}
-                                                onChange={handleChange(part?.guid)}
-                                            />
-                                            <Button
-                                                ref={target}
-                                                variant="light"
-                                                onClick={() => setShowPicker(!showPicker)}
-                                            >
-                                                😊
-                                            </Button>
-                                        </InputGroup>
+                                        </Form.Select>)
+                                    : (<>
+                                            <InputGroup>
+                                                <Form.Control
+                                                    type="text"
+                                                    name="format"
+                                                    value={part?.format || ''}
+                                                    placeholder={t("placeholders.customFormat")}
+                                                    onMouseDown={stop}
+                                                    onChange={handleChange(part?.guid)}
+                                                />
+                                                <Button
+                                                    ref={target}
+                                                    variant="light"
+                                                    onClick={() => setShowPicker(!showPicker)}
+                                                >
+                                                    😊
+                                                </Button>
+                                            </InputGroup>
 
-                                        <Overlay target={target.current} show={showPicker} placement="bottom-end">
-                                            {(props) => (
-                                                <Popover {...props}>
-                                                    <Popover.Body>
-                                                        <EmojiPicker
-                                                        onEmojiClick={(emojiData) => {
-                                                            const newFormat = (part.format || '') + emojiData.emoji;
-                                                            onUpdate(part.guid, { format: newFormat });
-                                                            setShowPicker(false);
-                                                        }}
-                                                        />
-                                                    </Popover.Body>
-                                                </Popover>)}
-                                        </Overlay>
-                                    </>)}
+                                            <Overlay target={target.current} show={showPicker} placement="bottom-end">
+                                                {(props) => (
+                                                    <Popover {...props}>
+                                                        <Popover.Body>
+                                                            <EmojiPicker
+                                                            onEmojiClick={(emojiData) => {
+                                                                const newFormat = (part.format || '') + emojiData.emoji;
+                                                                onUpdate(part.guid, { format: newFormat });
+                                                                setShowPicker(false);
+                                                            }}
+                                                            />
+                                                        </Popover.Body>
+                                                    </Popover>)}
+                                            </Overlay>
+                                        </>)}
 
-                            <Form.Text className="text-muted small d-block mt-1">
-                                {t(`${partDefinition?.formatHelp}`)}
-                            </Form.Text>
-                </Form.Group>
-            </Col>
+                                <Form.Text className="text-muted small d-block mt-1">
+                                    {t(`${partDefinition?.formatHelp}`)}
+                                </Form.Text>
+                    </Form.Group>
+                </Col>
 
-            <Col xs={12} sm={5}>
-                <Form.Group>
-                    <Form.Label className="fw-semibold">{t("labels.separator")}</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name='separator'
-                        value={part?.separator || ""}
-                        placeholder="Напр., INV- или _"
-                        onMouseDown={stop}
-                        onChange={handleChange(part?.guid)}
-                    />
-                    <Form.Text className="text-muted small d-block mt-1">
-                        {t("hints.separator")}
-                    </Form.Text>
-                </Form.Group>
-            </Col>
+                <Col xs={12} sm={5}>
+                    <Form.Group>
+                        <Form.Label className="fw-semibold">{t("labels.separator")}</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name='separator'
+                            value={part?.separator || ""}
+                            placeholder="Напр., INV- или _"
+                            onMouseDown={stop}
+                            onChange={handleChange(part?.guid)}
+                        />
+                        <Form.Text className="text-muted small d-block mt-1">
+                            {t("hints.separator")}
+                        </Form.Text>
+                    </Form.Group>
+                </Col>
 
-            <Col xs={6} sm={4}>
-                <Form.Group>
-                    <Form.Label className="fw-semibold">{t("labels.position")}</Form.Label>
-                    <Form.Select
-                        name='position'
-                        value={part?.position}
-                        onMouseDown={stop}
-                        onChange={handleChange(part?.guid)}
-                    >
-                        <option value="prefix">{t("options.before")}</option>
-                        <option value="suffix">{t("options.after")}</option>
-                    </Form.Select>
-                    <Form.Text className="text-muted small d-block mt-1">
-                        {t("hints.position")}
-                    </Form.Text>
-                </Form.Group>
-            </Col>
+                <Col xs={6} sm={4}>
+                    <Form.Group>
+                        <Form.Label className="fw-semibold">{t("labels.position")}</Form.Label>
+                        <Form.Select
+                            name='position'
+                            value={part?.position}
+                            onMouseDown={stop}
+                            onChange={handleChange(part?.guid)}
+                        >
+                            <option value="prefix">{t("options.before")}</option>
+                            <option value="suffix">{t("options.after")}</option>
+                        </Form.Select>
+                        <Form.Text className="text-muted small d-block mt-1">
+                            {t("hints.position")}
+                        </Form.Text>
+                    </Form.Group>
+                </Col>
 
-            <Col xs={6} sm={3} className="d-flex flex-column align-items-center align-self-center justify-content-between">
-                <ButtonGroup size="sm">
-                    <Button
-                        name='order'
-                        value='up'
-                        variant="outline-secondary"
-                        disabled={index === 0}
-                        onMouseDown={stop}
-                        onClick={handleChange(part?.guid || part?.id, index)}
-                    >
-                        <FaChevronUp />
-                    </Button>
-                    <Button
-                        name='order'
-                        value='down'
-                        variant="outline-secondary"
-                        disabled={index === total - 1}
-                        onMouseDown={stop}
-                        onClick={handleChange(part?.guid || part?.id, index)}
-                    >
-                        <FaChevronDown />
-                    </Button>
-                </ButtonGroup>
-                <Badge bg="light" text="dark" className="my-3 w-100 text-center">
-                    {piecePreview || "—"}
-                </Badge>
-            </Col>
-        </Row>
+                <Col xs={6} sm={3} className="d-flex flex-column align-items-center align-self-center justify-content-between">
+                    <ButtonGroup size="sm">
+                        <Button
+                            name='order'
+                            value='up'
+                            variant="outline-secondary"
+                            disabled={index === 0}
+                            onMouseDown={stop}
+                            onClick={handleChange(part?.guid || part?.id, index)}
+                        >
+                            <FaChevronUp />
+                        </Button>
+                        <Button
+                            name='order'
+                            value='down'
+                            variant="outline-secondary"
+                            disabled={index === total - 1}
+                            onMouseDown={stop}
+                            onClick={handleChange(part?.guid || part?.id, index)}
+                        >
+                            <FaChevronDown />
+                        </Button>
+                    </ButtonGroup>
+                    <Badge bg="light" text="dark" className="my-3 w-100 text-center">
+                        {piecePreview || "—"}
+                    </Badge>
+                </Col>
+            </Row>
+        </fieldset>
     );
 }

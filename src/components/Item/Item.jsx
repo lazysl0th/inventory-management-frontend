@@ -3,7 +3,8 @@ import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { Modal, Button, Spinner, Alert } from 'react-bootstrap';
 import ItemDetailsTab from './ItemTabs/ItemDetailTabs';
 import { initialStateItem, titleInfoTooltip } from '../../utils/constants';
-import { GET_ITEM, GET_INVENTORY_INFO, UPDATE_ITEM } from '../../graphql/queries';
+import { GET_ITEM, UPDATE_ITEM } from '../../graphql/itemQuery';
+import { GET_INVENTORY_INFO } from '../../graphql/inventoryQueries'
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import { useAutoSave } from '../../hooks/useAutoSave';
 import { mergeItem } from '../../utils/utils';
@@ -98,7 +99,7 @@ function Item({
             setVersion(res.updateItem.version)
         } catch (e) {
             console.log(e);
-            onOpenTooltip((titleInfoTooltip.ERROR), e.message);
+            onOpenTooltip(t(`${titleInfoTooltip.ERROR}`), e.message);
         }
     }
 
@@ -157,7 +158,7 @@ function Item({
             <Modal.Footer>
                 {isSaving && <Spinner animation="border" size="sm" />}
                 {errorAutoSave && onShowToast(errorAutoSave, 'bottom-center')}
-                <Button disabled={!isDirty && itemId} variant="primary" onClick={itemId ? handleFlashSave : handleCreateItem}> { itemId ? 'Update' : 'Create' } </Button>
+                <Button disabled={!isDirty && itemId} variant="dark" onClick={itemId ? handleFlashSave : handleCreateItem}> { itemId ? 'Update' : 'Create' } </Button>
             </Modal.Footer>
         </Modal>
     );

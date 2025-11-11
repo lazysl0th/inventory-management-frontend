@@ -132,7 +132,8 @@
         "error": "Error al guardar",
         "like": "Solo los usuarios registrados pueden dar me gusta",
         "image": "Se produjo un error al cargar la imagen",
-        "field": "No se pueden agregar más campos de tipo {{fieldTypeLabel}} (límite {{fieldTypeLimit}})"
+        "field": "No se pueden agregar más campos de tipo {{fieldTypeLabel}} (límite {{fieldTypeLimit}})",
+        "requiredFields": "Por favor, rellene los campos obligatorios"
     },
     "badges": {
         "example": "Ejemplo:",

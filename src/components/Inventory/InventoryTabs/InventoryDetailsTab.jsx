@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { components } from "react-select";
 import { Form, Row, Col, Image } from "react-bootstrap";
 import { CurrentUserContext } from '../../../context/CurrentUserContext';
-import { SEARCH_TAGS } from '../../../graphql/queries';
+import { SEARCH_TAGS } from '../../../graphql/commonQuery';
 import MarkdownField from './MarkdownField';
 
 export default function InventoryDetailsTab({
@@ -23,7 +23,6 @@ export default function InventoryDetailsTab({
     onShowToast,
     disabled,
 }) {
-    const currentUser = useContext(CurrentUserContext);
     const [searchTags] = useLazyQuery(SEARCH_TAGS, { fetchPolicy: "no-cache" });
     const imageRef = useRef(null);
     const { t } = useTranslation("inventory");
@@ -146,7 +145,7 @@ export default function InventoryDetailsTab({
                                         className="border rounded d-flex align-items-center justify-content-center p-3 text-muted"
                                         style={{ height: 160 }}
                                     >{t("placeholders.noImage")}</div>)}
-                                <Form.Label className="btn btn-outline-primary">
+                                <Form.Label className="btn btn-outline-dark">
                                     {t("buttons.selectFile")}
                                 </Form.Label>
                                 <Form.Control
