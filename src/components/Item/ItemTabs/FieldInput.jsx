@@ -94,7 +94,7 @@ export default function FieldInput({ field, value, handlerChangeFieldInput, onSh
                         type="checkbox"
                         name={value.id}
                         label={field.title}
-                        checked={!!value.value}
+                        checked={value.value}
                         onChange={handleChange}
                         disabled={disabled}
                     />

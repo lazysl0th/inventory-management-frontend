@@ -101,6 +101,9 @@ export const GET_INVENTORY_INFO = gql`
             allowedUsers {
                 id
             }
+            owner {
+                id
+            }
             customIdFormat
             fields {
                 id

@@ -1,10 +1,12 @@
 import { useRef, useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 export const useAutoSave = (delay = 8000, saveFn) => {
     const timerRef = useRef(null);
     const [isDirty, setIsDirty] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [errorAutoSave, setErrorAutoSave] = useState(null);
+    const { t } = useTranslation("common");
 
     const scheduleSave = (updated, version) => {
         setIsDirty(true);
@@ -21,7 +23,7 @@ export const useAutoSave = (delay = 8000, saveFn) => {
             await saveFn(updated, version);
             setIsDirty(false);
         } catch (e) {
-            setErrorAutoSave(e?.message || "Ошибка сохранения");
+            setErrorAutoSave(e?.message || t("toasts.saveError"));
         } finally {
             setIsSaving(false);
         }

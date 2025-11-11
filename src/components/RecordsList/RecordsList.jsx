@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Table, Container, Row, Col, OverlayTrigger, Tooltip, Button, Form } from "react-bootstrap";
 import { CiLock, CiUnlock } from "react-icons/ci";
 import { BsSortDown, BsSortUp, BsFillTrashFill } from "react-icons/bs";
@@ -21,6 +21,7 @@ import Record from "./Record/Record";
 import { NAME_LIST, RECORDS_LIST_HEADS } from "../../utils/constants";
 
 export default function RecordsList({
+    inventoryId,
     type,
     records,
     nameRecordList,
@@ -206,6 +207,8 @@ export default function RecordsList({
 
     const filterTable = (row, columnId, filterValue) => Object.values(row.original).some((val) => String(val).toLowerCase().includes(filterValue.toLowerCase()));
 
+    const sortDate = (a, b, columnId) => { return new Date(a.getValue(columnId)).getTime() - new Date(b.getValue(columnId)).getTime(); };
+
     const handelFilterChange = (e) => setGlobalFilter(e.target.value);
 
     const columns = getColumnsByType(type, fields);
@@ -282,7 +285,7 @@ export default function RecordsList({
                                             placement="top"
                                             overlay={<Tooltip id="tooltip-add">Add</Tooltip>}
                                         >
-                                            <Button variant="outline-success" disabled={disabled} onClick={handleAdd}>
+                                            <Button variant="outline-success" disabled={disabled || fields?.length === 0 || (type === 'Item' && !inventoryId)} onClick={handleAdd}>
                                                 <VscAdd />
                                             </Button>
                                         </OverlayTrigger>)}

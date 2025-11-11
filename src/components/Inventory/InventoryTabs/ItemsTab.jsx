@@ -27,6 +27,7 @@ export default function ItemsTab({
                     <Alert variant="danger">{error.message}</Alert>
                     </div>)
                 : <RecordsList type='Item'
+                    inventoryId={inventoryId}
                     records={items}
                     fields={itemFields}
                     handlerAddRecord={handlerAddRecord}

@@ -34,6 +34,9 @@
         "titleError": "Error",
         "messageError": "Something went wrong! Try again."
     },
+    "toasts": {
+        "saveError": "Saving error"
+    },
     "records": {
         "delete": "{{recordType}}(s) deleted success",
         "create": "{{recordType}} successfully created!",

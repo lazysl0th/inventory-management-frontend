@@ -152,7 +152,7 @@ function Item({
                             onUploadImage={onUploadImage}
                             customIdFormat={inventoryCustomIdFormat}
                             readAccess={readAccess}
-                            disabled={readOnly && !writeAccess}
+                            disabled={!!(readOnly && !writeAccess && itemId)}
                         /> }
             </Modal.Body>
             <Modal.Footer>

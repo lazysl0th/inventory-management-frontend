@@ -104,7 +104,6 @@ function Inventory({
     }
 
     const handleUpdateInventory = async(updatedInventory = inventory, expectedVersion) => {
-        console.log(inventory)
         const { createdAt, updatedAt, ...data } = updatedInventory;
         try {
             const { data: res } = await updateInventory({
@@ -157,7 +156,7 @@ function Inventory({
         const errors = await formikRef.current.validateForm();
         formikRef.current.setTouched(Object.keys(errors).reduce((acc, key) => ({ ...acc, [key]: true }), {}));
         if (Object.keys(errors).length === 0) formikRef.current.handleSubmit()
-        else onShowToast(t("toast.requiredFields"), 'bottom-center');
+        else onShowToast(t("toasts.requiredFields"), 'bottom-center');
     }
 
     useImperativeHandle(ref, () => ({ forceSaveInventory }));
