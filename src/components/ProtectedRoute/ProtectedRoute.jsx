@@ -15,9 +15,7 @@ const ProtectedRoute = ({ isLoading, children }) => {
                 ? (<Spinner animation="border" className="mx-auto"/>)
                 : !currentUser.loggedIn
                     ? (<Navigate to='/sign-in' replace />)
-                    : location.pathname == '/admin' && !isAdmin
-                        ? (<Navigate to='/sign-in' replace />)
-                        : children}
+                    : children}
         </Container>)
 };
 
