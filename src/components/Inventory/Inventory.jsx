@@ -212,7 +212,7 @@ function Inventory({
                                             handlerChangeDetails={handlerChangeInventory}
                                             onUploadImage={onUploadImage}
                                             onShowToast={onShowToast}
-                                            disabled={!!(readOnly && !writeAccess && inventoryId)}
+                                            disabled={!!(readOnly && inventoryId)}
                                         />}
                             </Tab>
                             <Tab eventKey="customId" title="Custom ID">
@@ -229,7 +229,7 @@ function Inventory({
                                             handlerChangeCustomIdFormat={handlerChangeInventory}
                                             loading={loading}
                                             error={error}
-                                            disabled={!!(readOnly && !writeAccess && inventoryId)}
+                                            disabled={!!(readOnly && inventoryId)}
                                         />}
                             </Tab>
                             <Tab eventKey="fields" title="Fields">
