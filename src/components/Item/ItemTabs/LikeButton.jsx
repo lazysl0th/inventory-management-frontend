@@ -51,7 +51,8 @@ export default function LikeButton({ itemId, readAccess, onShowToast }) {
     }
 
     const handleLike = async () => {
-        if (!readAccess) return onShowToast(t("toasts.like"), "bottom-center")
+        if (!readAccess) return onShowToast(t("toasts.like"), "bottom-center");
+        if (!itemId) return onShowToast(t("toasts.likeWithoutId"), 'bottom-center')
         const optimistic = {
             likedByMe: !localState.likedByMe,
             likesCount: localState.likedByMe

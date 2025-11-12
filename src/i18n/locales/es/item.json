@@ -15,6 +15,7 @@
     },
     "toasts": {
         "like": "Solo los usuarios autenticados pueden dar me gusta",
+        "likeWithoutId": "Elemento no creado",
         "errorLike": "Se produjo un error al dar me gusta"
     }
 }

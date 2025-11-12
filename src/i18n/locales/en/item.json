@@ -15,6 +15,7 @@
     },
     "toasts": {
         "like": "Only authenticated users can like",
+        "likeWithoutId": "Item not created",
         "errorLike": "An error occurred while liking"
     }
 }
