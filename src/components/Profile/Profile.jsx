@@ -144,7 +144,7 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
                                             variant={theme === "light" ? "outline-dark" : "outline-light"}
                                             onClick={handleThemeToggle}
                                         >
-                                            <CiLight />{theme === "light" ? t("buttons.dark") : t("buttons.light")}
+                                            <CiLight />
                                         </Button>
                                     </Form.Group>
                                 </Row>
