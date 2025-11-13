@@ -20,6 +20,7 @@ import Profile from '../Profile/Profile';
 import AdminPage from '../AdminPage/AdminPage'
 import Inventory from '../Inventory/Inventory';
 import Item from '../Item/Item';
+import User from '../User/User';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import InfoToast from '../InfoToast/InfoToast';
 import PageDeleteUserData from '../PageDeleteUserData/PageDeleteUserData';
@@ -41,8 +42,10 @@ function App() {
     const [infoToastMessage, setInfoToastMessage] = useState('');
     const [isInventoryViewOpen, setIsInventoryViewOpen] = useState(false);
     const [isItemViewOpen, setIsItemViewOpen] = useState(false);
+    const [isUserViewOpen, setIsUserViewOpen] = useState(false);
     const [selectedInventoryId, setSelectedInventoryId] = useState(null);
     const [selectedItemId, setSelectedItemId] = useState(null);
+    const [selectedUserId, setSelectedUserId] = useState(null);
     const [searchParams] = useSearchParams();
     const client = useApolloClient();
     const inventoryRef = useRef(null);
@@ -130,9 +133,15 @@ function App() {
         setIsItemViewOpen(true);
     }
 
+    const openUser = (record) => {
+        setSelectedUserId(record.id);
+        setIsUserViewOpen(true);
+    }
+
     const handlerClickRecord = {
         Inventory: openInventory,
         Item: openItem,
+        AdminUser: openUser
     }
 
     const closeInventory = () => {
@@ -144,10 +153,16 @@ function App() {
         setSelectedItemId(null);
         setIsItemViewOpen(false);
     }
+
+    const closeUser = () => {
+        setSelectedUserId(null);
+        setIsUserViewOpen(false);
+    }
     
     const handlerCloseRecordView = {
         Inventory: closeInventory,
-        Item: closeItem
+        Item: closeItem,
+        AdminUser: closeUser,
     };
 
     const handlerAddRecord = {
@@ -411,6 +426,11 @@ function App() {
                 onShowToast={showInfoToats}
                 onUploadImage={handlerUploadImage}
                 onOpenTooltip={openInfoTooltip}
+            />
+            <User
+                isOpen={isUserViewOpen}
+                userId={selectedUserId}
+                handlerCloseView={handlerCloseRecordView.AdminUser}
             />
             <InfoTooltip
                 isOpen={isInfoTooltipOpen}

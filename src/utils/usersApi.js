@@ -47,6 +47,14 @@ export const getUsers = async() => {
     return await checkResponse(res);
 }
 
+export const getUser = async(userId) => {
+    const res = await fetch(`${apiConfig.baseUrl}/users/${userId}`, {
+        method: 'GET',
+        headers: apiConfig.headers()
+    });
+    return await checkResponse(res);
+}
+
 export const changeUsersStatus = async(usersIds, status) => {
     const res = await fetch(`${apiConfig.baseUrl}/users/status`, {
         method: 'PATCH',

@@ -19,7 +19,6 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
     const [personalData, setPersonalData] = useState({ name: '', email: '' });
     const [isEdit, setIsEdit] = useState(false)
     const { t, i18n } = useTranslation("profile");
-    const { t: ta } = useTranslation("auth");
     const [theme, setTheme] = useState('light');
     const currentLang = i18n.language;
 
@@ -141,12 +140,12 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
                                         </Button>
                                     </Form.Group>
                                     <Form.Group as={Col} xs={1} controlId="formProfileTheme" className="d-flex flex-grow-1 align-items-center justify-content-center">
-                                        <Form.Label>{/*t("labels.interface")*/}</Form.Label>
+                                        <Form.Label>{t("labels.interface")}</Form.Label>
                                         <Button className="w-100"
                                             variant={theme === "light" ? "outline-dark" : "outline-light"}
                                             onClick={handleThemeToggle}
                                         >
-                                            <CiLight />{/*theme === "light" ? t("buttons.dark") : t("buttons.light")*/}
+                                            <CiLight />{theme === "light" ? t("buttons.dark") : t("buttons.light")}
                                         </Button>
                                     </Form.Group>
                                 </Row>

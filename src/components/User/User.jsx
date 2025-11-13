@@ -1,127 +1,46 @@
-import { useContext, useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
-import { useLazyQuery, useMutation } from '@apollo/client/react';
-import { Modal, Button, Spinner, Alert } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import ItemDetailsTab from './ItemTabs/ItemDetailTabs';
-import { initialStateItem, titleInfoTooltip } from '../../utils/constants';
-import { GET_ITEM, UPDATE_ITEM } from '../../graphql/itemQuery';
-import { GET_INVENTORY_INFO } from '../../graphql/inventoryQueries'
+import { useContext, useState, useEffect } from 'react';
+import { Modal, Spinner, Alert, Form, Row, Col, ListGroup } from 'react-bootstrap';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
-import { useAutoSave } from '../../hooks/useAutoSave';
-import { mergeItem } from '../../utils/utils';
+import { useTranslation } from 'react-i18next';
+import { getUser } from '../../utils/usersApi';
 import useAccess from '../../hooks/useAccess';
+import { initialStateUser } from '../../utils/constants';
 
 function User({
     isOpen,
     userId,
     handlerCloseView,
-    onShowToast,
 }) {
     const currentUser = useContext(CurrentUserContext);
-    const timerRef = useRef(null);
-    const [item, setItem] = useState(initialStateItem)
-    const [version, setVersion] = useState();
-    const { t } = useTranslation("item");
-
-    const [loadItem, { data: dataItem, loading: loadingItem, error, reset }] = useLazyQuery(GET_ITEM);
-    const [loadInventory, { data: dataInventory, loading: loadingInventory}] = useLazyQuery(GET_INVENTORY_INFO);
-    const [updateItem] = useMutation(UPDATE_ITEM);
-
-    const itemData = dataItem?.item || {}
-    const itemFields = dataInventory?.inventory?.fields || []
-    const inventoryCustomIdFormat = dataInventory?.inventory?.customIdFormat || {}
-
-    const { readOnly, readAccess, writeAccess } = useAccess([dataInventory?.inventory]);
-
-    useEffect(() => { return () => { if (timerRef.current) clearTimeout(timerRef.current); }; }, []);
+    const [user, setUser] = useState(initialStateUser)
+    const [isLoading, setIsLoading] = useState(false);
+    const { t } = useTranslation("admin");
+    const { t: tp } = useTranslation("profile");
 
     useEffect(() => {
-        if (itemId) {
-            loadItem({ variables: { id: itemId } })
-            updateStateItem(itemData);
-        } else {
-            updateStateItem({
-                owner: {id: currentUser.id, name: currentUser.name},
-                values: itemFields.map((field) => ({ guid: crypto.randomUUID(), value: '', field: field, }))
-            })
+        if (userId) {
+            handleLoadUser(userId);
         }
-    }, [isOpen, dataItem, itemId]);
-    
-    useEffect(() => {
-        if (inventoryId) {
-            loadInventory({ variables: { id: inventoryId } });
-        }
-    }, [isOpen, dataInventory, inventoryId]);
-
-    const updateStateItem = (itemData) => {
-        const updated = { ...item };
-        for (let key in itemData) {
-            if (key === 'createdAt' || key === 'updatedAt') updated[key] = new Date(+itemData[key]).toLocaleString();
-            else if (key === 'version') setVersion(itemData[key]);
-            else updated[key] = itemData[key];
-        }
-        setItem(updated);
-    };
+    }, [isOpen, userId]);
 
     const handleCloseView = () => {
         handlerCloseView();
-        reset?.();
-        setItem(initialStateItem);
-        cancelSave()
+        setUser(initialStateUser);
     }
 
-    const handleCreateItem = () => {
-        const { createdAt, updatedAt, values, ...newItem } = item;
-        handlerCreateItem({
-            inventoryId: inventoryId,
-            ...newItem,
-            values: values.map(value => ({fieldId: value.field.id, value: value.value})),
-        });
-    }
-
-    const handleUpdateItem = async(updatedItem = item, expectedVersion) => {
-        const { createdAt, updatedAt, likesCount, likedByMe, values, ...data } = updatedItem;
+    const handleLoadUser = async (id) => {
         try {
-            const { data: res } = await updateItem({
-                variables: { 
-                    id: data.id,
-                    ...(expectedVersion !== undefined ? { expectedVersion } : {}),
-                    input: {
-                        ...data,
-                        inventoryId: inventoryId,
-                        values: values.map(value => ({fieldId: value.field.id, value: value.value})),
-                    }
-                },
-            });
-            updateStateItem(res.updateItem);
-            setVersion(res.updateItem.version)
+            setIsLoading(true)
+            const userData = await getUser(id);
+            console.log(userData);
+            setUser(userData)
+            setIsLoading(false);
         } catch (e) {
             console.log(e);
-            onOpenTooltip(t(`${titleInfoTooltip.ERROR}`), e.message);
+        } finally {
+            setIsLoading(false);
         }
     }
-
-    const forceSaveItem = async () => {
-        const { data: fresh } = await loadItem({ variables: { id: itemId }, fetchPolicy: "network-only", });
-        const merged = mergeItem(fresh.item, item);
-        await handleUpdateItem(merged, fresh.item.version);
-    };
-
-    const { isDirty, isSaving, errorAutoSave, scheduleSave, flushSave, cancelSave } = useAutoSave(8000, handleUpdateItem);
-
-    const handlerChangeItem = ((name, value) => {
-        setItem(prev => { 
-            const updated = { ...prev, [name]: value, }
-            if (itemId) scheduleSave(updated, version);
-            return updated;
-        })
-    });
-
-    const handleFlashSave = () => {
-        flushSave(item, version)
-    }
-
-    useImperativeHandle(ref, () => ({ forceSaveItem }));
 
     return (
 
@@ -136,28 +55,76 @@ function User({
         >
             <Modal.Header closeButton>
             </Modal.Header>
-            <Modal.Body className={(loadingItem || error) && "align-self-center"}>
-                {loadingItem
+            <Modal.Body className={(isLoading || user.id === null) && "align-self-center"}>
+                {isLoading
                     ? <Spinner animation="border"/>
-                    : error
+                    : user.id === null
                         ? (<div className="d-flex justify-content-center align-items-center">
-                                <Alert variant="danger">{error.message}</Alert>
+                                <Alert variant="danger" className="align-self-center">{t("alerts.users")}</Alert>
                             </div>)
-                        : <ItemDetailsTab
-                            item={item}
-                            handlerChangeItem={handlerChangeItem}
-                            onShowToast={onShowToast}
-                            onUploadImage={onUploadImage}
-                            customIdFormat={inventoryCustomIdFormat}
-                            readAccess={readAccess}
-                            disabled={!!(readOnly && !writeAccess && itemId)}
-                        /> }
+                        : <Form>
+                                <Row className="mb-3 justify-content-between">
+                                    <Form.Group as={Col} xs={12} sm={6} className="mt-2" controlId="formUserName">
+                                        <Form.Label>{tp("labels.name")}</Form.Label>
+                                        <Form.Control 
+                                            type="text" 
+                                            name="name"
+                                            value={user.name ?? ''}
+                                            disabled
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} xs={12} sm={6} className="mt-2" controlId="formUserEmail">
+                                        <Form.Label>{tp("labels.email")}</Form.Label>
+                                          <Form.Control 
+                                            type="email" 
+                                            name="email"
+                                            value={user.email ?? ''}
+                                            disabled
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} xs={12} sm={6} className="mt-2" controlId="formUserGoogleId">
+                                        <Form.Label>{tp("labels.googleId")}</Form.Label>
+                                        <Form.Control 
+                                            type="text" 
+                                            name="googleId"
+                                            value={user.googleId ?? ''}
+                                            disabled
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} xs={12} sm={6} className="mt-2" controlId="formUserFacebookId">
+                                        <Form.Label>{tp("labels.facebookId")}</Form.Label>
+                                        <Form.Control 
+                                            type="text" 
+                                            name="facebookId"
+                                            value={user.facebookId ?? ''}
+                                            disabled
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} xs={12} sm={6} className="mt-2" controlId="formUserStatus">
+                                        <Form.Label>{tp("labels.status")}</Form.Label>
+                                        <Form.Control 
+                                            type="text" 
+                                            name="status"
+                                            value={user.status ?? ''}
+                                            disabled
+                                        />
+                                    </Form.Group>
+                                    <ListGroup as={Col} xs={12} sm={6} className="mt-2">
+                                        <ListGroup.Item className="d-flex align-items-start">
+                                            {tp("labels.roles")}
+                                        </ListGroup.Item>
+                                        {user.roles.map((role, i) => (
+                                            <ListGroup.Item
+                                                key={role.role.id}
+                                                className="d-flex align-items-start"
+                                            >
+                                                {role.role.name}
+                                            </ListGroup.Item>
+                                        ))}
+                                    </ListGroup>
+                                </Row>
+                            </Form> }
             </Modal.Body>
-            <Modal.Footer>
-                {isSaving && <Spinner animation="border" size="sm" />}
-                {errorAutoSave && onShowToast(errorAutoSave, 'bottom-center')}
-                <Button disabled={!isDirty && itemId} variant="dark" onClick={itemId ? handleFlashSave : handleCreateItem}> { itemId ? 'Update' : 'Create' } </Button>
-            </Modal.Footer>
         </Modal>
     );
 }

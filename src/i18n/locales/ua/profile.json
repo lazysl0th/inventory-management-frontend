@@ -3,7 +3,11 @@
         "name": "Ім'я",
         "email": "Електронна пошта",
         "interface": "Інтерфейс",
-        "language": "Мова"
+        "language": "Мова",
+        "googleId": "GoogleID",
+        "facebookId": "FacebookID",
+        "status": "Статус",
+        "roles": "Ролі"
     },
     "options": {
         "english": "Англійська",

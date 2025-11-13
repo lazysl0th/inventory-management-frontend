@@ -3,7 +3,11 @@
         "name": "Nombre",
         "email": "Correo electrónico",
         "interface": "Interfaz",
-        "language": "Idioma"
+        "language": "Idioma",
+        "googleId": "GoogleID",
+        "facebookId": "FacebookID",
+        "status": "Estado",
+        "roles": "Roles"
     },
     "options": {
         "english": "Inglés",

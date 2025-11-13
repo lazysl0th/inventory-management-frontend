@@ -25,6 +25,15 @@ export const initialStateItem = {
     updatedAt: new Date().toLocaleString(),
 }
 
+export const initialStateUser = {
+    name: '',
+    email: '',
+    googleId: '',
+    facebookId: '',
+    status: '',
+    roles: []
+}
+
 
 export const titleInfoTooltip = {
     SUCCESS: 'modals.titleSuccess',
