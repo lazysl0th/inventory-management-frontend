@@ -140,7 +140,6 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
                                         </Button>
                                     </Form.Group>
                                     <Form.Group as={Col} xs={1} controlId="formProfileTheme" className="d-flex flex-grow-1 align-items-center justify-content-center">
-                                        <Form.Label>{t("labels.interface")}</Form.Label>
                                         <Button className="w-100"
                                             variant={theme === "light" ? "outline-dark" : "outline-light"}
                                             onClick={handleThemeToggle}
