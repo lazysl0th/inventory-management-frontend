@@ -34,6 +34,16 @@ export const initialStateUser = {
     roles: []
 }
 
+export const initialStateAdditionalInfo = {
+    Phone: '',
+    ShippingCountryCode: '',
+    ShippingCity: '',
+    ShippingStateCode: '',
+    ShippingStreet: '',
+    ShippingPostalCode: '',
+}
+
+
 
 export const titleInfoTooltip = {
     SUCCESS: 'modals.titleSuccess',

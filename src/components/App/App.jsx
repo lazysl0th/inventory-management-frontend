@@ -20,7 +20,6 @@ import Profile from '../Profile/Profile';
 import AdminPage from '../AdminPage/AdminPage'
 import Inventory from '../Inventory/Inventory';
 import Item from '../Item/Item';
-import User from '../User/User';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import InfoToast from '../InfoToast/InfoToast';
 import PageDeleteUserData from '../PageDeleteUserData/PageDeleteUserData';
@@ -42,10 +41,8 @@ function App() {
     const [infoToastMessage, setInfoToastMessage] = useState('');
     const [isInventoryViewOpen, setIsInventoryViewOpen] = useState(false);
     const [isItemViewOpen, setIsItemViewOpen] = useState(false);
-    const [isUserViewOpen, setIsUserViewOpen] = useState(false);
     const [selectedInventoryId, setSelectedInventoryId] = useState(null);
     const [selectedItemId, setSelectedItemId] = useState(null);
-    const [selectedUserId, setSelectedUserId] = useState(null);
     const [searchParams] = useSearchParams();
     const client = useApolloClient();
     const inventoryRef = useRef(null);
@@ -134,8 +131,7 @@ function App() {
     }
 
     const openUser = (record) => {
-        setSelectedUserId(record.id);
-        setIsUserViewOpen(true);
+        navigate(`/profile/${record.id}`);
     }
 
     const handlerClickRecord = {
@@ -153,16 +149,10 @@ function App() {
         setSelectedItemId(null);
         setIsItemViewOpen(false);
     }
-
-    const closeUser = () => {
-        setSelectedUserId(null);
-        setIsUserViewOpen(false);
-    }
     
     const handlerCloseRecordView = {
         Inventory: closeInventory,
         Item: closeItem,
-        AdminUser: closeUser,
     };
 
     const handlerAddRecord = {
@@ -262,8 +252,6 @@ function App() {
         } catch (e) {
             openInfoTooltip(t(`${titleInfoTooltip.ERROR}`), t("modals.messageError"));
         }
-        
-        
     }
 
     const handleVerifyUser = async () => {
@@ -375,14 +363,15 @@ function App() {
                 <Route path="/delete-user-data" element={<PageDeleteUserData />} />
                 <Route path="/privacy" element={<PagePrivacy />} />
                 <Route
-                    path="/profile"
+                    path="/profile/:id?"
                     element={
                         <ProtectedRoute isLoading={isVerifyCurrentUser} >
-                            <Profile 
+                            <Profile
                                 handlerClickRecord={handlerClickRecord}
                                 handlerDeleteRecords={handlerDeleteRecords.Inventory}
                                 handlerAddRecord={handlerAddRecord.Inventory}
-                                onShowToast={showInfoToats} />
+                                onShowToast={showInfoToats}
+                            />
                         </ProtectedRoute>
                     }/>
                 <Route
@@ -426,11 +415,6 @@ function App() {
                 onShowToast={showInfoToats}
                 onUploadImage={handlerUploadImage}
                 onOpenTooltip={openInfoTooltip}
-            />
-            <User
-                isOpen={isUserViewOpen}
-                userId={selectedUserId}
-                handlerCloseView={handlerCloseRecordView.AdminUser}
             />
             <InfoTooltip
                 isOpen={isInfoTooltipOpen}

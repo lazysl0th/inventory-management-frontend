@@ -272,7 +272,10 @@ function Inventory({
                                 />
                             </Tab>
                             <Tab eventKey="discussion" title="Discussion" mountOnEnter>
-                                <DiscussionTab inventoryId={inventory.id} disabled={!readAccess} />
+                                <DiscussionTab
+                                    inventoryId={inventory.id}
+                                    disabled={!readAccess}
+                                    handlerCloseView={handlerCloseView}/>
                             </Tab>
                             <Tab eventKey="stats" title="Stats">
                                 {loading

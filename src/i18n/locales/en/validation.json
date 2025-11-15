@@ -1,0 +1,53 @@
+{
+    "searchQuery": {
+        "required": "Please enter at least 1 characters",
+        "max": "Too long query (max 100 characters)",
+        "matches": "Invalid characters in search query"
+    },
+    "name": {
+        "required": "Enter name"
+    },
+    "email": {
+        "email": "Please enter a valid email address",
+        "required": "Enter email"
+    },
+    "password": {
+        "min": "Password must be at least 1 characters long",
+        "required": "Enter password"
+    },
+    "title": {
+        "required": "Please enter title inventory"
+    },
+    "category": {
+        "required": "Select category"
+    },
+    "Phone": {
+        "required": "Enter phone",
+        "test": "Invelid phone number"
+    },
+    "ShippingCity": {
+        "required": "Enter city",
+        "matches": "Invalid city name"
+    },
+    "ShippingStreet": {
+        "required": "Enter street",
+        "matches": "Invalid street name"
+    },
+    "ShippingIndex": {
+        "required": "Enter index",
+        "matches": "Invalid index name"
+    },
+    "ShippingState": {
+        "required": "Enter state",
+        "matches": "Invalid state name"
+    },
+    "ShippingCountry": {
+        "required": "Enter country",
+        "matches": "Invalid country name"
+    },
+    "ShippingPostalCode": {
+        "required": "Enter postal code",
+        "matches": "Invalid postal code"
+    }
+
+}

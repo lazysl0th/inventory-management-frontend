@@ -100,13 +100,11 @@ export const changePassword = async({ password, token }) => {
     return checkResponse(res);
 }
 
-export const updateProfile = async ({ name, email }) => {
+export const updateProfile = async ({ name, email }, userId) => {
     const res = await fetch(`${apiConfig.baseUrl}/users/me`, {
         method: 'PATCH',
         headers: apiConfig.headers(),
-        body: JSON.stringify({ name, email })
+        body: JSON.stringify({ name, email, userId })
     })
     return checkResponse(res);
 }
-
-

@@ -7,12 +7,23 @@
         "googleId": "GoogleID",
         "facebookId": "FacebookID",
         "status": "Estado",
-        "roles": "Roles"
+        "roles": "Roles",
+        "phone": "Teléfono",
+        "shippingAddress": {
+            "country": "País",
+            "state": "Estado",
+            "city": "Ciudad",
+            "street": "Calle",
+            "postalCode": "Código postal"
+        }
     },
     "options": {
         "english": "Inglés",
         "spanish": "Español",
-        "ukrainian": "Ucraniano"
+        "ukrainian": "Ucraniano",
+        "country": "Seleccionar país...",
+        "state": "Seleccionar estado...",
+        "loading": "Cargando..."
     },
     "placeholders": {
         "email": "Correo electrónico",
@@ -25,5 +36,8 @@
     "toasts": {
         "updateUserSucces": "Datos actualizados correctamente",
         "updateUserFailed": "Los datos no se han actualizado."
+    },
+    "title": {
+        "additionalInfo": "Información adicional"
     }
 }

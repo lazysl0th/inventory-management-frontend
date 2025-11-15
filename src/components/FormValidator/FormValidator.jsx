@@ -1,6 +1,6 @@
 import { Formik } from "formik";
 
-export default function FormValidation ({ initialValues, validationSchema, onSubmit, children, validateOnMount, innerRef}) {
+export default function FormValidation ({ initialValues, validationSchema, onSubmit, children, validateOnMount, innerRef }) {
 
     function submitHandler(values, { setSubmitting }) {
         try {

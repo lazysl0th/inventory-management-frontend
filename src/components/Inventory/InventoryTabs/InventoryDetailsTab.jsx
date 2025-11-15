@@ -26,6 +26,7 @@ export default function InventoryDetailsTab({
     const [searchTags] = useLazyQuery(SEARCH_TAGS, { fetchPolicy: "no-cache" });
     const imageRef = useRef(null);
     const { t } = useTranslation("inventory");
+    const { t: tv } = useTranslation("validation");
 
     const loadOptions = async (inputValue, callback) => {
         const { data } = await searchTags({ variables: { searchQuery: inputValue } });
@@ -90,7 +91,7 @@ export default function InventoryDetailsTab({
                                 isInvalid={formikTouched?.title && !!formikErrors?.title}
                             />
                             <Form.Control.Feedback type='invalid'>
-                                {formikErrors?.title}
+                                {tv(`${formikErrors?.title}`)}
                             </Form.Control.Feedback>
                         </Form.Group>
                     </Col>
@@ -123,7 +124,7 @@ export default function InventoryDetailsTab({
                                 {t("texts.category")}
                             </Form.Text>
                             <Form.Control.Feedback type='invalid'>
-                                {formikErrors?.category}
+                                {tv(`${formikErrors?.category}`)}
                             </Form.Control.Feedback>
                         </Form.Group>
                     </Col>

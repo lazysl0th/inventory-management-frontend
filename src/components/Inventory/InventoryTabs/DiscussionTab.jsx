@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useSubscription } from "@apollo/client/react";
 import { Card, Form, Button, Alert, ListGroup, Spinner } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
@@ -6,11 +6,9 @@ import remarkGfm from "remark-gfm";
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { GET_COMMENTS, CREATE_COMMENT, COMMENT_ADDED} from "../../../graphql/commonQuery";
-import { CurrentUserContext } from '../../../context/CurrentUserContext';
 
-export default function DiscussionTab({ inventoryId, disabled }) {
+export default function DiscussionTab({ inventoryId, disabled, handlerCloseView}) {
     const { t } = useTranslation("inventory");
-    const currentUser = useContext(CurrentUserContext);
     const [content, setContent] = useState('');
     const [comments, setComments] = useState([]);
     const messagesEndRef = useRef(null);
@@ -49,7 +47,7 @@ export default function DiscussionTab({ inventoryId, disabled }) {
                                 { comments?.map((comment) => (
                                     <ListGroup.Item key={comment.id}>
                                         <div className="d-flex justify-content-between align-items-center mb-1">
-                                            <Link to={`/users/${comment.user.id}`} className="fw-bold text-decoration-none">
+                                            <Link onClick={handlerCloseView} to={`/profile/${comment.user.id}`} className="fw-bold text-decoration-none">
                                                 {comment.user.name}
                                             </Link>
                                             <small className="text-muted">

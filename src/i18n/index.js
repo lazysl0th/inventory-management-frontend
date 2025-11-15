@@ -8,7 +8,8 @@ import enInventory from './locales/en/inventory.json';
 import enItem from './locales/en/item.json';
 import enProfile from './locales/en/profile.json';
 import enSearch from './locales/en/search.json';
-import enTable from './locales/en/table.json'
+import enTable from './locales/en/table.json';
+import enValidation from './locales/en/validation.json';
 import esCommon from './locales/es/common.json';
 import esAuth from './locales/es/auth.json';
 import esAdmin from './locales/es/admin.json';
@@ -37,6 +38,7 @@ const resources = {
         profile: enProfile,
         search: enSearch,
         table: enTable,
+        validation: enValidation
     },
     es: {
         common: esCommon,

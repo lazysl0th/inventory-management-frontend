@@ -16,6 +16,7 @@ function Header({ onLog }) {
     const { t: ts } = useTranslation("search");
     const { t: ta } = useTranslation("auth");
     const { t: tad } = useTranslation("admin");
+    const { t: tv} = useTranslation("validation");
 
     const currentUser = useContext(CurrentUserContext);
     const [initialValues] = useState({ searchQuery: '' })
@@ -67,7 +68,7 @@ function Header({ onLog }) {
                                                 (errors.searchQuery)
                                                 ?
                                                 (<Tooltip id='tooltip-error'>
-                                                    {errors.searchQuery}
+                                                    {tv(`${errors.searchQuery}`)}
                                                 </Tooltip>)
                                                 : <Tooltip id="tooltip-empty" className="d-none" />
                                             }

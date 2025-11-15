@@ -11,6 +11,7 @@ import { link } from '../../utils/constants'
 
 export default function Register ({ onReg }) {
     const { t } = useTranslation("auth");
+    const { t: tv } = useTranslation("validation");
     const [showPassword, setShowPassword] = useState(false);
     const [initialValues, setIinitialValues] = useState({ name: '', email: '', password: '' })
 
@@ -56,7 +57,7 @@ export default function Register ({ onReg }) {
                                             isValid={touched.name && !errors.name}
                                         />
                                         <Form.Control.Feedback type='invalid'>
-                                            {errors.name}
+                                            {tv(`${errors.name}`)}
                                         </Form.Control.Feedback>
                                     </FloatingLabel>
                                     <FloatingLabel
@@ -75,7 +76,7 @@ export default function Register ({ onReg }) {
                                             isValid={touched?.email && !errors?.email}
                                         />
                                         <Form.Control.Feedback type='invalid'>
-                                            {errors?.email}
+                                            {tv(`${errors.email}`)}
                                         </Form.Control.Feedback>
                                     </FloatingLabel>
                                     <Form.Group className='mb-3 position-relative' controlId='formGroupPassword' >
@@ -91,7 +92,7 @@ export default function Register ({ onReg }) {
                                                 isValid={touched.password && !errors.password}
                                             />
                                             <Form.Control.Feedback type='invalid'>
-                                                {errors.password}
+                                                {tv(`${errors.password}`)}
                                             </Form.Control.Feedback>
                                         </FloatingLabel>
                                         <Button

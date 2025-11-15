@@ -7,23 +7,44 @@
         "googleId": "GoogleID",
         "facebookId": "FacebookID",
         "status": "Status",
-        "roles": "Roles"
+        "roles": "Roles",
+        "phone": "Phone",
+        "shippingAddress": {
+            "shippingAddress": "Shipping address",
+            "country": "Country",
+            "state": "State",
+            "city": "City",
+            "street": "Street",
+            "postalCode": "Postal code"
+        }
     },
     "options": {
         "english": "English",
         "spanish": "Spanish",
-        "ukrainian": "Ukrainian"
+        "ukrainian": "Ukrainian",
+        "country": "Select country...",
+        "state": "Select state...",
+        "loading": "Loading..."
     },
     "placeholders": {
         "email": "Enter email",
-        "name": "Enter name"
+        "name": "Enter name",
+        "phone": "Enter phone number",
+        "country": "Enter country",
+        "state": "Enter state",
+        "city": "Enter city",
+        "street": "Enter street"
     },
     "buttons": {
         "dark": "Dark",
-        "light": "Light"
+        "light": "Light",
+        "addAditionalInfo": "Add additional info"
     },
     "toasts": {
         "updateUserSucces": "Data updated successfully",
         "updateUserFailed": "The data has not been updated."
+    },
+    "title": {
+        "additionalInfo": "Additional info"
     }
 }

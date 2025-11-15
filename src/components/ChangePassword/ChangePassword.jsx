@@ -12,7 +12,7 @@ export default function ChangePassword ({ handlerChangePassword }) {
     const [searchParams] = useSearchParams();
     const token = searchParams.get("token");
     const { t } = useTranslation("auth");
-    
+    const { t: tv } = useTranslation("validation");
 
     return (
         <Container>
@@ -39,7 +39,7 @@ export default function ChangePassword ({ handlerChangePassword }) {
                                         isValid={touched.password && !errors.password}
                                     />
                                     <Form.Control.Feedback type='invalid'>
-                                        {errors.password}
+                                        {tv(`${errors.password}`)}
                                     </Form.Control.Feedback>
                                 </FloatingLabel>
                                 <Button

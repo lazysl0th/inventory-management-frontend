@@ -7,12 +7,23 @@
         "googleId": "GoogleID",
         "facebookId": "FacebookID",
         "status": "Статус",
-        "roles": "Ролі"
+        "roles": "Ролі",
+        "phone": "Телефон",
+        "shippingAddress": {
+            "country": "Країна",
+            "state": "Штат",
+            "city": "Місто",
+            "street": "Вулиця",
+            "postalCode": "Поштовий індекс"
+        }
     },
     "options": {
         "english": "Англійська",
         "spanish": "Іспанська",
-        "ukrainian": "Українська"
+        "ukrainian": "Українська",
+        "country": "Виберіть країну...",
+        "state": "Виберіть штат...",
+        "loading": "Завантаження..."
     },
     "placeholders": {
         "email": "Електронна пошта",
@@ -25,5 +36,8 @@
     "toasts": {
         "updateUserSucces": "Дані успішно оновлено",
         "updateUserFailed": "Дані не оновлено."
+    },
+    "title": {
+        "additionalInfo": "Додаткова інформація"
     }
 }

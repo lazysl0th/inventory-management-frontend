@@ -11,7 +11,7 @@ import { link } from '../../utils/constants';
 export default function ResetPassword({ handlerResetPassword }) {
     const [email, setEmail] = useState({ email: '' });
     const { t } = useTranslation("auth");
-
+    const { t: tv } = useTranslation("validation");
 
     return (
         <Container>
@@ -41,7 +41,7 @@ export default function ResetPassword({ handlerResetPassword }) {
                                         isValid={touched.email && !errors.email}
                                     />
                                     <Form.Control.Feedback type='invalid'>
-                                        {errors.email}
+                                        {tv(`${errors.email}`)}
                                     </Form.Control.Feedback>
                                 </FloatingLabel>
                             <Button type='submit' variant='dark'>

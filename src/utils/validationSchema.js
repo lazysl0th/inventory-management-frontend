@@ -1,38 +1,47 @@
 import * as Yup from "yup";
+import { isValidPhoneNumber } from "libphonenumber-js";
 
 export const searchSchema = Yup.object({
     searchQuery: Yup.string()
         .trim()
-        .required('Please enter at least 1 characters')
-        .max(100, 'Too long query (max 100 characters)')
-        .matches( /^[\p{Alpha}\p{M}\p{Nd}\p{Pc}\p{Join_C}\s-]+$/u, 'Invalid characters in search query')
+        .required('searchQuery.required')
+        .max(100, 'searchQuery.max')
+        .matches( /^[\p{Alpha}\p{M}\p{Nd}\p{Pc}\p{Join_C}\s-]+$/u, 'searchQuery.matches')
     })
 
 export const SignupSchema = Yup.object({
-    name: Yup.string().required("Enter name"),
-    email: Yup.string().email("Please enter a valid email address").required("Enter email"),
-    password: Yup.string().min(1, "Password must be at least 1 characters long").required("Enter password"),
+    name: Yup.string().required("name.required"),
+    email: Yup.string().email("email.email").required("email.required"),
+    password: Yup.string().min(1, "password.min").required("password.required"),
 });
 
 export const SigninSchema = Yup.object({
-    email: Yup.string().email("Please enter a valid email address").required("Enter email"),
-    password: Yup.string().min(1, "Password must be at least 1 characters long").required("Enter password"),
+    email: Yup.string().email("email.email").required("email.required"),
+    password: Yup.string().min(1, "password.min").required("password.required"),
 });
 
 export const InventorySchema = Yup.object({
-    title: Yup.string().required("Please enter title inventory"),
-    category: Yup.string().required('Select category').oneOf(['Furniture', 'Equipment', 'Book', 'Other'], 'Invalid category'),
+    title: Yup.string().required("title.required"),
+    category: Yup.string().required('category.required'),
 })
 
 export const ResetPasswordSchema = Yup.object({
-    email: Yup.string().email("Please enter a valid email address").required("Enter email"),
+    email: Yup.string().email("email.email").required("email.required"),
 });
 
 export const ChangePasswordSchema = Yup.object({
-    password: Yup.string().min(1, "Password must be at least 1 characters long").required("Enter password"),
+    password: Yup.string().min(1, "password.min").required("password.required"),
 });
 
 export const ProfileSchema = Yup.object({
-    name: Yup.string().required("Enter name"),
-    email: Yup.string().email("Please enter a valid email address").required("Enter email"),
+    name: Yup.string().required("name.required"),
+    email: Yup.string().email("email.email").required("email.required"),
+});
+
+export const AdditionalInfoSchema = Yup.object({
+    Phone: Yup.string().required("Phone.required").test("is-valid-phone", "Phone.test", value => isValidPhoneNumber(value || "")),
+    ShippingCity: Yup.string().required("ShippingCity.required").matches(/^[\p{Alpha}\p{M}\p{Pc}\p{Join_C}\s-]+$/u, "ShippingCity.matches"),
+    ShippingStreet: Yup.string().required("ShippingStreet.required").matches(/^[\p{Alpha}\p{M}\p{Nd}\p{Pc}\p{Join_C}\s-]+$/u, "ShippingStreet.matches"),
+    ShippingCountryCode: Yup.string().required("ShippingCountry.required").matches(/^[\p{Alpha}\p{M}\p{Pc}\p{Join_C}\s-]+$/u, "ShippingCountry.matches"),
+    ShippingPostalCode: Yup.string().required("ShippingPostalCode.required").matches(/^[\p{Alpha}\p{M}\p{Nd}\p{Pc}\p{Join_C}\s-]+$/u, "ShippingPostalCode.matches"),
 });
