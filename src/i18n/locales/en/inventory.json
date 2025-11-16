@@ -114,7 +114,8 @@
         "selectFile": "Select file",
         "create": "Create",
         "update": "Update",
-        "send": "Send"
+        "send": "Send",
+        "token": "Get token"
     },
     "dndForm":  {
         "CUSTOM_ID": "Format custom ID",
@@ -133,7 +134,8 @@
         "like": "Only registered users can like",
         "image": "There was an error loading the image",
         "field": "Cannot add more fields of type {{fieldTypeLabel}} (limit {{fieldTypeLimit}})",
-        "requiredFields": "Please fill in the required fields"
+        "requiredFields": "Please fill in the required fields",
+        "token": "Token"
     },
     "badges": {
         "example": "Example:",

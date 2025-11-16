@@ -15,7 +15,7 @@ import { updateProfile, getUser } from '../../utils/usersApi';
 import { useParams } from 'react-router-dom';
 import { CurrentUserContext } from "../../context/CurrentUserContext";
 import useAccess from '../../hooks/useAccess';
-import AdditionalInfo from "../AdditionalInfo/AdditionalInfo"; 
+import AdditionalInfo from "./AdditionalInfo/AdditionalInfo"; 
 
 export default function Profile ({ handlerClickRecord, handlerDeleteRecords, handlerAddRecord, onShowToast }) {
     const currentUser = useContext(CurrentUserContext);

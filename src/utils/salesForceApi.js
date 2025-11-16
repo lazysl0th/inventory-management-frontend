@@ -1,13 +1,4 @@
-import { link } from './constants';
-import { checkResponse } from './usersApi';
-
-const apiConfig = {
-  baseUrl: link.BASE_URL,
-  headers: () => ({
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
-  })
-};
+import { checkResponse, apiConfig } from './usersApi';
 
 export const getAddress = async() => {
     const res = await fetch(`${apiConfig.baseUrl}/salesForce/address`, {

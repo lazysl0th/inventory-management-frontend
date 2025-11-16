@@ -1,6 +1,6 @@
 import { link } from './constants';
 
-const apiConfig = {
+export const apiConfig = {
   baseUrl: link.BASE_URL,
   headers: () => ({
     'Content-Type': 'application/json',
@@ -42,6 +42,7 @@ export const checkToken = async () => {
 
 export const getUsers = async() => {
     const res = await fetch(`${apiConfig.baseUrl}/users`, {
+        method: 'GET',
         headers: apiConfig.headers()
     });
     return await checkResponse(res);
@@ -83,12 +84,12 @@ export const changeAccess = async(usersIds, roleIds) => {
 }
 
 export const resetPassword = async({ email }) => {
-  const res = await fetch(`${apiConfig.baseUrl}/resetpassword`, {
-    method: 'POST',
-    headers: apiConfig.headers(),
-    body: JSON.stringify({ email })
-  });
-  return checkResponse(res);
+    const res = await fetch(`${apiConfig.baseUrl}/resetpassword`, {
+        method: 'POST',
+        headers: apiConfig.headers(),
+        body: JSON.stringify({ email })
+    });
+    return checkResponse(res);
 }
 
 export const changePassword = async({ password, token }) => {

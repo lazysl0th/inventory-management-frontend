@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { Modal, Form, FloatingLabel, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { initialStateAdditionalInfo } from '../../utils/constants';
-import FormValidation from '../FormValidator/FormValidator';
-import { AdditionalInfoSchema } from '../../utils/validationSchema';
-import { getAddress, addAdditionInfo, getAdditionalInfo } from '../../utils/salesForceApi';
+import { initialStateAdditionalInfo } from '../../../utils/constants';
+import FormValidation from '../../FormValidator/FormValidator';
+import { AdditionalInfoSchema } from '../../../utils/validationSchema';
+import { getAddress, addAdditionInfo, getAdditionalInfo } from '../../../utils/salesForceApi';
 
 function AdditionalInfo({
     isOpen,

@@ -114,7 +114,8 @@
         "selectFile": "Seleccionar archivo",
         "create": "Crear",
         "update": "Actualizar",
-        "send": "Enviar"
+        "send": "Enviar",
+        "token": "Obtener token"
     },
     "dndForm": {
         "CUSTOM_ID": "Formato de ID personalizado",
@@ -133,7 +134,8 @@
         "like": "Solo los usuarios registrados pueden dar me gusta",
         "image": "Se produjo un error al cargar la imagen",
         "field": "No se pueden agregar más campos de tipo {{fieldTypeLabel}} (límite {{fieldTypeLimit}})",
-        "requiredFields": "Por favor, rellene los campos obligatorios"
+        "requiredFields": "Por favor, rellene los campos obligatorios",
+        "token": "Token"
     },
     "badges": {
         "example": "Ejemplo:",
