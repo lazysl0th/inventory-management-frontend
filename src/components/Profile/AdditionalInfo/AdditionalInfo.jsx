@@ -94,7 +94,7 @@ function AdditionalInfo({
             </Modal.Header>
             <Modal.Body>
                 <FormValidation innerRef={formikRef} initialValues={additionalInfo} validationSchema={AdditionalInfoSchema} onSubmit={handleAddAdditionalInfo}>
-                    { ({ handleSubmit, values, handleChange, handleBlur, touched, errors, isSubmitting}) => {
+                    { ({ handleSubmit, values, handleChange, handleBlur, touched, errors, isSubmitting }) => {
                         const filteredStates = getStatesForCountry(values.ShippingCountryCode);
                         return (
                             <Form
