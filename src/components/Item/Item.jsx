@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
-import { Modal, Button, Spinner, Alert } from 'react-bootstrap';
+import { Modal, Button, Spinner, Alert, CloseButton } from 'react-bootstrap';
+import { IoIosHelpCircleOutline } from "react-icons/io";
 import { useTranslation } from 'react-i18next';
 import ItemDetailsTab from './ItemTabs/ItemDetailTabs';
 import { initialStateItem, titleInfoTooltip } from '../../utils/constants';
@@ -20,6 +21,7 @@ function Item({
     onShowToast,
     onUploadImage,
     onOpenTooltip,
+    onSupportRequest
 }, ref) {
     const currentUser = useContext(CurrentUserContext);
     const timerRef = useRef(null);
@@ -138,7 +140,11 @@ function Item({
             keyboard={false}
             centered
         >
-            <Modal.Header closeButton>
+            <Modal.Header>
+                <Button variant="secondary" className="p-0 ms-auto bg-transparent border-0" onClick={onSupportRequest}>
+                    <IoIosHelpCircleOutline size={24} className="text-secondary btn-help"/>
+                </Button>
+                <CloseButton className="ms-0" onClick={handleCloseView}/>
             </Modal.Header>
             <Modal.Body className={(loadingItem || error) && "align-self-center"}>
                 {loadingItem

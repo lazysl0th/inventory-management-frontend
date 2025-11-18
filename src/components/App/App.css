@@ -16,6 +16,8 @@
     cursor: pointer;
 }
 
-.button-show-password:focus-visible {
-    outline: transparent;
+.btn-help:hover {
+    color: black !important;
+    text-decoration: none;
+    opacity: 0.75;
 }

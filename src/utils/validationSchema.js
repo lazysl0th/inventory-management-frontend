@@ -45,3 +45,10 @@ export const AdditionalInfoSchema = Yup.object({
     ShippingCountryCode: Yup.string().required("ShippingCountry.required").matches(/^[\p{Alpha}\p{M}\p{Pc}\p{Join_C}\s-]+$/u, "ShippingCountry.matches"),
     ShippingPostalCode: Yup.string().required("ShippingPostalCode.required").matches(/^[\p{Alpha}\p{M}\p{Nd}\p{Pc}\p{Join_C}\s-]+$/u, "ShippingPostalCode.matches"),
 });
+
+export const SupportRequesShema = Yup.object({
+    userName: Yup.string().required("name.required"),
+    userEmail: Yup.string().email("email.email").required("email.required"),
+    priority: Yup.string().required('Select priority').oneOf(['high', 'average', 'low'], 'Invalid priority'),
+    request: Yup.string().required("Enter request"),
+})

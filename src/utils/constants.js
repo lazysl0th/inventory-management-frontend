@@ -43,7 +43,14 @@ export const initialStateAdditionalInfo = {
     ShippingPostalCode: '',
 }
 
-
+export const initialStateSupportRequeste = {
+    userName: '',
+    userEmail: '',
+    inventory: '',
+    link: '',
+    priority: '',
+    request: '',
+}
 
 export const titleInfoTooltip = {
     SUCCESS: 'modals.titleSuccess',

@@ -98,6 +98,7 @@ export const GET_INVENTORY_INFO = gql`
     query GetInventoryFields($id: Int!) {
         inventory(id: $id) {
             id
+            title
             allowedUsers {
                 id
             }

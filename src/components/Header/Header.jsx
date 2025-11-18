@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Container, Nav, Navbar, Form, InputGroup, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { IoIosHelpCircleOutline } from "react-icons/io";
 import { useTranslation } from "react-i18next";
 import { CurrentUserContext } from '../../context/CurrentUserContext';
 import { FaSearch } from 'react-icons/fa';
@@ -10,7 +11,7 @@ import { link, roles } from '../../utils/constants';
 import { hasAdminRole } from '../../utils/utils';
 import './Header.css';
 
-function Header({ onLog }) {
+function Header({ onLog, onSupportRequest }) {
     const location = useLocation();
     const navigate = useNavigate();
     const { t: ts } = useTranslation("search");
@@ -87,13 +88,13 @@ function Header({ onLog }) {
                                         <Navbar.Text className='ps-2'>
                                             {ta("text.signedInAs")}: <a href="/profile">{currentUser?.name}</a>
                                         </Navbar.Text>
-                                        <Navbar.Text className='ps-2'>
+                                        <Navbar.Text className='p-2'>
                                             {ta("text.headerEmail")}: <a href={`mailto:${currentUser?.email}`}>{currentUser?.email}</a>
                                         </Navbar.Text>
                                     </> )
                                     : (hasAdminRole([roles.ADMIN], currentUser)
                                         && (<Nav.Link 
-                                                className='text-dark ms-2' 
+                                                className='text-dark' 
                                                 href='/admin' 
                                                 onClick={expandedHadle}>
                                                {tad("links.admin")}
@@ -116,6 +117,9 @@ function Header({ onLog }) {
                                             {ta("links.signup")}
                                     </Nav.Link>
                                 </>) }
+                        <Button variant="secondary" className="p-0 ms-2 bg-transparent border-0" onClick={onSupportRequest}>
+                            <IoIosHelpCircleOutline size={24} className="text-secondary btn-help"/>
+                        </Button>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

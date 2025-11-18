@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, forwardRef, useImperativeHandle, useRef } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
-import { Modal, Button, Spinner, Alert, Tabs, Tab } from 'react-bootstrap';
+import { Modal, Button, Spinner, Alert, Tabs, Tab, CloseButton } from 'react-bootstrap';
+import { IoIosHelpCircleOutline } from "react-icons/io";
 import { useTranslation } from 'react-i18next';
 import { GET_INVENTORY, UPDATE_INVENTORY } from '../../graphql/inventoryQueries';
 import { GET_ITEMS } from '../../graphql/itemQuery';
@@ -31,7 +32,8 @@ function Inventory({
     handlerAddRecord,
     handlerDeleteRecords,
     onShowToast,
-    onUploadImage
+    onUploadImage,
+    onSupportRequest
 }, ref) {
     const currentUser = useContext(CurrentUserContext);
     const formikRef = useRef();
@@ -166,7 +168,6 @@ function Inventory({
     return (
         <Modal
             show={isOpen}
-            onHide={handleCloseView}
             size="xl"
             backdrop="static"
             keyboard={false}
@@ -180,8 +181,12 @@ function Inventory({
             validateOnMount={true}>
             { ({ handleSubmit, values, handleChange, handleBlur, touched, errors, isSubmitting}) => (
                 <>
-                    <Modal.Header closeButton>
+                    <Modal.Header>
                         <Modal.Title>{inventory?.title}</Modal.Title>
+                        <Button variant="secondary" className="p-0 ms-auto bg-transparent border-0" onClick={onSupportRequest}>
+                            <IoIosHelpCircleOutline size={24} className="text-secondary btn-help"/>
+                        </Button>
+                        <CloseButton className="ms-0" onClick={handleCloseView}/>
                     </Modal.Header>
                     <Modal.Body className={(loading || error) && "align-self-center"}>
                         <Tabs

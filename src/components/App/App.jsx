@@ -350,9 +350,13 @@ function App() {
         }
     }
 
+    const handlerOpenSupportRequest = () => {
+        openInfoTooltip('Support request', 'Help');
+    }
+
     return (
         <CurrentUserContext.Provider value={currentUser}>
-            <Header onLog={handlerSignOut}/>
+            <Header onLog={handlerSignOut} onSupportRequest={handlerOpenSupportRequest}/>
             <Routes>
                 <Route path="/" element={ <Main handlerClickRecord={handlerClickRecord} loadTags={loadTags} resultTags={resultTags}/> } />
                 <Route path="/search" element={<SearchPage handlerClickRecord={handlerClickRecord}/>} />
@@ -404,6 +408,7 @@ function App() {
                     handlerDeleteRecords={handlerDeleteRecords.Item}
                     onShowToast={showInfoToats}
                     onUploadImage={handlerUploadImage}
+                    onSupportRequest={handlerOpenSupportRequest}
                 />
             <Item
                 ref={itemRef}
@@ -415,6 +420,7 @@ function App() {
                 onShowToast={showInfoToats}
                 onUploadImage={handlerUploadImage}
                 onOpenTooltip={openInfoTooltip}
+                onSupportRequest={handlerOpenSupportRequest}
             />
             <InfoTooltip
                 isOpen={isInfoTooltipOpen}
@@ -423,6 +429,9 @@ function App() {
                 message={infoTooltipMessage}
                 onReload={handlerReloadRecord}
                 onForceSave={handlerForceSaveRecord}
+                inventoryId={selectedInventoryId}
+                onShowToast={showInfoToats}
+                onSupportRequest={handlerOpenSupportRequest}
             />
             <InfoToast isShow={isInfoToastShow} onClose={handlerCloseInfoToast} message={infoToastMessage} position={infoToastPosition}/>
         </CurrentUserContext.Provider>
