@@ -67,10 +67,10 @@ export default function InfoTooltip({ isOpen, onClose, title, onReload, onForceS
                 <Modal.Title id="example-modal-sizes-title-sm">
                     {title}
                 </Modal.Title>
-                <Button variant="secondary" className="p-0 ms-auto bg-transparent border-0" onClick={onSupportRequest}>
+                {message !== 'Help' && (<Button variant="secondary" className="p-0 ms-auto bg-transparent border-0" onClick={onSupportRequest}>
                     <IoIosHelpCircleOutline size={24} className="text-secondary btn-help"/>
-                </Button>
-                <CloseButton className="ms-0" onClick={onClose}/>
+                </Button>)}
+                <CloseButton className={message !== 'Help' ? 'ms-0' : "ms-auto"} onClick={onClose}/>
             </Modal.Header>
             {message === 'Version conflict'
                 ? (<>

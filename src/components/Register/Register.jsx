@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Container, Row, Col, Form, FloatingLabel, Button} from 'react-bootstrap';
 import { useTranslation } from "react-i18next";
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
+import { IoIosHelpCircleOutline } from "react-icons/io";
 import { BiArrowBack } from 'react-icons/bi';
 import { FcGoogle } from 'react-icons/fc';
 import { BsFacebook } from 'react-icons/bs';
@@ -9,7 +10,7 @@ import FormValidation from '../FormValidator/FormValidator';
 import { SignupSchema } from '../../utils/validationSchema';
 import { link } from '../../utils/constants'
 
-export default function Register ({ onReg }) {
+export default function Register ({ onReg, onSupportRequest }) {
     const { t } = useTranslation("auth");
     const { t: tv } = useTranslation("validation");
     const [showPassword, setShowPassword] = useState(false);
@@ -26,6 +27,11 @@ export default function Register ({ onReg }) {
                             <BiArrowBack/>{' '}{t("links.back")}
                         </a>
                     </span>
+                </Col>
+                <Col xs={6} md={3}>
+                    <Button variant="secondary" className="p-0 ms-auto bg-transparent border-0" onClick={onSupportRequest}>
+                        <IoIosHelpCircleOutline size={24} className="text-secondary btn-help"/>
+                    </Button>
                 </Col>
             </Row>
             <Row className='justify-content-start'>

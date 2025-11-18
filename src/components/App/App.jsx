@@ -360,8 +360,8 @@ function App() {
             <Routes>
                 <Route path="/" element={ <Main handlerClickRecord={handlerClickRecord} loadTags={loadTags} resultTags={resultTags}/> } />
                 <Route path="/search" element={<SearchPage handlerClickRecord={handlerClickRecord}/>} />
-                <Route path="/sign-in" element={<Login onAuth={handlerSignInSubmit}/>} />
-                <Route path="/sign-up" element={<Register onReg={handlerSignUpSubmit}/>} />
+                <Route path="/sign-in" element={<Login onAuth={handlerSignInSubmit} onSupportRequest={handlerOpenSupportRequest}/>} />
+                <Route path="/sign-up" element={<Register onReg={handlerSignUpSubmit} onSupportRequest={handlerOpenSupportRequest}/>} />
                 <Route path="/reset-password" element={<ResetPassword handlerResetPassword={handlerResetPassword}/>} />
                 <Route path="/change-password" element={<ChangePassword handlerChangePassword={handlerChangePassword}/>} />
                 <Route path="/delete-user-data" element={<PageDeleteUserData />} />
