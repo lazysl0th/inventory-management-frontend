@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Modal, Form, FloatingLabel, Button } from 'react-bootstrap';
+import { Modal, Form, FloatingLabel, Button, CloseButton } from 'react-bootstrap';
+import { IoIosHelpCircleOutline } from "react-icons/io";
 import { useTranslation } from 'react-i18next';
 import { initialStateAdditionalInfo } from '../../../utils/constants';
 import FormValidation from '../../FormValidator/FormValidator';
@@ -11,6 +12,7 @@ function AdditionalInfo({
     userId,
     onClose,
     onShowToast,
+    onSupportRequest
 }) {
     const [additionalInfo, setAdditionalInfo] = useState(initialStateAdditionalInfo);
     const [isLoading, setIsLoading] = useState(false)
@@ -89,8 +91,12 @@ function AdditionalInfo({
             size="md"
             centered
         >
-            <Modal.Header closeButton>
+            <Modal.Header>
                 <Modal.Title>{t("title.additionalInfo")}</Modal.Title>
+                <Button variant="secondary" className="p-0 ms-auto bg-transparent border-0" onClick={onSupportRequest}>
+                    <IoIosHelpCircleOutline size={24} className="text-secondary btn-help"/>
+                </Button>
+                <CloseButton className='ms-0' onClick={onClose}/>
             </Modal.Header>
             <Modal.Body>
                 <FormValidation innerRef={formikRef} initialValues={additionalInfo} validationSchema={AdditionalInfoSchema} onSubmit={handleAddAdditionalInfo}>

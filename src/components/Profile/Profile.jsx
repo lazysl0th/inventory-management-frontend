@@ -17,7 +17,7 @@ import { CurrentUserContext } from "../../context/CurrentUserContext";
 import useAccess from '../../hooks/useAccess';
 import AdditionalInfo from "./AdditionalInfo/AdditionalInfo"; 
 
-export default function Profile ({ handlerClickRecord, handlerDeleteRecords, handlerAddRecord, onShowToast }) {
+export default function Profile ({ handlerClickRecord, handlerDeleteRecords, handlerAddRecord, onShowToast, onSupportRequest }) {
     const currentUser = useContext(CurrentUserContext);
     const { id: routeUserId } = useParams(); 
     const [isLoading, setIsLoading] = useState(false);
@@ -232,7 +232,7 @@ export default function Profile ({ handlerClickRecord, handlerDeleteRecords, han
                             />}
                 </Col>
             </Row>
-            <AdditionalInfo isOpen={isAdditionalInfoOpen} onClose={closeAdditionalInfo} userId={!isOwner ? targetUserId : null} onShowToast={onShowToast} />
+            <AdditionalInfo isOpen={isAdditionalInfoOpen} onClose={closeAdditionalInfo} userId={!isOwner ? targetUserId : null} onShowToast={onShowToast} onSupportRequest={onSupportRequest} />
         </Container>
     );
 };

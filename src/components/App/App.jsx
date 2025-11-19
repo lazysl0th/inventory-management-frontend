@@ -375,6 +375,7 @@ function App() {
                                 handlerDeleteRecords={handlerDeleteRecords.Inventory}
                                 handlerAddRecord={handlerAddRecord.Inventory}
                                 onShowToast={showInfoToats}
+                                onSupportRequest={handlerOpenSupportRequest}
                             />
                         </ProtectedRoute>
                     }/>
