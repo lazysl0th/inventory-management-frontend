@@ -1,0 +1,7 @@
+.fieldset {
+    &--description-markdown {
+        min-height: 150px;
+        max-height: 350px;
+        overflow-x: auto;
+    }
+}

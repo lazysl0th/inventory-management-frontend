@@ -1,11 +1,10 @@
-import { checkResponse, apiConfig } from './usersApi';
+import { checkResponse, apiConfig } from './usersApi.js'
 
-export const getInventoryToken = async(inventoryId) => {
+export const getInventoryToken = async (inventoryId) => {
     const res = await fetch(`${apiConfig.baseUrl}/inventories/getToken`, {
         method: 'POST',
         headers: apiConfig.headers(),
-        body: JSON.stringify({ inventoryId })
-
-    });
-    return await checkResponse(res);
+        body: JSON.stringify({ inventoryId }),
+    })
+    return await checkResponse(res)
 }

@@ -1,0 +1,31 @@
+.async-select {
+    &-container {
+        min-width: 300px !important;
+        @media (max-width: 465px) {
+            min-width: 100% !important;
+        }
+    }
+
+    &__control {
+        box-shadow: none !important;
+        background-color: transparent !important;
+        border: none !important;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    &__menu-portal {
+        z-index: 2000 !important;
+    }
+
+    &__option {
+        cursor: pointer !important;
+    }
+
+    &__input-container {
+        flex-wrap: nowrap;
+        overflow: hidden;
+    }
+}

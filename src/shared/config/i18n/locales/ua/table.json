@@ -1,0 +1,58 @@
+{
+    "placeholders": {
+        "filter": "Фільтр...",
+        "noMatches": "Немає збігів",
+        "users": "Ім'я / Email",
+        "enterValue": "Введіть {{field}}..."
+    },
+    "fields": {
+        "email": "email",
+        "name": "name"
+    },
+    "inventory": {
+        "title": "Назва",
+        "description": "Опис",
+        "category": "Категорія",
+        "owner": "Власник"
+    },
+    "inventorySearchResult": {
+        "title": "Назва",
+        "description": "Опис",
+        "category": "Категорія",
+        "owner": "Власник"
+    },
+    "numStats": {
+        "field": "Поле",
+        "average": "Середнє",
+        "max": "Максимум",
+        "min": "Мін"
+    },
+    "textStats": {
+        "field": "Поле",
+        "value": "Значення",
+        "count": "Кількість"
+    },
+    "user": {
+        "name": "Ім'я",
+        "email": "Електронна пошта"
+    },
+    "adminUser": {
+        "name": "Ім'я",
+        "email": "Електронна пошта",
+        "status": "Статус",
+        "roles": "Ролі"
+    },
+    "nameList": {
+        "LATEST": "Останні інвентаризації",
+        "TOP_ITEMS": "Топ-5 за кількістю товарів",
+        "SEARCH": "Результат пошуку",
+        "OWNER": "Мої інвентаризації",
+        "WRITE_ACCESS": "Інвентаризація з правом запису",
+        "ACCESS": "Користувачі з правом запису",
+        "ITEMS": "Товари",
+        "USERS": "Користувачі",
+        "INVENTORIES": "Інвентаризація",
+        "NUM_STATS": "Статистика числових полів",
+        "TEXT_STATS": "Статистика текстових полів"
+    }
+}

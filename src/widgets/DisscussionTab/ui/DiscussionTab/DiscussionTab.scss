@@ -1,0 +1,5 @@
+.discusstion-tab {
+    &--comments {
+        max-height: calc(100vh - 12.5rem * 2);
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "labels": {
+        "owner": "Owner",
+        "createdBy": "Created by",
+        "updateAt": "Update at",
+        "customId": "ID"
+    },
+    "buttons": {
+        "selectFile": "Select file",
+        "create": "Create",
+        "update": "Update"
+    },
+    "feedback": {
+        "invalidCustomId": "Invalid format. Expected:"
+    },
+    "toasts": {
+        "like": "Only authenticated users can like",
+        "likeWithoutId": "Item not created",
+        "errorLike": "An error occurred while liking"
+    }
+}

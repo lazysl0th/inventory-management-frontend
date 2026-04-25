@@ -1,0 +1,7 @@
+.item {
+    max-height: calc(100vh - 7rem * 2);
+
+    &-modal {
+        max-height: calc(100vh - 8rem * 2);
+    }
+}
