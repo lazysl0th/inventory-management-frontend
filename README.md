@@ -57,7 +57,7 @@ cd inventory-management-frontend
 npm install
 ```
 
-### 4. Start
+### 3. Start
 ```bash
 npm run dev
 ```
