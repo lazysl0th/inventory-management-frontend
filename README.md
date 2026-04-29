@@ -37,15 +37,6 @@ The project is structured according to **FSD** principles to ensure high maintai
 
 ## 🛠 Getting Started
 
-### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/lazysl0th/inventory-management-frontend.git](https://github.com/lazysl0th/inventory-management-frontend.git)
-   cd inventory-management-frontend
-
-   ## 🛠 Installation & Setup
-
 ### 1. Clone the repository
 ```bash
 git clone https://github.com/lazysl0th/inventory-management-frontend.git
