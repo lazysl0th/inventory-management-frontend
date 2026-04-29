@@ -57,12 +57,6 @@ cd inventory-management-frontend
 npm install
 ```
 
-### 3. Environment Setup
-Create a .env file:
-```env
-REACT_APP_API_URL=your_api_endpoint_here
-```
-
 ### 4. Start
 ```bash
 npm run dev
