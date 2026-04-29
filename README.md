@@ -1,16 +1,69 @@
-# React + Vite
+# Inventory Management Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, scalable inventory management interface built with React and TypeScript, following the **Feature Sliced Design (FSD)** architectural methodology.
 
-Currently, two official plugins are available:
+## 🚀 Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Core:** React & TypeScript
+* **Architecture:** Feature Sliced Design (FSD)
+* **State Management:** Redux Toolkit (RTK)
+* **Data Fetching:** RTK Query (caching and automated re-fetching)
+* **UI Components:** React-Bootstrap
+* **Interactions:** Drag and Drop (DnD) integration
+* **Forms:** Formik & Yup (validation)
+* **Data Grids:** TanStack Table (React Table)
+* **Internationalization:** i18next (with `i18next-http-backend` for async loading)
+* **Build Tooling:** Webpack (custom configuration for bundle optimization)
 
-## React Compiler
+## 🏗 Architecture Overview
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The project is structured according to **FSD** principles to ensure high maintainability and clear separation of concerns:
 
-## Expanding the ESLint configuration
+* **app**: Global setup (Providers, Styles, Routing).
+* **pages**: Composition of full application screens.
+* **widgets**: Complex UI units combining features and entities.
+* **features**: User interactions that carry business value (e.g., "Add to Stock").
+* **entities**: Business logic for core objects (Products, Suppliers, Users).
+* **shared**: Reusable UI components, API clients, and utility functions.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ✨ Key Features
+
+* **Drag and Drop Interface:** Intuitive DnD capabilities for reordering items or managing categories.
+* **Full CRUD Support:** Comprehensive management of products, categories, and vendors.
+* **Advanced Data Tables:** Highly performant tables featuring filtering, and pagination via TanStack Table.
+* **Dynamic Localization:** Multi-language support with asynchronous locale file loading.
+* **Performance Optimized:** Implements code-splitting using `React.lazy` and `Suspense`.
+* **Responsive UI:** Fully adaptive design optimized for various screen sizes using Bootstrap.
+
+## 🛠 Getting Started
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/lazysl0th/inventory-management-frontend.git](https://github.com/lazysl0th/inventory-management-frontend.git)
+   cd inventory-management-frontend
+
+   ## 🛠 Installation & Setup
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/lazysl0th/inventory-management-frontend.git
+cd inventory-management-frontend
+```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Environment Setup
+Create a .env file:
+```env
+REACT_APP_API_URL=your_api_endpoint_here
+```
+
+### 4. Start
+```bash
+npm run dev
+```
