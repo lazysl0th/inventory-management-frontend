@@ -1,7 +1,7 @@
-import { ButtonProps, OverlayTriggerProps } from 'react-bootstrap'
-import { Placement } from 'react-bootstrap/esm/types'
-import { OverlayChildren } from 'react-bootstrap/esm/Overlay'
-import { ReactNode } from 'react'
+import type { ButtonProps, OverlayTriggerProps } from 'react-bootstrap'
+import type { Placement } from 'react-bootstrap/esm/types'
+import type { OverlayChildren } from 'react-bootstrap/esm/Overlay'
+import type { ReactNode } from 'react'
 
 export type TOverlayTooltipProps = Omit<OverlayTriggerProps, 'children'>
 

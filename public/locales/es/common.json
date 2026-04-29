@@ -1,0 +1,91 @@
+{
+  "title": "Gestión de inventario",
+  "actions": {
+    "back": "Atrás",
+    "retry": "Intentar otra vez",
+    "update": "Actualizar",
+    "create": "Crear",
+    "addRecord": "Agregue $t(common:recordTypes.{{recordType}}, lowercase)",
+    "delete": "Borrar",
+    "down": "Abajo",
+    "overwrite": "Exagerar",
+    "save": "Ahorrar",
+    "send": "Enviar",
+    "up": "Arriba",
+    "blockRecords_other": "Bloquear {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
+    "blockRecords_one": "Bloquear $t(común:recordTypes.{{recordType}}, lowercase)",
+    "deleteRecords_one": "Eliminar $t(common:recordTypes.{{recordType}}, lowercase)",
+    "deleteRecords_other": "Eliminar {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
+    "grantPermission_one": "Conceder acceso de administrador $t(common:recordTypes.{{recordType}}, lowercase)",
+    "grantPermission_other": "Conceder acceso de administrador {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
+    "revokePermission_one": "Revocar el acceso de administrador $t(common:recordTypes.{{recordType}}, lowercase)",
+    "revokePermission_other": "Revocar el acceso de administrador {{count}} $t(common:recordType.{{recordType}}_plural, lowercase)",
+    "unblockRecords_one": "Desbloquear $t(common:recordTypes.{{recordType}}, lowercase)",
+    "unblockRecords_other": "Desbloquear {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)"
+  },
+  "modalTitles": {
+    "additionalInfo": "Información adicional",
+    "supportRequest": "Solicitud de soporte",
+    "versionConflict": "Conflicto de versión"
+  },
+  "placeholders": {
+    "search": "Buscar...",
+    "name": "Introduce el nombre",
+    "email": "Ingrese el correo electrónico",
+    "writeComment": "Escribe un comentario"
+  },
+  "labels": {
+    "email": "Correo electrónico",
+    "name": "Nombre",
+    "createdBy": "Creado",
+    "owner": "Dueño",
+    "updateAt": "Actualizado"
+  },
+  "pageTitle": {
+    "errorPage": "¡Ups!",
+    "adminPage": "Panel de administración"
+  },
+  "pageDescription": {
+    "errorPage": "Se produjo un error al cargar, inténtelo nuevamente.",
+    "notFoundPage": "Página no encontrada"
+  },
+  "options": {
+    "loading": "Cargando..."
+  },
+  "actionTypes": {
+    "created": "creado",
+    "creating": "creando",
+    "deleted": "eliminado",
+    "deleting": "eliminando",
+    "overwrited": "sobrescrito",
+    "overwriting": "sobrescribir",
+    "updated": "actualizado",
+    "updating": "actualizando"
+  },
+  "notifications": {
+    "errorAction_one": "Se produjo un error mientras $t(common:actionTypes.{{actionType}}) $t(common:recordTypes.{{recordType}}, lowercase)",
+    "errorAction_other": "Se produjo un error mientras $t(common:actionTypes.{{actionType}}) {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
+    "successAction_one": "$t(common:recordTypes.{{recordType}}) exitosamente $t(common:actionTypes.{{actionType}}).",
+    "successAction_other": "Con éxito $t(common:actionTypes.{{actionType}}) {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)"
+  },
+  "recordTypes": {
+    "field": "Campo",
+    "inventory": "Inventario",
+    "inventory_plural": "Inventarios",
+    "item": "Artículo",
+    "item_plural": "elementos",
+    "partId": "ID de pieza",
+    "user": "Usuario",
+    "user_plural": "Usuarios",
+    "image": "Imagen"
+  },
+  "versionConflict": {
+    "listItems": {
+      "overwrite": "Exagerar",
+      "update": "Actualizar",
+      "textOverwrite": "guarde sus cambios sobre la versión actual",
+      "textUpdate": "descargar la última versión del servidor"
+    },
+    "paragraph": "Estos datos han sido modificados por otro usuario. \nPuede:"
+  }
+}

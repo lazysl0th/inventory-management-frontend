@@ -1,17 +1,16 @@
 import {
-    BaseQueryFn,
-    FetchArgs,
+    type BaseQueryFn,
+    type FetchArgs,
     fetchBaseQuery,
-    FetchBaseQueryError,
+    type FetchBaseQueryError,
 } from '@reduxjs/toolkit/query'
 import { Mutex } from 'async-mutex'
-import { SETTINGS } from '../config/constants'
-import { logoutUser } from '@/features/auth'
+import { BASE_API, REFRESH_ACCESS_TOKEN } from '../config/constants'
 
 const mutex = new Mutex()
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: SETTINGS.urls.apiUrl,
+    baseUrl: BASE_API,
     prepareHeaders: (headers) => {
         const accessToken = localStorage.getItem('accessToken')
         if (accessToken) headers.set('authorization', `Bearer ${accessToken}`)
@@ -34,7 +33,7 @@ export const baseQueryWithReauth: BaseQueryFn<
             const release = await mutex.acquire()
             try {
                 const refreshResult = await baseQuery(
-                    SETTINGS.uri.refreshAccessToken,
+                    REFRESH_ACCESS_TOKEN,
                     api,
                     extraOptions
                 )
@@ -46,7 +45,7 @@ export const baseQueryWithReauth: BaseQueryFn<
                     )
                     result = await baseQuery(args, api, extraOptions)
                 } else {
-                    api.dispatch(logoutUser())
+                    api.dispatch({ type: 'auth/logout' });
                 }
             } finally {
                 release()

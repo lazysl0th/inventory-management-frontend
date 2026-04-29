@@ -1,21 +1,22 @@
 import {
-    ColumnDef,
+    type ColumnDef,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     useReactTable,
-    Row,
-    Updater,
-    RowSelectionState,
+    type Row,
+    type Updater,
+    type RowSelectionState,
 } from '@tanstack/react-table'
 import { Table } from 'react-bootstrap'
 import DataTableRow from './DataTableRow/DataTableRow'
-import { useId, useState } from 'react'
+import { lazy, useId, useState } from 'react'
 import DataTablePagination from './DataTablePagination/DataTablePagination'
 import DataTableToolbar from './DataTableToolbar/DataTableToolbar'
-import IndeterminateCheckbox from '@/shared/ui/IndeterminateCheckbox/ui/IndeterminateCheckbox'
-import { IDataTableProps, TRowData } from '../model/types'
+import type { IDataTableProps, TRowData } from '../model/types'
+
+const IndeterminateCheckbox = lazy(() => import('../../IndeterminateCheckbox').then(module => ({ default: module.IndeterminateCheckbox })))
 
 export default function DataTable<TData extends TRowData, TValue>({
     tableId,

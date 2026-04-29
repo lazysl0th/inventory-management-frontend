@@ -1,0 +1,50 @@
+{
+  "actions": {
+    "addAdditionalInfo": "Add additional info",
+    "editPersonalData": "Edit personal data"
+  },
+  "options": {
+    "english": "English",
+    "spanish": "Spanish",
+    "ukrainian": "Ukrainian",
+    "dark": "Dark",
+    "light": "Light",
+    "theme": "Theme"
+  },
+  "labels": {
+    "language": "Language",
+    "theme": "Theme",
+    "phone": "Phone"
+  },
+  "placeholders": {
+    "phone": "Enter phone number"
+  },
+  "deleteData": {
+    "description": "To delete your data, please submit a request to",
+    "timeframe": "We will delete all data associated with your account within 24 hours."
+  },
+  "listTitle": {
+    "all": "Users"
+  },
+  "pageTitle": {
+    "deleteData": "Delete User Data",
+    "profile": "Profile"
+  },
+  "listField": {
+    "name": "Name",
+    "email": "Email",
+    "status": "Status",
+    "roles": "Roles"
+  },
+  "toasts": {
+    "updateUserSuccess": "User profile updated successfully",
+    "updateUserFailed": "Failed to update user data"
+  },
+  "legends": {
+    "shippingAddress": "Shipping Address",
+    "preferences": "Preferences"
+  },
+  "tooltip": {
+    "additionalInfo": "Additional info"
+  }
+}

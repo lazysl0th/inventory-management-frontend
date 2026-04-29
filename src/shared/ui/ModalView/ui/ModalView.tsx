@@ -1,7 +1,7 @@
 import { Modal } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import './ModalView.scss'
-import { IModalView } from '../model/types'
+import type { IModalView } from '../model/types'
 import { AppModals, getModal } from '@/shared/model/ui'
 import { HelpButton } from '../../HelpButton'
 

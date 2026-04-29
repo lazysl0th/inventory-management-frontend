@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { userApi } from '../../../entities/user/api/userApi'
-import { IAuthState } from './types'
+import type { IAuthState } from './types'
 import { authApi } from '../api/authApi'
+import { profileApi } from '@/entities/user/api/profileApi'
 
 const initialState: IAuthState = {
     isAuthChecked: false,
@@ -45,7 +45,7 @@ const authSlice = createSlice({
             }
         )
         builder.addMatcher(
-            userApi.endpoints.getUserProfile.matchFulfilled,
+            profileApi.endpoints.getUserProfile.matchFulfilled,
             (state) => {
                 state.loginUserRequest = false
                 state.isAuthenticated = true
@@ -53,7 +53,7 @@ const authSlice = createSlice({
             }
         )
         builder.addMatcher(
-            userApi.endpoints.getUserProfile.matchRejected,
+            profileApi.endpoints.getUserProfile.matchRejected,
             (state, action) => {
                 state.loginUserRequest = false
                 state.loginUserError = action.payload ?? null

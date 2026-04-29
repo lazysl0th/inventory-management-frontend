@@ -1,8 +1,8 @@
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
-import { IAllowedUsersField } from '../model/types'
-import { AsyncSelect } from '@/shared/ui/Form'
-import { IUser, useLazyGetUsersQuery } from '@/entities/user'
-import { TAllowedUser } from '@/entities/inventory'
+import type { IAllowedUsersField } from '../model/types'
+import { type IUser, useLazyGetUsersQuery } from '@/entities/user'
+import type { TAllowedUser } from '@/entities/inventory'
+import { AsyncSelect } from '@/shared/ui/Form/ui/AsyncSelect'
 
 const AllowedUsersField = ({ name }: IAllowedUsersField) => {
     const [getUsers] = useLazyGetUsersQuery()

@@ -1,4 +1,4 @@
-import { OverlayTrigger, OverlayTriggerProps } from 'react-bootstrap'
+import { OverlayTrigger, type OverlayTriggerProps } from 'react-bootstrap'
 
 const OverlayTooltip = ({
     placement,

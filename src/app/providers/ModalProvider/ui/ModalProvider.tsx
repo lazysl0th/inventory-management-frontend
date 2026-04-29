@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppModals, closeModal, getModal } from '@/shared/model/ui'
 import { ModalView } from '@/shared/ui/ModalView'
 import { modalRegistry } from '../model/modalRegistry'
+import { useTranslation } from 'react-i18next'
 
 const modalRoot = document.getElementById('modal-root')
 
@@ -9,6 +10,7 @@ if (!modalRoot) throw new Error('Root modal container not found')
 
 const ModalProvider = () => {
     const dispatch = useDispatch()
+    const { t } = useTranslation('common')
 
     const activeModal = useSelector(getModal)
     const infoTooltip =
@@ -16,7 +18,7 @@ const ModalProvider = () => {
 
     if (!infoTooltip) return null
 
-    const { title, Body } = infoTooltip.infoTooltipContent
+    const { titleKey, Body } = infoTooltip.infoTooltipContent
 
     const handleClose = () => {
         dispatch(closeModal())
@@ -28,10 +30,10 @@ const ModalProvider = () => {
             onHide={handleClose}
             backdrop='static'
             keyboard={false}
-            title={title}
+            title={t(`common:modalTitles.${titleKey}`)}
             footerId='infoTooltip--footer'
         >
-            <Body />
+                <Body />
         </ModalView>
     )
 }

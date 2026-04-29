@@ -3,22 +3,21 @@ import { useMatch } from 'react-router-dom'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { showToast } from '@/shared/model/ui'
 import { useSendSupportRequestMutation } from '@/features/integration'
-import { ISupportRequestForm } from '../model/types'
+import type { ISupportRequestForm } from '../model/types'
 import { supportRequestShema } from '../model/validation'
-import { useCurrentUser } from '@/entities/user'
 import { useGetInventoryQuery } from '@/entities/inventory'
-import {
-    FloatingInput,
-    FloatingSelect,
-    FormProvider,
-    SubmitButton,
-} from '@/shared/ui/Form'
+import { useTranslation } from 'react-i18next'
+import { FormProvider } from '@/shared/ui/Form/ui/FormProvider'
+import { FloatingInput } from '@/shared/ui/Form/ui/FloatingInput'
+import { FloatingSelect } from '@/shared/ui/Form/ui/FloatingSelect'
+import { SubmitButton } from '@/shared/ui/Form/ui/SubmitButton'
+import { useCurrentUser } from '@/entities/user/lib/useCurrentUser'
 
 const SupportRequestForm = () => {
     const match = useMatch('/inventories/:inventoryId')
     const inventoryId = match?.params.inventoryId
     const dispatch = useDispatch()
-    //const { t: tv } = useTranslation('validation');
+    const { t } = useTranslation(['support', 'validation', 'common']);
     const { currentUser } = useCurrentUser()
 
     const [sendSupportRequest] = useSendSupportRequestMutation()
@@ -27,12 +26,12 @@ const SupportRequestForm = () => {
         try {
             await sendSupportRequest(values).unwrap()
             dispatch(
-                showToast({message: 'Your support request has been successfully sent'})
+                showToast({message: t('support:notifications.success')})
             )
         } catch (e) {
             dispatch(
                 showToast(
-                    {message: 'There were errors while submitting your support request.'}
+                    {message: t('support:notifications.error')}
                 )
             )
             console.log(e)
@@ -41,9 +40,6 @@ const SupportRequestForm = () => {
 
     const {
         data: inventory,
-        isLoading: inventoryIsLoading,
-        error: inventoryError,
-        isSuccess: inventoryIsSuccess,
     } = useGetInventoryQuery(
         inventoryId && inventoryId !== 'new' ? { inventoryId } : skipToken
     )
@@ -71,49 +67,48 @@ const SupportRequestForm = () => {
         >
             <FloatingInput
                 name='userName'
-                label='Name'
+                label={t('common:labels.name')}
                 type='text'
-                placeholder='Name'
+                placeholder={t('common:placeholders.name')}
             />
             <FloatingInput
                 name='userEmail'
-                label='Email'
+                label={t('common:labels.email')}
                 type='email'
                 placeholder='name@example.com'
             />
             <FloatingInput
                 name='inventory'
-                label='Title inventory'
+                label={t('support:labels.inventory')}
                 type='text'
-                placeholder='Title Inventory'
+                placeholder={t('support:placeholders.inventory')}
             />
             <FloatingInput
                 name='link'
-                label='Link'
+                label={t('support:labels.link')}
                 type='text'
-                placeholder='Link'
+                placeholder={t('support:placeholders.link')}
             />
 
-            <FloatingSelect name='priority' label='Priority'>
+            <FloatingSelect name='priority' label={t('support:labels.priority')}>
                 <option value='' disabled>
-                    {' '}
-                    {'Select priority...'}
+                    {t('support:options.priority')}
                 </option>
-                <option value='high'>High</option>
-                <option value='average'>Average</option>
-                <option value='low'>Low</option>
+                <option value='high'>{t('support:options.high')}</option>
+                <option value='average'>{t('support:options.average')}</option>
+                <option value='low'>{t('support:options.low')}</option>
             </FloatingSelect>
 
             <FloatingInput
                 name='request'
-                label='Request'
+                label={t('support:labels.request')}
                 as='textarea'
-                placeholder='Request'
+                placeholder={t('support:placeholders.request')}
             />
             <SubmitButton
                 form='supportRequest'
                 containerId='infoTooltip--footer'
-                label='Send request'
+                label={t('common:actions.send')}
             />
         </FormProvider>
     )

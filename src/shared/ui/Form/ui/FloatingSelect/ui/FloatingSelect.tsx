@@ -1,7 +1,7 @@
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
 import { FloatingLabel, Form, FormControl, FormSelect } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import { IFloatingSelectProps } from '../model/types'
+import type { IFloatingSelectProps } from '../model/types'
 
 const FloatingSelect = ({
     helpText,

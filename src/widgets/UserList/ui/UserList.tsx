@@ -1,40 +1,32 @@
-import { Alert, Spinner } from 'react-bootstrap'
 import { Section } from '@/shared/ui/Section'
 import { DataTable, Typename } from '@/shared/ui/DataTable'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/app/providers/StoreProvider/store'
+import type { RootState } from '@/app/providers/StoreProvider/store'
 import {
     getSelectedRows,
     toggleSelectedRow,
 } from '@/shared/model/table/model/tableSlice'
 import { RowSelectionState } from '@tanstack/react-table'
+import type { IUserList } from '../model/types'
+import { Loader } from '@/shared/ui/Loader'
+import { Message } from '@/shared/ui/Message'
+import type { IUser } from '@/entities/user'
+import useEntityNavigation from '@/shared/lib/hooks/useEntityNavigation'
+import { lazy, Suspense } from 'react'
+import { useUserColumns } from '@/entities/user/lib/useUserColumns'
 import { ActionButtons } from '@/shared/ui/ActionButtons'
-import useRecordHandlers from '@/shared/lib/hooks/useRecordHandlers'
-import { IUserList } from '../model/types'
-import {
-    useDeleteUsersMutation,
-    useGetUsersQuery,
-    useUpdateUsersMutation,
-} from '@/entities/user/api/userApi'
-import { useUserActions } from '@/entities/user/lib/useUserActions'
-import { IUser } from '@/entities/user/model/types'
-import { ActionMenu } from '@/shared/ui/ActionMenu'
-import { userColumns } from '@/entities/user/ui/columns'
-import { useAddRolesMutation, useDeleteRolesMutation } from '@/features/role'
+import { TableSkeleton } from '@/shared/ui/TableSkeleton'
 
-const UserList = ({ tableId, children }: IUserList) => {
+const ActionMenu = lazy(() => import('@/shared/ui/ActionMenu').then(module => ({ default: module.ActionMenu })))
+
+const UserList = ({ data,
+    isLoading,
+    error,
+    tableId, children,
+    userActions
+ }: IUserList) => {
+    
     const dispatch = useDispatch()
-
-    const {
-        data: users = [],
-        isLoading: usersIsLoading,
-        error: usersError,
-    } = useGetUsersQuery({})
-
-    const [deleteUsers] = useDeleteUsersMutation()
-    const [updateUsers] = useUpdateUsersMutation()
-    const [addRoles] = useAddRolesMutation()
-    const [deleteRoles] = useDeleteRolesMutation()
 
     const selectedRows = tableId
         ? useSelector((state: RootState) => getSelectedRows(state, tableId))
@@ -44,57 +36,44 @@ const UserList = ({ tableId, children }: IUserList) => {
         tableId && dispatch(toggleSelectedRow({ tableId, selectedRows }))
     }
 
-    const {
-        openRecord,
-        deleteRecords,
-        updateRecords,
-        grantRecords,
-        revokeRecords,
-        selectedRecords,
-    } = useRecordHandlers<IUser>(Typename.User, {
-        tableId: 'users',
-        onDelete: deleteUsers,
-        onUpdate: updateUsers,
-        onGrant: addRoles,
-        onRevoke: deleteRoles,
-    })
+    const { open } = useEntityNavigation<IUser>()
 
-    const userActions = useUserActions({
-        onBlock: () => updateRecords({ status: 'Blocked' }),
-        onUnblock: () => updateRecords({ status: 'Active' }),
-        onGrant: () => grantRecords([1]),
-        onRevoke: () => revokeRecords([1]),
-        onDelete: deleteRecords,
-        selectedCount: Object.keys(selectedRecords).length,
-    })
+    const openRecordHandler = (id: number) => open(Typename.User, id)
 
-    return usersIsLoading ? (
-        <Spinner animation='border' className='align-self-center' />
-    ) : usersError ? (
-        <Alert variant='danger' className='align-self-center'>
-            {' '}
-            {'inventoriesError'}
-        </Alert>
-    ) : (
-        <Section>
+    const userColumns = useUserColumns()
+
+    return (
+            <Section>
             {children}
+    {isLoading ? (
+        <TableSkeleton rows={6} columns={4}/>
+    ) : error ? (
+        <Message error={error} variant='danger' className='align-self-center'/>
+    ) : (
+
             <DataTable<IUser, string>
                 tableId={tableId}
-                data={users}
+                data={data}
                 columns={userColumns}
                 enableRowSelection={!!tableId}
                 rowSelection={selectedRows}
                 onRowSelectionChange={selectRowHandle}
-                onRowClick={openRecord}
+                onRowClick={openRecordHandler}
             >
-                <ActionButtons
-                    actions={userActions}
-                    className='d-none d-sm-flex'
-                />
-                <ActionMenu actions={userActions} className='d-sm-none' />
+                {userActions && (
+                    <Suspense fallback={<Loader />}>
+                    <ActionButtons
+                        actions={userActions}
+                        className='d-flex'
+                    />
+                    <ActionMenu actions={userActions} className='d-sm-none' />
+                    </Suspense>
+                )}
+                
             </DataTable>
-        </Section>
-    )
+        
+    )}
+    </Section>)
 }
 
 export default UserList

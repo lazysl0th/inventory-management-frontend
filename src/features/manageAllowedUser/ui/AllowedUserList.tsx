@@ -1,16 +1,14 @@
-import { TAllowedUser } from '@/entities/inventory/model/types'
-import DataTable from '@/shared/ui/DataTable/ui/DataTable'
 import { useDispatch, useSelector } from 'react-redux'
 import {
     getSelectedRows,
     resetSelectedRows,
     toggleSelectedRow,
 } from '@/shared/model/table/model/tableSlice'
-import { RootState } from '@/app/providers/StoreProvider/store'
-import { allowedUserColumns } from './columns'
-import { IAllowedUserList } from '../model/types'
+import type { RootState } from '@/app/providers/StoreProvider/store'
+import { useAllowedUserColumns } from '../lib/useAllowedUserColumns'
+import type { IAllowedUserList } from '../model/types'
 import { Section } from '@/shared/ui/Section'
-import { RowSelectionState } from '@tanstack/react-table'
+import type { RowSelectionState } from '@tanstack/react-table'
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
 import useSortableHandlers from '@/shared/lib/hooks/useSortableHandlers'
 import { useAllowedUserActions } from '../lib/useAllowedUserAction'
@@ -18,6 +16,9 @@ import { ActionButtons } from '@/shared/ui/ActionButtons'
 import { useParams } from 'react-router-dom'
 import { useGetInventoryQuery } from '@/entities/inventory/api/inventoryApi'
 import { skipToken } from '@reduxjs/toolkit/query'
+import { useTranslation } from 'react-i18next'
+import type { TAllowedUser } from '@/entities/inventory'
+import { DataTable } from '@/shared/ui/DataTable'
 import { useInventoryAccess } from '@/entities/inventory/lib/useInventoryAccess'
 
 const initialAllowedUser: TAllowedUser = {
@@ -27,6 +28,7 @@ const initialAllowedUser: TAllowedUser = {
 }
 
 const AllowedUserList = ({ tableId }: IAllowedUserList) => {
+    const {t} = useTranslation('inventory')
     const dispatch = useDispatch()
 
     const { inventoryId } = useParams()
@@ -73,12 +75,15 @@ const AllowedUserList = ({ tableId }: IAllowedUserList) => {
         onAdd: addAllowedUserHandler,
         onDelete: deleteAllowedUsersHandler,
         onAddState: !isAdmin && !isOwner,
-        onDeleteState:
-            !Object.keys(selectedRows).length || (!isAdmin && !isOwner),
+        onDeleteState: (!isAdmin && !isOwner),
+        selectedCount: Object.keys(selectedRows).length
     })
+
+    const allowedUserColumns = useAllowedUserColumns()
 
     return (
         <Section>
+            <h3>{t('inventory:listTitle.allowedUsers')}</h3>
             <DataTable<TAllowedUser, string>
                 tableId={tableId}
                 data={allowedUsersField.value}

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
-import { useGetTagsQuery } from '@/features/tag/api/tagApi'
-import { ITagsFieldProps, TCreatableTag } from '../model/types'
-import { CreatableSelect } from '@/shared/ui/Form'
+import type { ITagsFieldProps, TCreatableTag } from '../model/types'
+import { useGetTagsQuery } from '@/entities/tag'
+import { CreatableSelect } from '@/shared/ui/Form/ui/CreatableSelect'
 
 const TagsField = ({ disabled }: ITagsFieldProps) => {
     const { t } = useTranslation('inventory')
@@ -14,7 +14,7 @@ const TagsField = ({ disabled }: ITagsFieldProps) => {
 
     const formatCreateLabel = (inputValue: string) => (
         <span>
-            Create new tag: <b>{inputValue}</b>
+            {t('inventory:actions.createTag')} <b>{inputValue}</b>
         </span>
     )
 
@@ -33,9 +33,9 @@ const TagsField = ({ disabled }: ITagsFieldProps) => {
     return (
         <CreatableSelect<TCreatableTag, true>
             name='tags'
-            label={t('labels.tags')}
+            label={t('inventory:labels.tags')}
             isMulti
-            placeholder='Enter text...'
+            placeholder={t('inventory:placeholders.text')}
             getOptionLabel={getOptionLabel}
             getOptionValue={getOptionValue}
             formatCreateLabel={formatCreateLabel}

@@ -1,5 +1,5 @@
 import { baseApi } from '@/shared/api'
-import {
+import type {
     IDeleteBody,
     IInventoryIdParam,
     IItem,
@@ -19,7 +19,7 @@ export const itemApi = baseApi.injectEndpoints({
             providesTags: (result) =>
                 result
                     ? [
-                          ...result.map(({ id }) => ({ type: 'Item', id })),
+                          ...result.map(({ id }) => ({ type: 'Item' as const, id })),
                           'Item',
                       ]
                     : ['Item'],

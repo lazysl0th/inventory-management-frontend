@@ -1,23 +1,23 @@
-import { Container } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { MAIN } from '@/shared/config/constants'
 
 const PrivacyPage = () => {
-    const { t } = useTranslation('common')
+    const { t } = useTranslation(['privacy', 'common'])
 
     return (
-        <Container>
-            <h1>{t('privacy.header')}</h1>
+        <>
+            <h1>{t('privacy:pageTitle')}</h1>
             <p>
-                {t('privacy.paragraphPrefix')}
+                <span className='ms-1'>{t('privacy:description')}</span>
                 <a href='mailto:u69740384@gmail.com'>
                     support@inventory-management.com
                 </a>
                 .
             </p>
-            <p>{t('privacy.paragraphSuffix')}</p>
-            <Link to='/'>{t('links.back')}</Link>
-        </Container>
+            <p>{t('privacy:timeframe')}</p>
+            <Link to={MAIN}>{t('common:actions.back')}</Link>
+        </>
     )
 }
 

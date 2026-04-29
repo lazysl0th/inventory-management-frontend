@@ -2,7 +2,7 @@ import { FloatingLabel, Form, FormControl } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useRef } from 'react'
 import './FloatingInput.scss'
-import { IFloatingInputProps } from '../model/types'
+import type { IFloatingInputProps } from '../model/types'
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
 
 const FloatingInput = ({

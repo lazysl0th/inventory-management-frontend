@@ -1,5 +1,5 @@
-import { IField } from '@/entities/inventory/model/types'
-import { IUser } from '@/entities/user/model/types'
+import type { IField } from '@/entities/inventory' 
+import type { IUser } from '@/entities/user'
 
 export interface IItemListItem {
     id: number
@@ -74,4 +74,5 @@ export interface UseItemActionsProps {
     onDelete: () => void
     onAddState: boolean
     onDeleteState: boolean
+    selectedCount: number
 }

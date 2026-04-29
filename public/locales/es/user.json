@@ -1,0 +1,50 @@
+{
+  "actions": {
+    "addAdditionalInfo": "Agregar información adicional",
+    "editPersonalData": "Editar datos personales"
+  },
+  "listTitle": {
+    "all": "Usuarios"
+  },
+  "deleteData": {
+    "description": "Para eliminar sus datos, envíe una solicitud a",
+    "timeframe": "Eliminaremos todos los datos relacionados con usted dentro de las 24 horas."
+  },
+  "pageTitle": {
+    "deleteData": "Eliminar datos de usuario",
+    "profile": "Perfil"
+  },
+  "listField": {
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "status": "Estado",
+    "roles": "Roles"
+  },
+  "toasts": {
+    "updateUserSuccess": "Datos actualizados correctamente",
+    "updateUserFailed": "Los datos no se han actualizado."
+  },
+  "labels": {
+    "language": "Idioma",
+    "phone": "Teléfono",
+    "theme": "Tema"
+  },
+  "legends": {
+    "shippingAddress": "Dirección de envío",
+    "preferences": "Preferencias"
+  },
+  "options": {
+    "english": "Inglés",
+    "spanish": "Español",
+    "ukrainian": "Ucraniano",
+    "dark": "Oscuro",
+    "light": "Claro",
+    "theme": "Tema"
+  },
+  "tooltip": {
+    "additionalInfo": "Información adicional"
+  },
+  "placeholders": {
+    "phone": "Introduce el número de teléfono"
+  }
+}

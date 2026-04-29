@@ -1,7 +1,8 @@
+import { Header } from '@/widgets/Header'
 import { Outlet } from 'react-router-dom'
-import Header from '../../widgets/Header/ui/Header'
 
-const RootLayout: React.FC = () => (
+
+const RootLayout = () => (
     <>
         <Header />
         <Outlet />

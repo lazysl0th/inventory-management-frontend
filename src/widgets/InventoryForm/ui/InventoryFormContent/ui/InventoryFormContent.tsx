@@ -2,22 +2,22 @@ import { Tab } from 'react-bootstrap'
 import { useEffect } from 'react'
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
 import useAutoSave from '@/shared/lib/hooks/useAutoSave'
-import { SETTINGS } from '@/shared/config/constants'
 import useSortableHandlers from '@/shared/lib/hooks/useSortableHandlers'
 import { DragDropContext } from '@/shared/ui/DragDrop'
 import DragDropMonitor from '@/features/dragDrop/lib/DragDropMonitor'
-import { IField, IInventoryForm, IPartId } from '@/entities/inventory'
+import type { IField, IInventoryForm, IPartId } from '@/entities/inventory'
 import {
     IDragDropHandlers,
     InventoryTabs,
 } from '@/widgets/InventoryForm/model/types'
 import { inventoryFormTabs } from '@/widgets/InventoryForm/model/inventoryFromContentConfig'
+import { AUTO_SAVE } from '@/shared/config/constants'
 
 const InventoryFormContent = () => {
     const { form } = useFormikApi<IInventoryForm>()
 
     const { scheduleSave, cancelSave } = useAutoSave<IInventoryForm>({
-        delay: SETTINGS.delay.autoSave,
+        delay: AUTO_SAVE,
         saveFn: form.submitForm,
     })
 

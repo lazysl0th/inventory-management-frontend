@@ -1,17 +1,20 @@
 import { useNavigate } from 'react-router-dom'
 import { FaSearch } from 'react-icons/fa'
-import { SETTINGS } from '@/shared/config/constants'
 import { Button } from '@/shared/ui/Button'
-import { ISearchForm } from '../model/types'
-import { FormProvider, Input } from '@/shared/ui/Form'
+import type { ISearchForm } from '../model/types'
+import { useTranslation } from 'react-i18next'
+import { FormProvider } from '@/shared/ui/Form/ui/FormProvider'
+import { Input } from '@/shared/ui/Form/ui/Input'
+import { SEARCH } from '@/shared/config/constants'
 
-const SearchForm: React.FC = () => {
-    const navigate = useNavigate()
+const SearchForm = () => {
+    const navigate = useNavigate();
+    const {t} = useTranslation('common')
 
     const submitHandler = (values: ISearchForm) => {
         if (values.searchQuery)
             navigate(
-                `${SETTINGS.routes.search}?q=${encodeURIComponent(values.searchQuery)}`
+                `${SEARCH}?q=${encodeURIComponent(values.searchQuery)}`
             )
     }
 
@@ -24,7 +27,7 @@ const SearchForm: React.FC = () => {
 
     return (
         <FormProvider<ISearchForm> config={formikConfig}>
-            <Input name='searchQuery' type='search'>
+            <Input name='searchQuery' type='search' placeholder={t('common:placeholders.search')}>
                 <Button variant='dark' type='submit'>
                     <FaSearch />
                 </Button>

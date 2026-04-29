@@ -1,7 +1,7 @@
 import { Form, InputGroup } from 'react-bootstrap'
 import { useId } from 'react'
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
-import { ICheckProps } from '../model/types'
+import type { ICheckProps } from '../model/types'
 
 const Checkbox = ({
     inputPrefix,

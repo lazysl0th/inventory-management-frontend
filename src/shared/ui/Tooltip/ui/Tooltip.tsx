@@ -1,5 +1,5 @@
 import { Tooltip as RBTooltip } from 'react-bootstrap'
-import { ITooltipProps } from '../model/types'
+import type { ITooltipProps } from '../model/types'
 
 const Tooltip = ({ tooltip, ...rest }: ITooltipProps) => {
     return (

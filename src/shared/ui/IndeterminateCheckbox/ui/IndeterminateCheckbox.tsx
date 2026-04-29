@@ -1,7 +1,7 @@
 import { forwardRef, useRef, useEffect } from 'react'
 import { Form } from 'react-bootstrap'
 import './IndeterminateCheckbox.scss'
-import { IIndeterminateCheckboxProps } from '../model/types'
+import type { IIndeterminateCheckboxProps } from '../model/types'
 
 const IndeterminateCheckbox = forwardRef<
     HTMLInputElement,

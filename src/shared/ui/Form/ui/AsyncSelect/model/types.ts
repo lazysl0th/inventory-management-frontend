@@ -1,5 +1,5 @@
-import { GroupBase } from 'react-select'
-import { AsyncProps } from 'react-select/async'
+import type { GroupBase } from 'react-select'
+import type { AsyncProps } from 'react-select/async'
 
 export interface IAsyncSelect<
     Option,

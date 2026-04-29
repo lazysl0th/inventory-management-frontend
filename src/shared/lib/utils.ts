@@ -1,4 +1,6 @@
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+import type { SerializedError } from '@reduxjs/toolkit';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+import { IErrorResponse, IValidationError } from '../types';
 
 export function isObject(obj: unknown): obj is object {
     return typeof obj === 'object' && obj != null
@@ -7,46 +9,28 @@ export function isObject(obj: unknown): obj is object {
 export function isFetchBaseQueryError(
     error: unknown
 ): error is FetchBaseQueryError {
-    return isObject(error) && 'status' in error
+    return isObject(error) && 'status' in error && 'data' in error
 }
 
-/*
-
-
-export const generateNBitRandomNumber = (bit) => {
-    const bytes = Math.ceil(bit / 8)
-    const buffer = new Uint8Array(bytes)
-    window.crypto.getRandomValues(buffer)
-    let numBigInt = 0n
-    for (let i = 0; i < bytes; i++) {
-        numBigInt = (numBigInt << 8n) | BigInt(buffer[i])
-    }
-    const mask = (1n << BigInt(bit)) - 1n
-    return numBigInt & mask
+export function isBackendError(
+    data: unknown
+): data is IErrorResponse {
+    return (
+        isObject(data) && 'statusCode' in data && 'message' in data
+    );
 }
 
-const upsertById = (serverData = [], localData = [], key = 'id') => {
-    const map = new Map(serverData.map((prop) => [prop[key], prop]))
-    for (const data of localData)
-        map.set(data[key], { ...(map.get(data[key]) || {}), ...data })
-    return Array.from(map.values())
+export function isValidationError(
+    data: unknown
+): data is IValidationError {
+    return (
+        isBackendError(data) && 'validation' in data
+    );
 }
 
-export const mergeInventory = (server, local) => ({
-    ...server,
-    ...local,
-    tags: upsertById(server.tags, local.tags, 'id'),
-    fields: upsertById(server.fields, local.fields, 'id'),
-    allowedUsers: upsertById(server.allowedUsers, local.allowedUsers, 'id'),
-})
+export function isSerializedError(
+    error: unknown
+): error is SerializedError {
+    return isObject(error) && 'message' in error && !('status' in error);
+}
 
-export const mergeItem = (server, local) => ({
-    ...server,
-    ...local,
-    values: upsertById(
-        server.values?.map((v) => ({ ...v, id: v.id, value: v.value })) ?? [],
-        local.values?.map((v) => ({ ...v, id: v.id, value: v.value })) ?? [],
-        'id'
-    ),
-})
-*/

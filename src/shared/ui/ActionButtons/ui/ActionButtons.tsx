@@ -1,5 +1,5 @@
 import { ButtonGroup } from 'react-bootstrap'
-import { IActionButtonsProps } from '../model/types'
+import type { IActionButtonsProps } from '../model/types'
 import { Button } from '../../Button'
 
 const ActionButtons = ({ actions, ...rest }: IActionButtonsProps) => {

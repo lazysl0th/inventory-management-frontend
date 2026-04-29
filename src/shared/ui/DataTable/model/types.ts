@@ -1,5 +1,5 @@
-import { TTableIds } from '@/shared/model/table/model/tableSlice'
-import {
+import type { TTableIds } from '@/shared/model/table'
+import type {
     ColumnDef,
     Row,
     RowData,
@@ -7,7 +7,7 @@ import {
     Table,
     TableMeta,
 } from '@tanstack/react-table'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 export enum Typename {
     Inventory = 'Inventory',

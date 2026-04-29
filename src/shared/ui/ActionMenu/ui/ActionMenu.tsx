@@ -1,6 +1,6 @@
 import { Dropdown } from 'react-bootstrap'
 import './ActionMenu.scss'
-import { IActionMenuProps } from '../model/types'
+import type { IActionMenuProps } from '../model/types'
 import { Button } from '../../Button'
 
 const ActionMenu = ({

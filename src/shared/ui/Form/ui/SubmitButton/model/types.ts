@@ -1,4 +1,4 @@
-import { IButtonProps } from '@/shared/ui/Button'
+import type { IButtonProps } from '@/shared/ui/Button'
 
 export interface ISubmitButtonProps extends IButtonProps {
     containerId?: string

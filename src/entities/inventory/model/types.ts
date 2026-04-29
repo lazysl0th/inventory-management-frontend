@@ -1,5 +1,5 @@
-import { IUser } from '@/entities/user/model/types'
-import { ITag } from '@/features/tag/api/tagApi'
+import type { ITag } from '@/entities/tag'
+import type { IUser } from '@/entities/user'
 
 export enum Category {
     Equipment = 'Equipment',

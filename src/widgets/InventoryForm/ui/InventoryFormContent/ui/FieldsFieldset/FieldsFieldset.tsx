@@ -6,7 +6,7 @@ import useSortableHandlers from '@/shared/lib/hooks/useSortableHandlers'
 import { DroppableFieldset } from '@/shared/ui/DragDrop'
 import { Button } from '@/shared/ui/Button'
 import { Tooltip } from '@/shared/ui/Tooltip'
-import { IField } from '@/entities/inventory'
+import type { IField } from '@/entities/inventory'
 
 const initialField: IField = {
     id: '',
@@ -48,7 +48,7 @@ const FieldsFieldset = () => {
                 <Button
                     name='addField'
                     placement='top'
-                    overlay={<Tooltip tooltip='Add field' />}
+                    overlay={<Tooltip tooltip={t('common:actions.addRecord', { recordType: 'field' })} />}
                     variant='outline-success'
                     onClick={addFieldhandle}
                 >

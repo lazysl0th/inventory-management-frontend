@@ -1,7 +1,7 @@
 import { Form, FormControl, InputGroup } from 'react-bootstrap'
-import { forwardRef, ForwardRefRenderFunction, useId } from 'react'
+import { forwardRef, type ForwardRefRenderFunction, useId } from 'react'
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
-import { IInputProps, InputElement } from '../model/types'
+import type { IInputProps, InputElement } from '../model/types'
 import { ImagePreview } from '@/shared/ui/ImagePreview'
 
 const Input: ForwardRefRenderFunction<InputElement, IInputProps> = (
@@ -26,7 +26,7 @@ const Input: ForwardRefRenderFunction<InputElement, IInputProps> = (
     return (
         <Form.Group controlId={`${name}_${fieldId}`}>
             {label && <Form.Label>{label}</Form.Label>}
-            {type === 'file' && <ImagePreview imageUrl={field.value} />}
+            {type === 'file' && <ImagePreview imageUrl={field.value} alt={rest.alt} placeholder={rest.placeholder}/>}
             <InputGroup hasValidation>
                 {inputPrefix && (
                     <InputGroup.Text id={`${name}-prepend`}>

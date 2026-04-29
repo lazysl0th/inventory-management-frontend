@@ -12,27 +12,33 @@ import { itemSchema } from '../model/validation'
 import useRecordHandlers from '@/shared/lib/hooks/useRecordHandlers'
 import {
     InventoryFieldType,
-    useInventoryAccess,
-    useInventoryData,
 } from '@/entities/inventory'
 import {
-    IItemForm,
+    type IItemForm,
+    type IUpdateItemData,
     resetActiveItem,
     setActiveItem,
+    type TCreateItemData,
     useCreateItemMutation,
     useGetItemQuery,
     useUpdateItemMutation,
 } from '@/entities/item'
-import { useCurrentUser } from '@/entities/user'
 import { LikeButton } from '@/features/likeItem'
-import { Checkbox, FormProvider, Input, SubmitButton } from '@/shared/ui/Form'
+import { showToast } from '@/shared/model/ui'
+import { useCurrentUser } from '@/entities/user/lib/useCurrentUser'
+import { useInventoryData } from '@/entities/inventory/lib/useInventoryData'
+import { useInventoryAccess } from '@/entities/inventory/lib/useInventoryAccess'
+import { FormProvider } from '@/shared/ui/Form/ui/FormProvider'
+import { Input } from '@/shared/ui/Form/ui/Input'
+import { Checkbox } from '@/shared/ui/Form/ui/Checkbox'
+import { SubmitButton } from '@/shared/ui/Form/ui/SubmitButton'
 
 const initialValuesTemplate = {
     customId: '',
 }
 
 const Item = () => {
-    const { t } = useTranslation('item')
+    const { t } = useTranslation(['item', 'common'])
     const { itemId } = useParams()
     const location = useLocation()
     const modalView = location.state?.modal
@@ -41,17 +47,11 @@ const Item = () => {
 
     const {
         data: inventory,
-        isLoading: inventoryIsLoading,
-        error: inventoryError,
-        isSuccess: inventoryIsSuccess,
         inventoryId,
     } = useInventoryData()
 
     const {
         data: item,
-        isLoading: itemIsLoading,
-        error: itemError,
-        isSuccess: itemIsSuccess,
     } = useGetItemQuery(
         inventoryId && itemId && itemId !== 'new'
             ? { inventoryId, itemId }
@@ -105,26 +105,48 @@ const Item = () => {
     const [createItem] = useCreateItemMutation()
     const [updateItem] = useUpdateItemMutation()
 
-    const submitHandler = async (formValues: IItemForm) => {
-        if (!inventoryId) return
-        const { createdAt, updatedAt, values, owner, ...itemData } = formValues
-        const payload = {
+    const create = async(payload: TCreateItemData) => {
+        try {
+            const item = await createItem(payload).unwrap()
+            dispatch(setActiveItem({ id: item.id }))
+            dispatch(showToast({message: t('common:notifications.successAction', { count: 1, actionType: 'created', recordType: 'item' })}))
+            openRecord(item.id, true)
+        } catch (e) {
+            dispatch(showToast({message: t('common:notifications.errorAction', { count: 1, actionType: 'creating', recordType: 'item' })}))
+            console.log(e)
+        }
+    }
+
+    const update = async(payload: IUpdateItemData) => {
+        try {
+            await updateItem(payload).unwrap()
+            dispatch(showToast({message: t('common:notifications.successAction', { count: 1, actionType: 'updated', recordType: 'item' })}))
+        } catch(e) {
+            dispatch(showToast({message: t('common:notifications.errorAction', { count: 1, actionType: 'updating', recordType: 'item' })}))
+            console.log(e)
+        }
+    }
+
+    const preparePayload = (formValues: IItemForm, inventoryId: string | number) => {
+        const { createdAt, updatedAt, values, owner, ...itemData } = formValues;
+        
+        return {
             ...itemData,
             inventoryId: Number(inventoryId),
             values: values.map(({ field, ...value }) => ({
                 ...value,
                 fieldId: field.id,
             })),
-        }
-        if (!itemData.id) {
-            const item = await createItem(payload).unwrap()
-            dispatch(setActiveItem({ id: item.id }))
-            openRecord(item.id, true)
+        };
+    };
+
+    const submitHandler = async (formValues: IItemForm) => {
+        if (!inventoryId) return
+        const payload = preparePayload(formValues, inventoryId);
+        if (!payload.id) {
+            await create(payload)
         } else {
-            await updateItem({
-                ...payload,
-                id: Number(itemId),
-            }).unwrap()
+            await update({id: payload.id, ...payload})
         }
     }
 
@@ -141,7 +163,7 @@ const Item = () => {
             : initialItem,
         onSubmit: submitHandler,
         enableReinitialize: true,
-        validationSchema: itemSchema(new RegExp(`^${customIdRegexPattern}$`)),
+        validationSchema: itemSchema(new RegExp(`^${customIdRegexPattern}$`), !itemId),
     }
 
     return (
@@ -151,7 +173,7 @@ const Item = () => {
                     className={`g-3 justify-content-end overflow-auto ${modalView ? 'item-modal' : 'item'}`}
                 >
                     <Col xs={12}>
-                        <Input name='customId' label={t('labels.customId')} />
+                        <Input name='customId' label={t('item:labels.customId')} />
                     </Col>
                     {itemValues
                         .toSorted((a, b) => a.field.order - b.field.order)
@@ -194,7 +216,7 @@ const Item = () => {
                     <Col xs={12} md={4}>
                         <Input
                             name='owner'
-                            label={t('labels.owner')}
+                            label={t('common:labels.owner')}
                             disabled
                             readOnly
                         />
@@ -202,7 +224,7 @@ const Item = () => {
                     <Col xs={12} md={3}>
                         <Input
                             name='createdAt'
-                            label={t('labels.createdBy')}
+                            label={t('common:labels.createdBy')}
                             disabled
                             readOnly
                         />
@@ -210,7 +232,7 @@ const Item = () => {
                     <Col xs={12} md={3}>
                         <Input
                             name='updatedAt'
-                            label={t('labels.updateAt')}
+                            label={t('common:labels.updateAt')}
                             disabled
                             readOnly
                         />
@@ -228,8 +250,8 @@ const Item = () => {
                             containerId={modalView ? 'item-modal--footer' : ''}
                             label={
                                 item?.id
-                                    ? t('buttons.update')
-                                    : t('buttons.create')
+                                    ? t('common:actions.update')
+                                    : t('common:actions.create')
                             }
                             form='item'
                         />

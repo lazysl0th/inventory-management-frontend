@@ -1,4 +1,14 @@
 export { default as userSliceReducer } from './model/userSlice'
 export type { IUser } from './model/types'
-export * from './api/userApi'
-export { useCurrentUser } from './lib/useCurrentUser'
+export {
+    useGetUsersQuery,
+    useLazyGetUsersQuery,
+    useDeleteUsersMutation,
+    useUpdateUsersMutation,
+} from './api/adminApi'
+export {
+    useGetUserProfileQuery,
+    useLazyGetUserProfileQuery,
+    useGetUserQuery,
+    useUpdateUserMutation,
+} from './api/profileApi'

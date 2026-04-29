@@ -1,4 +1,4 @@
-import { IAction } from '../../ActionButtons'
+import type { IAction } from '../../ActionButtons'
 
 export interface IActionMenuProps {
     actions: IAction[]

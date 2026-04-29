@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useLazyGetUserProfileQuery } from '@/entities/user'
-import { SETTINGS } from '@/shared/config/constants'
+import { LOGIN, PROFILE } from '@/shared/config/constants'
 
 const OAuthSuccessPage = () => {
     const dispatch = useDispatch()
@@ -14,15 +14,15 @@ const OAuthSuccessPage = () => {
         const authenticate = async () => {
             const token = searchParams.get('authToken')
             if (!token) {
-                navigate(SETTINGS.routes.login, { replace: true })
+                navigate(LOGIN, { replace: true })
                 return
             }
             try {
                 await getUserProfile().unwrap()
-                navigate(SETTINGS.routes.profile, { replace: true })
+                navigate(PROFILE, { replace: true })
             } catch (e) {
                 console.log(e)
-                navigate(SETTINGS.routes.login, { replace: true })
+                navigate(LOGIN, { replace: true })
             }
         }
         authenticate()

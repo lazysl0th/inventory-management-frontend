@@ -1,4 +1,4 @@
-import { FormikConfig } from 'formik'
+import type { FormikConfig } from 'formik'
 
 export interface IProfileForm {
     name: string

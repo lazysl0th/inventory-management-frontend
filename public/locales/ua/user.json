@@ -1,0 +1,50 @@
+{
+  "actions": {
+    "addAdditionalInfo": "Додати додаткову інформацію",
+    "editPersonalData": "Редагувати особисті дані"
+  },
+  "listTitle": {
+    "all": "Користувачі"
+  },
+  "deleteData": {
+    "description": "Щоб видалити свої дані, надішліть запит на адресу",
+    "timeframe": "Ми видалимо всі дані, що стосуються вас, протягом 24 годин."
+  },
+  "pageTitle": {
+    "deleteData": "Видалення даних користувача",
+    "profile": "Профіль"
+  },
+  "listField": {
+    "name": "Ім'я",
+    "email": "Електронна пошта",
+    "status": "Статус",
+    "roles": "Ролі"
+  },
+  "toasts": {
+    "updateUserSuccess": "Дані успішно оновлено",
+    "updateUserFailed": "Дані не оновлено."
+  },
+  "labels": {
+    "language": "Мова",
+    "phone": "Телефон",
+    "theme": "Theme"
+  },
+  "legends": {
+    "shippingAddress": "Адреса доставки",
+    "preferences": "Налаштування"
+  },
+  "options": {
+    "english": "Англійська",
+    "spanish": "Іспанська",
+    "ukrainian": "Українська",
+    "dark": "Темний",
+    "light": "Світлий",
+    "theme": "Тема"
+  },
+  "tooltip": {
+    "additionalInfo": "Додаткова інформація"
+  },
+  "placeholders": {
+    "phone": "Введіть номер телефону"
+  }
+}

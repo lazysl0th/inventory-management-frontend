@@ -1,5 +1,5 @@
 import { Popover as RBPopover } from 'react-bootstrap'
-import { IPopoverProps } from '../types/types'
+import type { IPopoverProps } from '../types/types'
 
 const Popover = ({ children, ...rest }: IPopoverProps) => {
     return (

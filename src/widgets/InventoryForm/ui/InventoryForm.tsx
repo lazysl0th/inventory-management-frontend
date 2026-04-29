@@ -2,25 +2,27 @@ import { useDispatch } from 'react-redux'
 import InventoryFormContent from './InventoryFormContent/ui/InventoryFormContent'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Alert, Spinner } from 'react-bootstrap'
 import { Typename } from '@/shared/ui/DataTable'
 import { inventorySchema } from '../model/validation'
 import useRecordHandlers from '@/shared/lib/hooks/useRecordHandlers'
 import { isFetchBaseQueryError } from '@/shared/lib/utils'
-import { AppModals, openModal } from '@/shared/model/ui'
+import { AppModals, openModal, showToast } from '@/shared/model/ui'
 import {
     Category,
-    IInventoryForm,
-    IUpdateInventoryData,
+    type IInventoryForm,
+    type IUpdateInventoryData,
     setActiveInventory,
-    TCreateInventoryData,
+    type TCreateInventoryData,
     useCreateInventoryMutation,
-    useInventoryAccess,
-    useInventoryData,
     useUpdateInventoryMutation,
 } from '@/entities/inventory'
-import { FormProvider, SubmitButton } from '@/shared/ui/Form'
-import { useCurrentUser } from '@/entities/user'
+import { Loader } from '@/shared/ui/Loader'
+import { Message } from '@/shared/ui/Message'
+import { FormProvider } from '@/shared/ui/Form/ui/FormProvider'
+import { SubmitButton } from '@/shared/ui/Form/ui/SubmitButton'
+import { useCurrentUser } from '@/entities/user/lib/useCurrentUser'
+import { useInventoryData } from '@/entities/inventory/lib/useInventoryData'
+import { useInventoryAccess } from '@/entities/inventory/lib/useInventoryAccess'
 
 const initialValuesTemplate: Omit<
     IInventoryForm,
@@ -45,14 +47,13 @@ const initialValuesTemplate: Omit<
 const InventoryForm: React.FC = () => {
     const { currentUser } = useCurrentUser()
     const location = useLocation()
-    const { t } = useTranslation('inventory')
+    const { t } = useTranslation(['inventory', 'common'])
     const dispatch = useDispatch()
 
     const {
         data: inventory,
         isLoading: inventoryIsLoading,
         error: inventoryError,
-        isSuccess: inventoryIsSuccess,
         inventoryId,
     } = useInventoryData()
 
@@ -78,6 +79,7 @@ const InventoryForm: React.FC = () => {
         }
         try {
             await updateInventory(updateInventoryData).unwrap()
+            dispatch(showToast({message: t('common:notifications.successAction', { count: 1, actionType: 'updated', recordType: 'inventory' })}))
         } catch (e) {
             if (isFetchBaseQueryError(e) && e.status === 409) {
                 dispatch(
@@ -86,6 +88,8 @@ const InventoryForm: React.FC = () => {
                         payload: updateInventoryData,
                     })
                 )
+            } else {
+                dispatch(showToast({message: t('common:notifications.errorAction', { count: 1, actionType: 'updating', recordType: 'inventory' })}))
             }
             console.log(e)
         }
@@ -94,9 +98,11 @@ const InventoryForm: React.FC = () => {
     const create = async (inventoryData: TCreateInventoryData) => {
         try {
             const inventory = await createInventory(inventoryData).unwrap()
+            dispatch(showToast({message: t('common:notifications.successAction', { count: 1, actionType: 'created', recordType: 'inventory' })}))
             dispatch(setActiveInventory({ id: inventory.id }))
             openRecord(inventory.id, true)
         } catch (e) {
+            dispatch(showToast({message: t('common:notifications.errorAction', { count: 1, actionType: 'creating', recordType: 'inventory' })}))
             console.log(e)
         }
     }
@@ -131,35 +137,29 @@ const InventoryForm: React.FC = () => {
 
     return (
         <FormProvider<IInventoryForm> config={formikConfig} id='inventory'>
-            {inventoryIsLoading ? (
-                <div className='d-flex justify-content-center align-items-center'>
-                    <Spinner animation='border' className='align-self-center' />
-                </div>
-            ) : inventoryError ? (
-                <div className='d-flex justify-content-center align-items-center'>
-                    <Alert variant='danger'>{'error.message'}</Alert>
-                </div>
-            ) : (
-                <>
-                    <fieldset disabled={!!inventoryId && !isAdmin && !isOwner}>
-                        <InventoryFormContent />
-                    </fieldset>
-                    <SubmitButton
-                        disabled={!isAdmin && !isOwner}
-                        containerId={
-                            modalView
-                                ? 'inventory-modal--footer'
-                                : 'inventory--submit-button'
-                        }
-                        label={
-                            inventory?.id
-                                ? t('buttons.update')
-                                : t('buttons.create')
-                        }
-                        form='inventory'
-                    />
-                </>
-            )}
+            {inventoryIsLoading 
+                ? <Loader/>
+                : inventoryError
+                    ? <Message variant='danger' error={inventoryError}/>
+                    : (<>
+                            <fieldset disabled={!!inventoryId && !isAdmin && !isOwner}>
+                                <InventoryFormContent />
+                            </fieldset>
+                            <SubmitButton
+                                disabled={!isAdmin && !isOwner}
+                                containerId={
+                                    modalView
+                                        ? 'inventory-modal--footer'
+                                        : 'inventory--submit-button'
+                                }
+                                label={
+                                    inventory?.id
+                                        ? t('common:actions.update')
+                                        : t('common:actions.create')
+                                }
+                                form='inventory'
+                            />
+                        </>)}
         </FormProvider>
     )
 }

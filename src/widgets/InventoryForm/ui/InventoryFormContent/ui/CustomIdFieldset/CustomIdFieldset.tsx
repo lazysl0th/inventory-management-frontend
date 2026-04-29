@@ -2,13 +2,14 @@ import { Badge } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { VscAdd } from 'react-icons/vsc'
-import PartIdFieldset from './PartIdFieldset'
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
 import useSortableHandlers from '@/shared/lib/hooks/useSortableHandlers'
 import { DroppableFieldset } from '@/shared/ui/DragDrop'
 import { Button } from '@/shared/ui/Button'
 import { Tooltip } from '@/shared/ui/Tooltip'
-import { IPartId } from '@/entities/inventory'
+import type { IPartId } from '@/entities/inventory'
+import PartIdFieldset from './PartIdFieldset'
+
 
 const initialPartId: IPartId = {
     guid: '',
@@ -22,7 +23,7 @@ const initialPartId: IPartId = {
 }
 
 const CustomIdFieldset = () => {
-    const { t } = useTranslation('inventory')
+    const { t } = useTranslation('common')
 
     const { field: partsId } = useFormikApi<IPartId[]>('customIdFormat.parts')
     const { field: summary } = useFormikApi<string>('customIdFormat.summary')
@@ -59,7 +60,7 @@ const CustomIdFieldset = () => {
                 <Button
                     name='addPartId'
                     placement='top'
-                    overlay={<Tooltip tooltip='Add part ID' />}
+                    overlay={<Tooltip tooltip={t('common:actions.addRecord', { recordType: 'partId' })} />}
                     variant='outline-success'
                     onClick={addPartIdHandle}
                 >
@@ -67,7 +68,7 @@ const CustomIdFieldset = () => {
                 </Button>
                 {true && (
                     <Badge bg='dark' className='p-2'>
-                        {t('badges.example')}&nbsp;{summary.value}
+                        {t('inventory:badges.example')}&nbsp;{summary.value}
                     </Badge>
                 )}
             </div>

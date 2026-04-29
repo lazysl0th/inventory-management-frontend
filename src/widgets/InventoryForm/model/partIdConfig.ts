@@ -3,7 +3,7 @@ import {
     PartIdTypes,
     SeparatorPosition,
 } from '@/entities/inventory'
-import {
+import type {
     PartIdSettings,
     TDateTimeFormats,
     TRandom20BitNumberFormats,

@@ -6,13 +6,15 @@ import useSortableHandlers from '@/shared/lib/hooks/useSortableHandlers'
 import { SortableFieldset } from '@/shared/ui/DragDrop'
 import { useFieldsetActions } from '@/widgets/InventoryForm/lib/useFieldsetAction'
 import {
-    IField,
+    type IField,
     InventoryFieldType,
-    useInventoryAccess,
-    useInventoryData,
 } from '@/entities/inventory'
-import { IFieldFieldsetProps } from '@/widgets/InventoryForm/model/types'
-import { Checkbox, Input, Select } from '@/shared/ui/Form'
+import type { IFieldFieldsetProps } from '@/widgets/InventoryForm/model/types'
+import { useInventoryData } from '@/entities/inventory/lib/useInventoryData'
+import { useInventoryAccess } from '@/entities/inventory/lib/useInventoryAccess'
+import { Select } from '@/shared/ui/Form/ui/Select'
+import { Input } from '@/shared/ui/Form/ui/Input'
+import { Checkbox } from '@/shared/ui/Form/ui/Checkbox'
 
 const FieldFieldset = ({ field }: IFieldFieldsetProps) => {
     const { t } = useTranslation('inventory')
@@ -51,10 +53,10 @@ const FieldFieldset = ({ field }: IFieldFieldsetProps) => {
                 <Col xs={12} md={4} lg={3}>
                     <Select
                         name={`fields[${field.order}].type`}
-                        label={t('labels.type')}
+                        label={t('inventory:labels.type')}
                     >
                         <option value='' disabled>
-                            Select type...
+                            {t('inventory:options.type')}
                         </option>
                         {Object.values(InventoryFieldType).map((fieldType) => (
                             <option key={fieldType} value={fieldType}>
@@ -66,22 +68,22 @@ const FieldFieldset = ({ field }: IFieldFieldsetProps) => {
                 <Col xs={12} md={4} lg={6}>
                     <Input
                         name={`fields[${field.order}].title`}
-                        label={t('labels.title')}
-                        placeholder={t('placeholders.title')}
+                        label={t('inventory:labels.title')}
+                        placeholder={t('inventory:placeholders.title')}
                     />
                 </Col>
                 <Col xs={12} md={4} lg={3}>
                     <Checkbox
                         name={`fields[${field.order}].showInTable`}
-                        label={t('labels.showInTable')}
+                        label={t('inventory:labels.showInTable')}
                     />
                 </Col>
                 <Col xs={12} md={9}>
                     <Input
                         as='textarea'
                         name={`fields[${field.order}].description`}
-                        label={t('labels.description')}
-                        placeholder={t('placeholders.descriptionField')}
+                        label={t('inventory:labels.description')}
+                        placeholder={t('inventory:placeholders.descriptionField')}
                         rows={2}
                     />
                 </Col>
@@ -96,7 +98,7 @@ const FieldFieldset = ({ field }: IFieldFieldsetProps) => {
                         text='dark'
                         className='mb-2 w-100 text-center'
                     >
-                        {t('badges.position')} {field.order}
+                        {t('inventory:badges.position')} {field.order}
                     </Badge>
                     <ActionButtons size='sm' actions={sortableActions} />
                 </Col>

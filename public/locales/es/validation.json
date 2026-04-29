@@ -1,0 +1,53 @@
+{
+  "Phone": {
+    "required": "Introducir teléfono",
+    "test": "Número de teléfono no válido"
+  },
+  "ShippingCity": {
+    "matches": "Nombre de ciudad no válido",
+    "required": "Introduce la ciudad"
+  },
+  "ShippingCountry": {
+    "matches": "Nombre de país no válido",
+    "required": "Introduce el país"
+  },
+  "ShippingIndex": {
+    "matches": "índice no válido",
+    "required": "Ingresar índice"
+  },
+  "ShippingPostalCode": {
+    "matches": "código postal no válido",
+    "required": "Introduce el código postal"
+  },
+  "ShippingState": {
+    "matches": "Nombre de estado no válido",
+    "required": "Ingresar estado"
+  },
+  "ShippingStreet": {
+    "matches": "Nombre de calle no válido",
+    "required": "entrar calle"
+  },
+  "category": {
+    "required": "Seleccionar categoría"
+  },
+  "email": {
+    "email": "Por favor, introduce una dirección de correo electrónico válida",
+    "required": "Ingrese el correo electrónico"
+  },
+  "name": {
+    "required": "Introduce el nombre"
+  },
+  "password": {
+    "min": "La contraseña debe tener al menos 1 carácter",
+    "required": "Introduce la contraseña"
+  },
+  "searchQuery": {
+    "matches": "Caracteres no válidos en la consulta de búsqueda.",
+    "max": "Consulta demasiado larga (máximo 100 caracteres)",
+    "min": "La consulta debe tener al menos 2 caracteres.",
+    "required": "Por favor introduce al menos 1 carácter"
+  },
+  "title": {
+    "required": "Por favor ingrese el inventario de títulos"
+  }
+}

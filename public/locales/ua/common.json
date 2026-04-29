@@ -1,0 +1,92 @@
+{
+  "title": "Управління запасами",
+  "actions": {
+    "back": "Назад",
+    "retry": "Спробуйте ще раз",
+    "update": "Оновити",
+    "create": "Створити",
+    "addRecord": "Додати $t(common:recordTypes.{{recordType}})",
+    "delete": "Додати",
+    "down": "Вниз",
+    "overwrite": "Перезаписати",
+    "save": "Зберегти",
+    "send": "Надіслати",
+    "up": "Вгору",
+    "blockRecords_other": "Заблокувати {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
+    "blockRecords_one": "Заблокувати $t(common:recordTypes.{{recordType}}, lowercase)",
+    "deleteRecords_one": "Видалити $t(common:recordTypes.{{recordType}}, lowercase)",
+    "deleteRecords_other": "Видалити {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
+    "grantPermission_one": "Надати доступ адміністратора $t(common:recordTypes.{{recordType}}, lowercase)",
+    "grantPermission_other": "Надати доступ адміністратора {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
+    "revokePermission_one": "Скасувати доступ адміністратора $t(common:recordTypes.{{recordType}}, lowercase)",
+    "revokePermission_other": "Скасувати доступ адміністратора {{count}} $t(common:recordType.{{recordType}}_plural, lowercase)",
+    "unblockRecords_one": "Розблокувати $t(common:recordTypes.{{recordType}}, lowercase)",
+    "unblockRecords_other": "Розблокувати {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)"
+  },
+  "modalTitles": {
+    "additionalInfo": "Додаткова інформація",
+    "supportRequest": "Запит на підтримку",
+    "versionConflict": "Конфлікт версій"
+  },
+  "placeholders": {
+    "search": "Пошук...",
+    "name": "Введіть ім'я",
+    "email": "Введіть електронну адресу",
+    "writeComment": "Write a comment"
+  },
+  "labels": {
+    "email": "Електронна пошта",
+    "name": "Ім'я",
+    "createdBy": "Створено",
+    "owner": "Owner",
+    "updateAt": "Оновлено"
+  },
+  "versionConflict": {
+    "paragraph": "Дані інвентаризації були змінені іншим користувачем. Ви можете:",
+    "listItems": {
+      "textUpdate": "завантажити останню версію даних із сервера",
+      "textOverwrite": "зберегти зміни в поточній версії",
+      "overwrite": "Перезаписати",
+      "update": "Оновлення"
+    }
+  },
+  "pageTitle": {
+    "errorPage": "Ой!",
+    "adminPage": "Admin panel"
+  },
+  "pageDescription": {
+    "errorPage": "Сталася помилка завантаження, спробуйте ще раз.",
+    "notFoundPage": "Сторінку не знайдено"
+  },
+  "options": {
+    "loading": "Завантаження..."
+  },
+  "actionTypes": {
+    "creating": "створення",
+    "deleted": "видалено",
+    "deleting": "видалення",
+    "overwrited": "перезаписано",
+    "overwriting": "перезапис",
+    "updated": "оновлено",
+    "updating": "оновлення",
+    "created": "створений"
+  },
+  "notifications": {
+    "errorAction_one": "Сталася помилка під час $t(common:actionTypes.{{actionType}}) $t(common:recordTypes.{{recordType}}, lowercase)",
+    "errorAction_other": "Сталася помилка під час $t(common:actionTypes.{{actionType}}) {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
+    "successAction_one": "$t(common:recordTypes.{{recordType}}) успішно виконано $t(common:actionTypes.{{actionType}}).",
+    "successAction_other": "Успішно виконано $t(common:actionTypes.{{actionType}}) {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)"
+  },
+  "recordTypes": {
+    "field": "Поле",
+    "inventory": "Інвентарь",
+    "inventory_plural": "Інвентари",
+    "item": "Елемент",
+    "item_plural": "предмети",
+    "partId": "Частина ID",
+    "user": "Користувач",
+    "user_plural": "Користувачі",
+    "image": "Зображення"
+
+  }
+}

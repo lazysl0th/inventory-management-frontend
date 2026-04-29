@@ -1,5 +1,5 @@
-import { IUser } from '@/entities/user/model/types'
-import { FormikConfig } from 'formik'
+import type { IUser } from '@/entities/user/model/types'
+import type { FormikConfig } from 'formik'
 
 export interface IComment {
     id: number

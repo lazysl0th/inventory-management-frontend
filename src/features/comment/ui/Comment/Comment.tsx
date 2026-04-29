@@ -1,8 +1,8 @@
 import { Card } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { SETTINGS } from '../../../../shared/config/constants'
-import { ICommentProps } from '../../model/types'
-import { MarkdownField } from '@/shared/ui/Form'
+import type { ICommentProps } from '../../model/types'
+import { MarkdownField } from '@/shared/ui/Form/ui/MarkdownField'
+import { USERS } from '@/shared/config/constants'
 
 const Comment = ({ comment }: ICommentProps) => {
     return (
@@ -10,7 +10,7 @@ const Comment = ({ comment }: ICommentProps) => {
             <Card.Body className='p-0 d-flex flex-wrap justify-content-between'>
                 <Card.Link
                     as={Link}
-                    to={`/${SETTINGS.routes.users}/${comment.user.id}`}
+                    to={`/${USERS}/${comment.user.id}`}
                     className='fw-bold text-decoration-none text-dark'
                 >
                     <Card.Title>{comment.user.name}</Card.Title>

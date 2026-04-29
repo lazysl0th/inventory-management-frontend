@@ -1,10 +1,18 @@
-export { default as LoginForm } from './ui/LoginForm'
-export { default as RegisterForm } from './ui/RegisterForm'
-export { default as ResetPasswordForm } from './ui/ResetPasswordForm'
-export { default as ChangePasswordForm } from './ui/ChangePasswordForm'
+import { lazy } from 'react'
+export const LoginForm = lazy(() => import('./ui/LoginForm'));
+export const RegisterForm = lazy(() => import('./ui/RegisterForm'));
+export const ResetPasswordForm = lazy(() => import('./ui/ResetPasswordForm'));
+export const ChangePasswordForm = lazy(() => import('./ui/ChangePasswordForm'));
+export const SocialButtons = lazy(() => import('./ui/SocialButtons'));
 export {
     default as authSliceReducer,
-    logoutUser,
     getIsAuthenticated,
+    getIsAuthChecked
 } from './model/authSlice'
-export * from './api/authApi'
+export {
+    useLoginByEmailMutation,
+    useLogoutMutation,
+    useRegisterMutation,
+    useResetPasswordMutation,
+    useChangePasswordMutation,
+} from './api/authApi'

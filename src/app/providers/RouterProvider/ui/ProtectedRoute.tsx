@@ -1,12 +1,10 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { Container, Spinner } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
-import { SETTINGS } from '@/shared/config/constants'
-import {
-    getIsAuthChecked,
-    getIsAuthenticated,
-} from '@/features/auth/model/authSlice'
 import { useCurrentUser } from '@/entities/user/lib/useCurrentUser'
+import { getIsAuthChecked, getIsAuthenticated } from '@/features/auth/'
+import { Loader } from '@/shared/ui/Loader'
+import { ADMIN, LOGIN, MAIN } from '@/shared/config/constants'
 
 const ProtectedRoute = () => {
     const location = useLocation()
@@ -17,7 +15,7 @@ const ProtectedRoute = () => {
     if (!isAuthChecked) {
         return (
             <Container className='d-flex'>
-                <Spinner animation='border' className='mx-auto' />
+                <Loader/>
             </Container>
         )
     }
@@ -26,14 +24,14 @@ const ProtectedRoute = () => {
         return (
             <Navigate
                 replace
-                to={SETTINGS.routes.login}
+                to={LOGIN}
                 state={{ from: location }}
             />
         )
     }
 
-    if (location.pathname === SETTINGS.routes.admin && !isAdmin) {
-        return <Navigate to={SETTINGS.routes.main} replace />
+    if (location.pathname === ADMIN && !isAdmin) {
+        return <Navigate to={MAIN} replace />
     }
 
     return <Outlet />

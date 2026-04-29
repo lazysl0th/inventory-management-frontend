@@ -1,6 +1,6 @@
-import * as Yup from 'yup'
+import { object, string } from 'yup';
 
-export const inventorySchema = Yup.object({
-    title: Yup.string().required('title.required'),
-    category: Yup.string().required('category.required'),
+export const inventorySchema = object({
+    title: string().required('title.required'),
+    category: string().required('category.required'),
 })

@@ -1,4 +1,4 @@
-import { IField, IPartId, PartIdFormat } from '@/entities/inventory'
+import type { IField, IPartId, PartIdFormat } from '@/entities/inventory'
 
 export type TDateTimeFormats = Extract<
     PartIdFormat,

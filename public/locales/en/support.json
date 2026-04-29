@@ -1,0 +1,23 @@
+{
+  "labels": {
+    "inventory": "Inventory title",
+    "link": "Link",
+    "priority": "Priority",
+    "request": "Message/Request"
+  },
+  "placeholders": {
+    "inventory": "Enter inventory title",
+    "link": "Enter link",
+    "request": "Entert message/request"
+  },
+  "options": {
+    "priority": "Select priority...",
+    "high": "High",
+    "average": "Average",
+    "low": "Low"
+  },
+  "notifications": {
+    "success": "Your support request has been successfully sent",
+    "error": "There were errors while submitting your support request."
+  }
+}

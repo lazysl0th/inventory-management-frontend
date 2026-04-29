@@ -2,7 +2,15 @@ export {
     default as inventorySliceReducer,
     setActiveInventory,
 } from './model/inventorySlice'
-export * from './api/inventoryApi'
+export { useSearchInventoriesQuery,
+    useGetInventoriesQuery,
+    useLazyGetInventoryQuery,
+    useGetInventoryQuery,
+    useGetInventoryCategoriesQuery,
+    useDeleteInventoriesMutation,
+    useCreateInventoryMutation,
+    useUpdateInventoryMutation,
+    useLazyGetInventoryTokenQuery } from './api/inventoryApi'
 export {
     Category,
     PartIdFormat,
@@ -16,11 +24,10 @@ export type {
     IUpdateInventoryData,
     TCreateInventoryData,
     IPartId,
-    TInventoryListItem,
     IField,
     TAllowedUser,
+    TTag,
+    IInventoriesRequestParams,
+    IInventorySearchParam,
+    TInventoryListItem,
 } from './model/types'
-export { useInventoryAccess } from './lib/useInventoryAccess'
-export { useInventoryData } from './lib/useInventoryData'
-export { useInventoryActions } from './lib/useInventoryActions'
-export { inventoryColumns } from './ui/columns'

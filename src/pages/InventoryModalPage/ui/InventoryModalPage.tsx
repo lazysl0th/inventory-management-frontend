@@ -1,8 +1,8 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { TInventoryListItem } from '@/entities/inventory/model/types'
-import { SETTINGS } from '@/shared/config/constants'
-import ModalView from '@/shared/ui/ModalView/ui/ModalView'
+import type { TInventoryListItem } from '@/entities/inventory/model/types'
+import { ModalView } from '@/shared/ui/ModalView'
 import { useInventoryData } from '@/entities/inventory/lib/useInventoryData'
+import { MAIN } from '@/shared/config/constants'
 
 const InventoryModalPage = () => {
     const navigate = useNavigate()
@@ -15,7 +15,7 @@ const InventoryModalPage = () => {
     const inventoryTitle = inventory?.title || data?.title || 'Inventory'
 
     const handleClose = () => {
-        navigate(backgroundLocation || SETTINGS.routes.main)
+        navigate(backgroundLocation || MAIN)
     }
 
     return !backgroundLocation.pathname.includes(inventoryId) ? (

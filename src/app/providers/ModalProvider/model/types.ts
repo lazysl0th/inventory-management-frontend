@@ -1,6 +1,6 @@
 export interface IConfig {
     infoTooltipContent: {
-        title: string
+        titleKey: string
         Body: React.FC
     }
 }

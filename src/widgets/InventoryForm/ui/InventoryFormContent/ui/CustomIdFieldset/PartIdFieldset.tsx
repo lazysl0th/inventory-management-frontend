@@ -1,24 +1,25 @@
 import { useTranslation } from 'react-i18next'
 import { Badge, Col, Row } from 'react-bootstrap'
-import { ChangeEventHandler } from 'react'
+import { type ChangeEventHandler, lazy, Suspense } from 'react'
 import { ActionButtons } from '@/shared/ui/ActionButtons'
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
 import useSortableHandlers from '@/shared/lib/hooks/useSortableHandlers'
 import { SortableFieldset } from '@/shared/ui/DragDrop'
 import { EmojiButton } from '@/shared/ui/EmojiButton'
 import {
-    IPartId,
     PartIdFormat,
     PartIdTypes,
     SeparatorPosition,
-    useInventoryAccess,
-    useInventoryData,
 } from '@/entities/inventory'
-import { IPartIdFieldsetProps } from '@/widgets/InventoryForm/model/types'
+import type { IPartId } from '@/entities/inventory'
+import type { IPartIdFieldsetProps } from '@/widgets/InventoryForm/model/types'
 import { partIdSettings } from '@/widgets/InventoryForm/model/partIdConfig'
 import { useFieldsetActions } from '@/widgets/InventoryForm/lib/useFieldsetAction'
 import { getPartIdExample } from '@/widgets/InventoryForm/lib/getPartIdExample'
-import { Input, Select } from '@/shared/ui/Form'
+import { Select } from '@/shared/ui/Form/ui/Select'
+import { Input } from '@/shared/ui/Form/ui/Input'
+import { useInventoryData } from '@/entities/inventory/lib/useInventoryData'
+import { useInventoryAccess } from '@/entities/inventory/lib/useInventoryAccess'
 
 const PartIdFieldset = ({ partId, index }: IPartIdFieldsetProps) => {
     const { t } = useTranslation('inventory')
@@ -87,14 +88,14 @@ const PartIdFieldset = ({ partId, index }: IPartIdFieldsetProps) => {
                 <Col xs={12} md={partId.type === PartIdTypes.Sequence ? 4 : 6}>
                     <Select
                         name={`customIdFormat.parts[${index}].type`}
-                        label={t('labels.type')}
+                        label={t('inventory:labels.type')}
                         helpText={t(
                             partId.type ? partIdSettings[partId.type].hint : ''
                         )}
                         onChange={handleChangePartIdType}
                     >
                         <option value='' disabled>
-                            Select type...
+                            {t('inventory:options.type')}
                         </option>
                         {Object.values(PartIdTypes).map((partIdType) => (
                             <option key={partIdType} value={partIdType}>
@@ -107,9 +108,11 @@ const PartIdFieldset = ({ partId, index }: IPartIdFieldsetProps) => {
                     xs={partId.type === PartIdTypes.Sequence ? 7 : 12}
                     md={partId.type === PartIdTypes.Sequence ? 5 : 6}
                 >
+                    
                     {partId.type && partId.type === PartIdTypes.Text ? (
+                        <Suspense fallback={<div>Загрузка смайликов...</div>}>
                         <Input
-                            label={t('labels.format')}
+                            label={t('inventory:labels.format')}
                             name={`customIdFormat.parts[${index}].format`}
                             onChange={handleChangePartIdFormat}
                             helpText={t(
@@ -117,14 +120,16 @@ const PartIdFieldset = ({ partId, index }: IPartIdFieldsetProps) => {
                                     partIdSettings[partId.type].formatHint
                             )}
                         >
-                            <EmojiButton
-                                formatValue={partId.format}
-                                onEmojiClick={partIdFormat.setValue}
-                            />
+                            
+                                <EmojiButton
+                                    formatValue={partId.format}
+                                    onEmojiClick={partIdFormat.setValue}
+                                />
                         </Input>
+                        </Suspense>
                     ) : (
                         <Select
-                            label={t('labels.format')}
+                            label={t('inventory:labels.format')}
                             name={`customIdFormat.parts[${index}].format`}
                             disabled={
                                 partId.type === null ||
@@ -138,7 +143,7 @@ const PartIdFieldset = ({ partId, index }: IPartIdFieldsetProps) => {
                             )}
                         >
                             <option value='' disabled>
-                                Select format...
+                                {t('inventory:options.format')}
                             </option>
                             {formats !== null &&
                                 Object.entries(formats).map(([key, label]) => (
@@ -154,26 +159,26 @@ const PartIdFieldset = ({ partId, index }: IPartIdFieldsetProps) => {
                         <Input
                             name={`customIdFormat.parts[${index}].currentSequence`}
                             label='Initial value'
-                            placeholder={t('placeholders.initialValue')}
+                            placeholder={t('inventory:placeholders.initialValue')}
                         />
                     </Col>
                 )}
                 <Col xs={12} sm={5}>
                     <Input
                         name={`customIdFormat.parts[${index}].separator`}
-                        label={t('labels.separator')}
-                        placeholder='Напр., INV- или _'
-                        helpText={t('hints.separator')}
+                        label={t('inventory:labels.separator')}
+                        placeholder={t('inventory:placeholders.separator')}
+                        helpText={t('inventory:hints.separator')}
                     />
                 </Col>
                 <Col xs={6} sm={4}>
                     <Select
                         name={`customIdFormat.parts[${index}].position`}
-                        label={t('labels.position')}
-                        helpText={t('hints.position')}
+                        label={t('inventory:labels.position')}
+                        helpText={t('inventory:hints.position')}
                     >
                         <option value='' disabled>
-                            Select separator position...
+                            {t('inventory:options.separator')}
                         </option>
                         {Object.entries(SeparatorPosition).map(
                             ([value, label]) => (

@@ -1,12 +1,14 @@
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { ICommentForm, TSubmitHandler } from '../../model/types'
+import type { ICommentForm, TSubmitHandler } from '../../model/types'
 import { useCurrentUser } from '@/entities/user/lib/useCurrentUser'
-import { FormProvider, Input, SubmitButton } from '@/shared/ui/Form'
 import { useCreateInventoryCommentMutation } from '../../api/commentApi'
+import { FormProvider } from '@/shared/ui/Form/ui/FormProvider'
+import { Input } from '@/shared/ui/Form/ui/Input'
+import { SubmitButton } from '@/shared/ui/Form/ui/SubmitButton'
 
 const CommentForm = () => {
-    const { t } = useTranslation('inventory')
+    const { t } = useTranslation('common')
     const { inventoryId } = useParams()
     const { currentUser } = useCurrentUser()
     const [createInventoryComment, isSucces] =
@@ -34,11 +36,11 @@ const CommentForm = () => {
             <Input
                 name='content'
                 as='textarea'
-                placeholder={t('placeholders.writeComment')}
+                placeholder={t('common:placeholders.writeComment')}
                 rows={2}
             />
             <SubmitButton
-                label={t('buttons.send')}
+                label={t('common:actions.send')}
                 className='align-self-end'
                 disabled={!inventoryId || !currentUser}
             />

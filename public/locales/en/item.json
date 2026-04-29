@@ -1,0 +1,11 @@
+{
+    "actions": {
+        "selectFile": "Select file"
+    },
+    "labels": {
+        "customId": "Custom ID"
+    },
+    "listFields": {
+        "customId": "Custom ID"
+    }
+}

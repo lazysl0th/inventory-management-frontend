@@ -1,5 +1,5 @@
 import { baseApi } from '@/shared/api'
-import { ISupportRequestForm, IUploadResultDropbox } from '../model/types'
+import type { ISupportRequestForm, IUploadResultDropbox } from '../model/types'
 
 export const supportRequestApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({

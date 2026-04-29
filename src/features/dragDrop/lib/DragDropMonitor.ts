@@ -1,6 +1,6 @@
 import { useDragDropMonitor } from '@dnd-kit/react'
 import { isSortable } from '@dnd-kit/react/sortable'
-import { IDragDropMonitorProps } from '../model/types'
+import type { IDragDropMonitorProps } from '../model/types'
 
 const DragDropMonitor = ({ onDelete, onSort }: IDragDropMonitorProps) => {
     useDragDropMonitor({

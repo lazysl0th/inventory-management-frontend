@@ -1,5 +1,6 @@
-import { IUser } from '@/entities/user/model/types'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+
+import type{ IUser } from '@/entities/user'
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 
 export interface IUserData {
     name: string

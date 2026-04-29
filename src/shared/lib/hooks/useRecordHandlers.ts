@@ -1,14 +1,12 @@
-import { TEntity } from './useEntityNavigation'
+import type { TEntity } from './useEntityNavigation'
 import useEntityNavigation from './useEntityNavigation'
-import {
-    getSelectedRows,
-    resetSelectedRows,
-    TTableIds,
-} from '../../model/table/model/tableSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../app/providers/StoreProvider/store'
-import { RowSelectionState } from '@tanstack/react-table'
-import { TRowData } from '@/shared/ui/DataTable'
+import type { RootState } from '@/app/providers/StoreProvider/store'
+import type { RowSelectionState } from '@tanstack/react-table'
+import type { TRowData } from '@/shared/ui/DataTable'
+import { showToast } from '@/shared/model/ui'
+import { useTranslation } from 'react-i18next'
+import { getSelectedRows, resetSelectedRows, type TTableIds } from '@/shared/model/table'
 
 export interface IUpdateData<T> {
     ids: string[]
@@ -22,10 +20,10 @@ export interface IRoleData {
 
 interface IUseActionOptions<T> {
     tableId?: TTableIds
-    onDelete?: (ids: string[]) => void
-    onUpdate?: (updateData: IUpdateData<T>) => void
-    onGrant?: (data: IRoleData) => void
-    onRevoke?: (data: IRoleData) => void
+    onDelete?: (ids: string[]) => Promise<{ count: number }>
+    onUpdate?: (updateData: IUpdateData<T>) => Promise<{ count: number }>
+    onGrant?: (data: IRoleData) => Promise<{ count: number }>
+    onRevoke?: (data: IRoleData) => Promise<{ count: number }>
 }
 
 interface IRecordHandlers<T> {
@@ -42,7 +40,8 @@ export default function useRecordHandlers<T extends TRowData>(
     entity: TEntity,
     options?: IUseActionOptions<T>
 ): IRecordHandlers<T> {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const {t} = useTranslation('common');
 
     const selectedRecords =
         useSelector(
@@ -61,28 +60,56 @@ export default function useRecordHandlers<T extends TRowData>(
         options?.tableId && dispatch(resetSelectedRows(options.tableId))
     }
 
-    const deleteRecords = (): void => {
+    const deleteRecords = async (): Promise<void> => {
         const ids = Object.keys(selectedRecords)
-        if (options?.onDelete) options.onDelete(ids)
-        resetSelection()
+        if (!options?.onDelete || ids.length === 0) return
+        try {
+            const deletedRecords = await options.onDelete(ids);
+            dispatch(showToast({message: t('common:notifications.successAction', { count: deletedRecords.count, actionType: 'deleted', recordType: entity.toLocaleLowerCase() })}))
+            resetSelection()
+        } catch(e) {
+            dispatch(showToast({message: t('common:notifications.errorAction', { count: ids.length, actionType: 'deleting', recordType: entity.toLocaleLowerCase() })}))
+            console.log(e)
+        }
     }
 
-    const updateRecords = (data: Partial<T>): void => {
+    const updateRecords = async (data: Partial<T>): Promise<void> => {
         const ids = Object.keys(selectedRecords)
-        if (options?.onUpdate) options.onUpdate({ ids, data })
-        resetSelection()
+        if (!options?.onUpdate || ids.length === 0) return
+        try {
+            const updatedRecords = await options.onUpdate({ ids, data });
+            dispatch(showToast({message: t('common:notifications.successAction', { count: updatedRecords.count, actionType: 'updated', recordType: entity.toLocaleLowerCase() })}))
+            resetSelection()
+        } catch(e) {
+            dispatch(showToast({message: t('common:notifications.errorAction', { count: ids.length, actionType: 'updating', recordType: entity.toLocaleLowerCase() })}))
+            console.log(e)
+        }
     }
 
-    const grantRecords = (roleIds: number[]): void => {
+    const grantRecords = async (roleIds: number[]): Promise<void> => {
         const userIds = Object.keys(selectedRecords)
-        if (options?.onGrant) options.onGrant({ userIds, roleIds })
-        resetSelection()
+        if (!options?.onGrant || userIds.length === 0) return
+        try {
+            const updatedRecords = await options.onGrant({ userIds, roleIds });
+            dispatch(showToast({message: t('common:notifications.successAction', { count: updatedRecords.count, actionType: 'updated', recordType: entity.toLocaleLowerCase() })}))
+            resetSelection()
+        } catch(e) {
+            dispatch(showToast({message: t('common:notifications.errorAction', { count: userIds.length, actionType: 'updating', recordType: entity.toLocaleLowerCase() })}))
+            console.log(e)
+        }
     }
 
-    const revokeRecords = (roleIds: number[]): void => {
+    const revokeRecords = async(roleIds: number[]): Promise<void> => {
         const userIds = Object.keys(selectedRecords)
-        if (options?.onRevoke) options.onRevoke({ userIds, roleIds })
-        resetSelection()
+        if (!options?.onRevoke || userIds.length === 0) return
+        try {
+            const updatedRecords = await options.onRevoke({ userIds, roleIds });
+            dispatch(showToast({message: t('common:notifications.successAction', { count: updatedRecords.count, actionType: 'updated', recordType: entity.toLocaleLowerCase() })}))
+            resetSelection()
+        } catch(e) {
+            dispatch(showToast({message: t('common:notifications.errorAction', { count: userIds.length, actionType: 'updating', recordType: entity.toLocaleLowerCase() })}))
+            console.log(e)
+        }
     }
 
     return {

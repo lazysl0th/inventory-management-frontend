@@ -1,5 +1,5 @@
 import { Button } from '@/shared/ui/Button'
-import { IDataTablePaginationProps } from '../../model/types'
+import type { IDataTablePaginationProps } from '../../model/types'
 
 export default function DataTablePagination<TData>({
     table,

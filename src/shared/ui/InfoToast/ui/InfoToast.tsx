@@ -1,7 +1,7 @@
 import { Toast, ToastContainer } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { getToast, hideToast } from '@/shared/model/ui'
-import { SETTINGS } from '@/shared/config/constants'
+import { CLOSE_INFO_TOAST } from '@/shared/config/constants'
 
 const InfoToast = () => {
     const dispatch = useDispatch()
@@ -13,7 +13,7 @@ const InfoToast = () => {
             <Toast
                 show={toastState.show}
                 onClose={closeHandle}
-                delay={toastState.header ? undefined : SETTINGS.delay.closeInfoToast}
+                delay={toastState.header ? undefined : CLOSE_INFO_TOAST}
                 autohide={!toastState.header}
                 bg={toastState.header ? 'dark' : 'warning'}
             >

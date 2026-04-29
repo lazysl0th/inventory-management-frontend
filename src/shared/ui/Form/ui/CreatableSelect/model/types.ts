@@ -1,5 +1,5 @@
-import { GroupBase } from 'react-select'
-import { CreatableProps } from 'react-select/creatable'
+import type { GroupBase } from 'react-select'
+import type { CreatableProps } from 'react-select/creatable'
 
 export interface ICreatableSelectProps<
     Option,

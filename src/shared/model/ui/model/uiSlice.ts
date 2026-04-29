@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AppModals, IModal, IUiState, TToastPayload } from './types'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import type { IModal, IUiState, TToastPayload } from './types'
+import { AppModals } from './types'
 
 const initialModalState = {
     name: AppModals.None,

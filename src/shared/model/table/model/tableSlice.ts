@@ -1,18 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RowSelectionState } from '@tanstack/react-table'
-
-export type TTableIds =
-    | 'myInventories'
-    | 'allInventories'
-    | 'allowedUsers'
-    | 'items'
-    | 'users'
-
-interface ITableProps {
-    selectedRows: RowSelectionState
-}
-
-type TTableState = Record<TTableIds, ITableProps>
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import type { RowSelectionState } from '@tanstack/react-table'
+import type { TTableIds, TTableState } from './types'
 
 const initialState: TTableState = {
     allInventories: {

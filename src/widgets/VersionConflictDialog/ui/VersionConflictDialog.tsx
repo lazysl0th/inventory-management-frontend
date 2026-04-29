@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMatch } from 'react-router-dom'
 import { Button } from '@/shared/ui/Button'
-import { closeModal, getModal } from '@/shared/model/ui'
+import { closeModal, getModal, showToast } from '@/shared/model/ui'
 import {
     useLazyGetInventoryQuery,
     useUpdateInventoryMutation,
@@ -34,11 +34,18 @@ const VersionConflictDialog = () => {
                     version: inventory.version,
                 }).unwrap()
                 dispatch(closeModal())
+                dispatch(showToast({message: t('common:notifications.successAction', { count: 1, actionType: 'overwrited', recordType: 'inventory' })}))
             }
         } catch (e) {
             dispatch(closeModal())
+            dispatch(showToast({message: t('common:notifications.eerorAction', { count: 1, actionType: 'overwriting', recordType: 'inventory' })}))
             console.log(e)
         }
+    }
+
+    const handleClose = async() => {
+        dispatch(closeModal());
+        dispatch(showToast({message: t('common:notifications.successAction', { count: 1, actionType: 'updated', recordType: 'inventory' })}))
     }
 
     useEffect(() => {
@@ -48,19 +55,19 @@ const VersionConflictDialog = () => {
     return (
         <>
             <ListGroup variant='flush'>
-                <p className='mb-2'>{t('versionConflict.paragraph')}</p>
+                <p className='mb-2'>{t('common:versionConflict.paragraph')}</p>
                 <ListGroup.Item className='d-flex align-items-start'>
                     <div>
-                        <strong>{t('versionConflict.listItems.update')}</strong>{' '}
-                        — {t('versionConflict.listItems.textUpdate')}
+                        <strong>{t('common:versionConflict.listItems.update')}</strong>{' '}
+                        — {t('common:versionConflict.listItems.textUpdate')}
                     </div>
                 </ListGroup.Item>
                 <ListGroup.Item className='d-flex align-items-start'>
                     <div>
                         <strong>
-                            {t('versionConflict.listItems.rewrite')}
+                            {t('common:versionConflict.listItems.overwrite')}
                         </strong>{' '}
-                        — {t('versionConflict.listItems.textRewrite')}
+                        — {t('common:versionConflict.listItems.textOverwrite')}
                     </div>
                 </ListGroup.Item>
             </ListGroup>
@@ -70,12 +77,12 @@ const VersionConflictDialog = () => {
                     <>
                         <Button
                             variant='dark'
-                            onClick={() => dispatch(closeModal())}
+                            onClick={handleClose}
                         >
-                            <GrUpdate /> {t('versionConflict.buttons.update')}
+                            <GrUpdate /> {t('common:actions.update')}
                         </Button>
                         <Button variant='danger' onClick={handleRewrite}>
-                            <MdSaveAlt /> {t('versionConflict.buttons.rewrite')}
+                            <MdSaveAlt /> {t('common:actions.overwrite')}
                         </Button>
                     </>,
                     container

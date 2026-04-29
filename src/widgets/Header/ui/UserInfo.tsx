@@ -1,19 +1,18 @@
-import { SETTINGS } from '@/shared/config/constants'
 import { Nav, Navbar } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useLocation, Link, useNavigate } from 'react-router-dom'
-import { INavItemProps } from '../model/types'
-import { useCurrentUser } from '@/entities/user'
+import type { INavItemProps } from '../model/types'
 import { useLogoutMutation } from '@/features/auth'
+import { ADMIN, PROFILE } from '@/shared/config/constants'
+import { useCurrentUser } from '@/entities/user/lib/useCurrentUser'
 
 const UserInfo = ({ onExpanded }: INavItemProps) => {
     const location = useLocation()
     const navigate = useNavigate()
-    const { t: ta } = useTranslation('auth')
-    const { t: tad } = useTranslation('admin')
+    const { t } = useTranslation(['auth', 'admin', 'common'])
     const { isAdmin, currentUser } = useCurrentUser()
     const [logout] = useLogoutMutation()
-    const isProfilePage = location.pathname === SETTINGS.routes.profile
+    const isProfilePage = location.pathname === PROFILE
     const logoutHandler = async () => {
         await logout(undefined)
         navigate('/sign-in')
@@ -24,14 +23,14 @@ const UserInfo = ({ onExpanded }: INavItemProps) => {
         <>
             {!isProfilePage ? (
                 <>
-                    <Navbar.Text>
-                        {ta('text.signedInAs')}:{' '}
-                        <Link to={SETTINGS.routes.profile} onClick={onExpanded}>
+                    <Navbar.Text className='me-1'>
+                        {t('auth:text.signedInAs')}:
+                        <Link to={PROFILE} onClick={onExpanded}>
                             {currentUser?.name}
                         </Link>
                     </Navbar.Text>
-                    <Navbar.Text>
-                        {ta('text.headerEmail')}:{' '}
+                    <Navbar.Text className='me-1'>
+                        {t('common:labels.email')}:
                         <Link
                             onClick={onExpanded}
                             to={`mailto:${currentUser?.email}`}
@@ -45,10 +44,10 @@ const UserInfo = ({ onExpanded }: INavItemProps) => {
                     <Nav.Link
                         as={Link}
                         className='text-dark p-0 text-nowrap'
-                        to={SETTINGS.routes.admin}
+                        to={ADMIN}
                         onClick={onExpanded}
                     >
-                        {tad('links.admin')}
+                        {t('admin:links.admin')}
                     </Nav.Link>
                 )
             )}
@@ -57,7 +56,7 @@ const UserInfo = ({ onExpanded }: INavItemProps) => {
                 className='text-dark p-0'
                 onClick={logoutHandler}
             >
-                {ta('links.signout')}
+                {t('auth:actions.signout')}
             </Nav.Link>
         </>
     )

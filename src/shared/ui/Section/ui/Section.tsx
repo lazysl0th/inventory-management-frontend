@@ -1,4 +1,4 @@
-import { ISectionProps } from '../model/types'
+import type { ISectionProps } from '../model/types'
 
 const Section = ({ children, className = '' }: ISectionProps) => {
     return (

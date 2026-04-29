@@ -1,5 +1,5 @@
 import { useCurrentUser } from '@/entities/user/lib/useCurrentUser'
-import { IInventory } from '../model/types'
+import type { IInventory } from '../model/types'
 
 export function useInventoryAccess(inventory?: IInventory) {
     const { currentUser, isAdmin } = useCurrentUser()

@@ -1,9 +1,9 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { skipToken } from '@reduxjs/toolkit/query'
-import ModalView from '@/shared/ui/ModalView/ui/ModalView'
-import { SETTINGS } from '@/shared/config/constants'
-import { IItemListItem, useGetItemQuery } from '@/entities/item'
+import { type IItemListItem, useGetItemQuery } from '@/entities/item'
 import { Item } from '@/widgets/Item'
+import { ModalView } from '@/shared/ui/ModalView'
+import { MAIN } from '@/shared/config/constants'
 
 const ItemModalPage = () => {
     const location = useLocation()
@@ -26,7 +26,7 @@ const ItemModalPage = () => {
     const itemTitle = item?.customId || data?.customId || 'Item'
 
     const handleClose = () => {
-        backgroundLocation ? navigate(-1) : navigate(SETTINGS.routes.main)
+        backgroundLocation ? navigate(-1) : navigate(MAIN)
     }
 
     return (

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { IUser, IUserState } from './types'
-import { userApi } from '../api/userApi'
+import type { IUser, IUserState } from './types'
+import { profileApi } from '../api/profileApi'
 
 const initialState: IUserState = {
     currentUser: null,
@@ -15,13 +15,13 @@ const userSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addMatcher(
-            userApi.endpoints.getUserProfile.matchFulfilled,
+            profileApi.endpoints.getUserProfile.matchFulfilled,
             (state, action: PayloadAction<IUser>) => {
                 state.currentUser = action.payload
             }
         )
         builder.addMatcher(
-            userApi.endpoints.getUserProfile.matchRejected,
+            profileApi.endpoints.getUserProfile.matchRejected,
             (state) => {
                 state.currentUser = null
             }

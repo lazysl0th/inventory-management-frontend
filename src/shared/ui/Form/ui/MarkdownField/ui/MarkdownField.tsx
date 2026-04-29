@@ -2,7 +2,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeSanitize from 'rehype-sanitize'
 import { Form, InputGroup } from 'react-bootstrap'
-import { IMarkdownFieldProps } from '../model/types'
+import type { IMarkdownFieldProps } from '../model/types'
 
 const MarkdownField = ({
     name,

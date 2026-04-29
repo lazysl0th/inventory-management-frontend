@@ -6,14 +6,16 @@ import { useSelector } from 'react-redux'
 import UserInfo from './UserInfo'
 import AuthActions from './AuthActions'
 import { SearchForm } from '@/features/search'
-import { SETTINGS } from '@/shared/config/constants'
 import { HelpButton } from '@/shared/ui/HelpButton'
 import { getIsAuthenticated } from '@/features/auth'
+import { useTranslation } from 'react-i18next'
+import { MAIN } from '@/shared/config/constants'
 
 export default function Header(): React.ReactNode {
     const isAuthenticated = useSelector(getIsAuthenticated)
     const [expanded, setExpanded] = useState(false)
     const expandedHadle = () => setExpanded(false)
+    const { t } = useTranslation('common');
 
     return (
         <Navbar
@@ -27,10 +29,10 @@ export default function Header(): React.ReactNode {
             <Container className='mw-100 gap-2'>
                 <Navbar.Brand
                     as={Link}
-                    to={SETTINGS.routes.main}
+                    to={MAIN}
                     className='text-wrap mx-0'
                 >
-                    <h2 className='mb-0 text-nowrap'>Inventory Management</h2>
+                    <h2 className='mb-0 text-nowrap'>{t('common:title')}</h2>
                 </Navbar.Brand>
                 <Navbar.Toggle
                     aria-controls='main-navbar-nav'

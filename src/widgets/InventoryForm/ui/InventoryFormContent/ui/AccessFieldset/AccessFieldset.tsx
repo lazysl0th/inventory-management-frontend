@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
 import { Button } from '@/shared/ui/Button'
 import { AllowedUserList } from '@/features/manageAllowedUser'
-import { Checkbox } from '@/shared/ui/Form'
 import { useLazyGetInventoryTokenQuery } from '@/entities/inventory'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { showToast } from '@/shared/model/ui'
+import { Checkbox } from '@/shared/ui/Form/ui/Checkbox'
 
 const AccessFieldset = () => {
     const {inventoryId} = useParams()
@@ -20,7 +20,7 @@ const AccessFieldset = () => {
     const getTokenHandle = async () => {
         if (!inventoryId) return;
         const token = await getInventoryToken({ inventoryId }).unwrap()
-        dispatch(showToast({header: 'Inventory token', message: token}))
+        dispatch(showToast({header: t('inventory:toasts.headers.token'), message: token}))
     }
 
     return (
@@ -28,17 +28,17 @@ const AccessFieldset = () => {
             <Col xs={12} className='d-flex justify-content-between'>
                 <Checkbox
                     name='isPublic'
-                    label={t('labels.publicAccess')}
+                    label={t('inventory:labels.publicAccess')}
                     helpText={
                         isPublicField.value
-                            ? t('texts.publicAccess')
-                            : t('texts.privateAccess')
+                            ? t('inventory:texts.publicAccess')
+                            : t('inventory:texts.privateAccess')
                     }
                 />
                 <Button variant='dark' onClick={getTokenHandle}>
                     <FaKey />
                     <span className='ms-2 text-nowrap'>
-                        {t('buttons.token')}
+                        {t('inventory:actions.getToken')}
                     </span>
                 </Button>
             </Col>

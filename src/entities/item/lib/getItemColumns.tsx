@@ -1,6 +1,6 @@
-import { IField, InventoryFieldType } from '@/entities/inventory/model/types'
-import { CellContext, ColumnDef } from '@tanstack/react-table'
-import { IItemListItem } from '../model/types'
+import { type IField, InventoryFieldType } from '@/entities/inventory/model/types'
+import type { CellContext, ColumnDef } from '@tanstack/react-table'
+import type { IItemListItem } from '../model/types'
 import { FaCheck } from 'react-icons/fa'
 import { GiCancel } from 'react-icons/gi'
 

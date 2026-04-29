@@ -1,5 +1,5 @@
 import { baseApi } from '@/shared/api'
-import {
+import type {
     IAdditionalData,
     ICloudinaryApiResponse,
     IGetInfoResponse,

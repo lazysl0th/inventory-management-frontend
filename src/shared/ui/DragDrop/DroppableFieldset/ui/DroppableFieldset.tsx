@@ -1,5 +1,5 @@
 import { useDroppable } from '@dnd-kit/react'
-import { IDroppableFieldset } from '../model/types'
+import type { IDroppableFieldset } from '../model/types'
 
 const DroppableFieldset = ({ id, children }: IDroppableFieldset) => {
     const { ref } = useDroppable({ id })

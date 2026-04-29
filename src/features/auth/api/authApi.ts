@@ -1,11 +1,11 @@
-import {
+import type {
     IAccessToken,
     IAuthResponce,
     IEmailAuthData,
     IRegData,
 } from '../model/types'
 import { logoutUser } from '../model/authSlice'
-import { userApi } from '@/entities/user/api/userApi'
+import { profileApi } from '@/entities/user/api/profileApi'
 import { baseApi } from '@/shared/api'
 
 export const authApi = baseApi.injectEndpoints({
@@ -46,7 +46,7 @@ export const authApi = baseApi.injectEndpoints({
                 try {
                     const { data } = await queryFulfilled
                     localStorage.setItem('accessToken', data.accessToken)
-                    dispatch(userApi.util.invalidateTags(['Me']))
+                    dispatch(profileApi.util.invalidateTags(['Me']))
                 } catch (e) {}
             },
         }),

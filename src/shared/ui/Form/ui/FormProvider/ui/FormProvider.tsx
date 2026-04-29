@@ -1,6 +1,6 @@
 import { FormikProvider, useFormik } from 'formik'
 import { Form } from 'react-bootstrap'
-import { IFormProps } from '../model/types'
+import type { IFormProps } from '../model/types'
 
 export default function FormProvider<T extends object>({
     config,

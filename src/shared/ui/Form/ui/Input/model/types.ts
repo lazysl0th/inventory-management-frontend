@@ -1,5 +1,5 @@
-import { IFieldApi } from '@/shared/lib/hooks/useFormikApi'
-import { FormControlProps } from 'react-bootstrap'
+import type { IFieldApi } from '@/shared/lib/hooks/useFormikApi'
+import type { FormControlProps } from 'react-bootstrap'
 
 export type InputElement = HTMLInputElement | HTMLTextAreaElement
 

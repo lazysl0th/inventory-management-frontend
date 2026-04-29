@@ -1,7 +1,7 @@
 import RSCreatableSelect from 'react-select/creatable'
 import { Form } from 'react-bootstrap'
-import { GroupBase, OnChangeValue } from 'react-select'
-import { ICreatableSelectProps } from '../model/types'
+import type { GroupBase, OnChangeValue } from 'react-select'
+import type { ICreatableSelectProps } from '../model/types'
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
 
 export default function CreatableSelect<

@@ -1,6 +1,6 @@
 import { useId } from 'react'
 import { Form, InputGroup } from 'react-bootstrap'
-import { ISelectProps } from '../model/types'
+import type { ISelectProps } from '../model/types'
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
 
 const Select = ({

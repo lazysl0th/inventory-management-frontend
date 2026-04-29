@@ -1,0 +1,11 @@
+{
+  "actions": {
+    "selectFile": "Вибрати файл"
+  },
+  "labels": {
+    "customId": "ID"
+  },
+  "listFields": {
+    "customId": "Користувацький ІД"
+  }
+}

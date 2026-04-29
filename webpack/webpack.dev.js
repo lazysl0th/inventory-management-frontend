@@ -10,6 +10,9 @@ export default {
         port: 8080,
         open: true,
         hot: true,
-        historyApiFallback: true
+        historyApiFallback: true,
+        devMiddleware: {
+            writeToDisk: true,
+        },
     },
 }

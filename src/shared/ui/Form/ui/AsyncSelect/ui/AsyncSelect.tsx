@@ -1,8 +1,8 @@
 import { Form } from 'react-bootstrap'
-import { GroupBase, OnChangeValue } from 'react-select'
+import type { GroupBase, OnChangeValue } from 'react-select'
 import RSAsyncSelect from 'react-select/async'
 import './AsyncSelect.scss'
-import { IAsyncSelect } from '../model/types'
+import type { IAsyncSelect } from '../model/types'
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
 
 export default function AsyncSelect<

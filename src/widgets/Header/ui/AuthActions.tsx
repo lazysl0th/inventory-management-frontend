@@ -1,29 +1,29 @@
-import { SETTINGS } from '@/shared/config/constants'
 import { Nav } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { INavItemProps } from '../model/types'
+import { LOGIN, REGISTER } from '@/shared/config/constants'
 
 const AuthActions = ({ onExpanded }: INavItemProps) => {
-    const { t: ta } = useTranslation('auth')
+    const { t } = useTranslation('auth')
 
     return (
         <>
             <Nav.Link
                 as={Link}
                 className='text-dark p-0'
-                to={SETTINGS.routes.login}
+                to={LOGIN}
                 onClick={onExpanded}
             >
-                {ta('links.signin')}
+                {t('auth:actions.signin')}
             </Nav.Link>
             <Nav.Link
                 as={Link}
                 className='text-dark p-0'
-                to={SETTINGS.routes.register}
+                to={REGISTER}
                 onClick={onExpanded}
             >
-                {ta('links.signup')}
+                {t('auth:actions.signup')}
             </Nav.Link>
         </>
     )

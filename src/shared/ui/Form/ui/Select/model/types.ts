@@ -1,5 +1,5 @@
-import { ReactNode } from 'react'
-import { FormSelectProps } from 'react-bootstrap'
+import type { ReactNode } from 'react'
+import type { FormSelectProps } from 'react-bootstrap'
 
 export interface ISelectProps extends FormSelectProps {
     label?: string

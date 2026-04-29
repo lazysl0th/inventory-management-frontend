@@ -1,18 +1,18 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { SETTINGS } from '../../config/constants'
 import { TRowData, Typename } from '@/shared/ui/DataTable/model/types'
+import { INVENTORIES, ITEMS, USERS } from '@/shared/config/constants'
 
 export const EntityRoutesSettings = {
     [Typename.Inventory]: {
-        route: SETTINGS.routes.inventories,
+        route: INVENTORIES,
         absolute: true,
     },
     [Typename.Item]: {
-        route: SETTINGS.routes.items,
+        route: ITEMS,
         absolute: false,
     },
     [Typename.User]: {
-        route: SETTINGS.routes.users,
+        route: USERS,
         absolute: true,
         backgroundLocation: null,
     },

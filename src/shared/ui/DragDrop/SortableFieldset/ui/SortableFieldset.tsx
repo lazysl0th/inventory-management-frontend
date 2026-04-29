@@ -1,7 +1,7 @@
 import { DragOverlay } from '@dnd-kit/react'
 import { useSortable } from '@dnd-kit/react/sortable'
 import './SortableFieldset.scss'
-import { IFieldsetProps } from '../model/types'
+import type { IFieldsetProps } from '../model/types'
 
 const SortableFieldset = ({
     id,

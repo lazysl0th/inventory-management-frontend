@@ -1,7 +1,7 @@
-import * as Yup from 'yup'
+import { object, string } from 'yup';
 
-export const searchSchema = Yup.object({
-    searchQuery: Yup.string()
+export const searchSchema = object({
+    searchQuery: string()
         .trim()
         .required('searchQuery.required')
         .max(100, 'searchQuery.max')

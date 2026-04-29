@@ -1,8 +1,8 @@
-import { ButtonGroupProps } from 'react-bootstrap'
-import { ButtonVariant, Placement } from 'react-bootstrap/esm/types'
-import { OverlayChildren } from 'react-bootstrap/esm/Overlay'
-import { IconType } from 'react-icons'
-import { MouseEventHandler } from 'react'
+import type { ButtonGroupProps } from 'react-bootstrap'
+import type { ButtonVariant, Placement } from 'react-bootstrap/esm/types'
+import type { OverlayChildren } from 'react-bootstrap/esm/Overlay'
+import type { IconType } from 'react-icons'
+import type { MouseEventHandler } from 'react'
 
 export interface IAction {
     name: string

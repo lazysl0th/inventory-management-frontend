@@ -1,6 +1,6 @@
 import {
-    IPartId,
-    PartIdFormat,
+    type IPartId,
+    type PartIdFormat,
     PartIdTypes,
     SeparatorPosition,
 } from '@/entities/inventory/model/types'

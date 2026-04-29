@@ -1,0 +1,11 @@
+{
+  "actions": {
+    "selectFile": "Seleccionar archivo"
+  },
+  "labels": {
+    "customId": "ID"
+  },
+  "listFields": {
+    "customId": "Identificación personalizada"
+  }
+}

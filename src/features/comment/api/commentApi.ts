@@ -1,6 +1,6 @@
-import { SETTINGS } from '@/shared/config/constants'
-import { IComment, ICommentData, ISelectParam } from '../model/types'
+import type { IComment, ICommentData, ISelectParam } from '../model/types'
 import { baseApi } from '@/shared/api'
+import { BASE_WSAPI } from '@/shared/config/constants'
 
 export const commentApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -12,7 +12,7 @@ export const commentApi = baseApi.injectEndpoints({
                 arg,
                 { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
             ) {
-                const ws = new WebSocket(SETTINGS.urls.wsUrl)
+                const ws = new WebSocket(BASE_WSAPI)
 
                 const channel = `comments:inventoryId=${arg.inventoryId}`
 

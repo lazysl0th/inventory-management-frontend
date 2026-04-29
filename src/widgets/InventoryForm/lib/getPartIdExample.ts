@@ -1,5 +1,5 @@
 import {
-    IPartId,
+    type IPartId,
     PartIdFormat,
     PartIdTypes,
     SeparatorPosition,

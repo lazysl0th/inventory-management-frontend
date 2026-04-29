@@ -1,4 +1,4 @@
-import { ChangeEventHandler } from 'react'
+import type { ChangeEventHandler } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Row, Col } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
@@ -10,12 +10,15 @@ import { useInventoryAccess } from '@/entities/inventory/lib/useInventoryAccess'
 import { showToast } from '@/shared/model/ui'
 import { TagsField } from '@/features/selectTags'
 import {
-    useGetInventoryCategoriesQuery,
-    useInventoryData,
+    useGetInventoryCategoriesQuery
 } from '@/entities/inventory'
-import { Input, MarkdownField, Select } from '@/shared/ui/Form'
+import { useInventoryData } from '@/entities/inventory/lib/useInventoryData'
+import { Input } from '@/shared/ui/Form/ui/Input'
+import { Select } from '@/shared/ui/Form/ui/Select'
+import { MarkdownField } from '@/shared/ui/Form/ui/MarkdownField'
 
 const InventoryDetailsFieldset = () => {
+    
     const { data: categories, isLoading: categoriesIsLoading } =
         useGetInventoryCategoriesQuery()
 
@@ -23,7 +26,7 @@ const InventoryDetailsFieldset = () => {
 
     const { isAdmin, isOwner } = useInventoryAccess(inventory)
 
-    const { t } = useTranslation('inventory')
+    const { t } = useTranslation(['inventory', 'common'])
     const dispatch = useDispatch()
     const [uploadImage] = useUploadImageMutation()
 
@@ -41,7 +44,7 @@ const InventoryDetailsFieldset = () => {
             const imageUrl = await uploadImage(formData).unwrap()
             image.setValue(imageUrl.url)
         } catch {
-            dispatch(showToast({message: t('toasts.image')}))
+            dispatch(showToast({message: t('common:notifications.errorAction', { count: 1, actionType: 'loading', recordType: 'image' })}))
         }
     }
 
@@ -51,19 +54,19 @@ const InventoryDetailsFieldset = () => {
                 <Col xs={12} md={8}>
                     <Input
                         name='title'
-                        label={t('labels.title')}
-                        placeholder='Enter title...'
+                        label={t('inventory:labels.title')}
+                        placeholder={t('inventory:placeholders.title')}
                     />
                 </Col>
                 <Col xs={12} md={4}>
-                    <Select name='category' label={t('labels.category')}>
+                    <Select name='category' label={categoriesIsLoading ? t('common:options.loading') : t('inventory:labels.category')}>
                         <option value={Category.None} disabled>
-                            {t('options.selectCategory')}
+                            {t('inventory:options.category')}
                         </option>
                         {categories &&
                             categories.map((category) => (
                                 <option key={category} value={category}>
-                                    {t(`categories.${category}`)}
+                                    {t(`inventory:categories.${category}`)}
                                 </option>
                             ))}
                     </Select>
@@ -72,7 +75,7 @@ const InventoryDetailsFieldset = () => {
                     {!isAdmin && !isOwner ? (
                         <MarkdownField
                             name='description'
-                            label={t('labels.description')}
+                            label={t('inventory:labels.description')}
                             value={description.value}
                             className='d-block p-2 border rounded bg-light fieldset--description-markdown'
                         />
@@ -80,8 +83,8 @@ const InventoryDetailsFieldset = () => {
                         <Input
                             as='textarea'
                             name='description'
-                            label={t('labels.description')}
-                            placeholder={t('placeholders.descriptionInventory')}
+                            label={t('inventory:labels.description')}
+                            placeholder={t('inventory:placeholders.descriptionInventory')}
                             rows={6}
                         />
                     )}
@@ -89,9 +92,11 @@ const InventoryDetailsFieldset = () => {
                 <Col xs={12} md={6} lg={4}>
                     <Input
                         name='image'
-                        label={t('labels.image')}
+                        label={t('inventory:labels.image')}
                         type='file'
                         accept='image/*'
+                        alt={t('inventory:alts.imagePreview')}
+                        placeholder={t('inventory:placeholders.noImage')}
                         onChange={handlerChangeImageField}
                     />
                 </Col>
@@ -104,19 +109,19 @@ const InventoryDetailsFieldset = () => {
                     <div className='d-flex flex-column gap-1'>
                         <Input
                             name='owner'
-                            label={t('labels.owner')}
+                            label={t('common:labels.owner')}
                             readOnly
                             disabled
                         />
                         <Input
                             name='createdAt'
-                            label={t('labels.createdBy')}
+                            label={t('common:labels.createdBy')}
                             readOnly
                             disabled
                         />
                         <Input
                             name='updatedAt'
-                            label={t('labels.updateAt')}
+                            label={t('common:labels.updateAt')}
                             readOnly
                             disabled
                         />

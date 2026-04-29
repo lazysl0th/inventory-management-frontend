@@ -18,8 +18,6 @@ const LikeButton = () => {
     const {
         data: likes,
         isLoading: likesIsLoading,
-        error: likesError,
-        isSuccess: likesIsSuccess,
     } = useGetLikesQuery(
         inventoryId && itemId && itemId !== 'new'
             ? { inventoryId, itemId }
@@ -29,8 +27,6 @@ const LikeButton = () => {
     const {
         data: like,
         isLoading: likeIsLoading,
-        error: likeError,
-        isSuccess: likeIsSuccess,
     } = useGetLikeQuery(
         inventoryId && itemId && itemId !== 'new' && currentUser
             ? { inventoryId, itemId }

@@ -1,6 +1,6 @@
 import { flexRender } from '@tanstack/react-table'
 import './DataTableRow.scss'
-import { IDataTableRowProps, TRowData } from '../../model/types'
+import type { IDataTableRowProps, TRowData } from '../../model/types'
 
 export default function DataTableRow<TData extends TRowData>({
     row,

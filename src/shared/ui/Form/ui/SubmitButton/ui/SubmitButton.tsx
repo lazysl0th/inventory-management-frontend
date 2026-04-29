@@ -2,7 +2,7 @@ import { createPortal } from 'react-dom'
 import { useEffect, useState } from 'react'
 import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
 import { Button } from '../../../../Button'
-import { ISubmitButtonProps } from '../model/types'
+import type { ISubmitButtonProps } from '../model/types'
 
 export default function SubmitButton<T>({
     containerId,

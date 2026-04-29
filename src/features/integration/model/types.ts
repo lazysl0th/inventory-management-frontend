@@ -1,4 +1,4 @@
-import { IAdditionalInfoForm } from '@/widgets/AdditionalInfo/model/types'
+import type { IAdditionalInfoForm } from '@/widgets/AdditionalInfoForm/model/types'
 
 export interface ICloudinaryApiResponse {
     url: string

@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { IActiveInventory, IInventoriesState } from './types'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import type { IActiveInventory, IInventoriesState } from './types'
 
 const initialState: IInventoriesState = {
     activeInventory: {

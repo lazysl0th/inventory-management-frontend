@@ -1,0 +1,184 @@
+{
+  "actions": {
+    "selectFile": "Seleccionar archivo",
+    "getToken": "Obtener token",
+    "createTag": "Crear nueva etiqueta:"
+  },
+  "tabs": {
+    "details": "Detalles",
+    "customId": "ID personalizado",
+    "fields": "Campos",
+    "access": "Acceso",
+    "items": "Elementos",
+    "discussion": "Discusión",
+    "stats": "Estadísticas",
+    "export": "Exportar"
+  },
+  "labels": {
+    "title": "Título",
+    "description": "Descripción",
+    "category": "Categoría",
+    "image": "Imagen",
+    "tags": "Etiquetas",
+    "fileNotSelected": "Archivo no seleccionado",
+    "type": "Tipo",
+    "format": "Formato",
+    "separator": "Separador",
+    "position": "Posición",
+    "showInTable": "Mostrar en la tabla",
+    "publicAccess": "Acceso público"
+  },
+  "categories": {
+    "Equipment": "Equipment",
+    "Furniture": "Furniture",
+    "Book": "Books",
+    "Other": "Other"
+  },
+  "typesCustomId": {
+    "fixed": {
+      "label": "Fixed",
+      "hint": "Texto que no cambia. Puede usar Unicode o emojis.",
+      "formatHint": "Introduzca un valor constante.",
+      "formats": {}
+    },
+    "20bitRandom": {
+      "label": "Aleatorio de 20 bits",
+      "hint": "Valor aleatorio de 20 bits. Por ejemplo, formato decimal de seis dígitos (D6) o hexadecimal de cinco dígitos (X5).",
+      "formatHint": "Elija cómo representar los bits aleatorios.",
+      "formats": {
+        "D6": "Decimal D6 (000000)",
+        "X5": "Hex X5 (00000..fffff)"
+      }
+    },
+    "32bitRandom": {
+      "label": "Número aleatorio de 32 bits",
+      "hint": "Valor aleatorio de 32 bits. Por ejemplo, formato decimal de diez dígitos (D10) o hexadecimal de ocho dígitos (X8).",
+      "formatHint": "Elige cómo representar los bits aleatorios.",
+      "formats": {
+        "D10": "Decimal D10 (0000000000)",
+        "X8": "Hex X8 (00000000..ffffffff)"
+      }
+    },
+    "6digitsRandom": {
+      "label": "Número aleatorio de 6 dígitos",
+      "hint": "Número aleatorio de seis dígitos.",
+      "formatHint": "Decimal de longitud fija.",
+      "formats": {
+        "D6": "Decimal D6 (000000)"
+      }
+    },
+    "9digitsRandom": {
+      "label": "Número aleatorio de 9 dígitos.",
+      "hint": "Un número aleatorio de nueve dígitos.",
+      "formatHint": "Decimal de longitud fija.",
+      "formats": {
+        "D9": "Decimal D9 (000000000)"
+      }
+    },
+    "guid": {
+      "label": "GUID",
+      "hint": "UUID v4 generado automáticamente.",
+      "formatHint": "No se requiere formato.",
+      "formats": {}
+    },
+    "dateTime": {
+      "formatHint": "Elija un patrón común o utilice uno personalizado.",
+      "formats": {
+        "YYYY": "Año (AAAA)",
+        "YYYYMM": "Año mes (AAAAMM)",
+        "YYYYMMDD": "Fecha (AAAAMMDD)",
+        "YYYYMMDD-HHmm": "Fecha y hora (AAAAMMDD-HHmm)",
+        "YYYYMMDD-HHmmss": "Fecha, hora, segundos (AAAAMMDD-HHmmss)"
+      },
+      "hint": "Una fecha/hora de creación del artículo.",
+      "label": "Fecha/hora"
+    },
+    "sequence": {
+      "formatHint": "Elija ancho: D, D2, D3, D4... y valor inicial",
+      "formats": {
+        "D1": "1, 2, 3",
+        "D2": "01, 02, 03",
+        "D3": "001, 002, 003",
+        "D4": "0001, 0002, 0003"
+      },
+      "hint": "Un índice secuencial. \nPor ejemplo, con ceros a la izquierda (D4) o sin (D).",
+      "label": "Secuencia (1)"
+    }
+  },
+  "options": {
+    "category": "Seleccionar categoría...",
+    "type": "Seleccionar tipo...",
+    "before": "Antes",
+    "after": "Después",
+    "format": "Seleccione formato...",
+    "publicAccess": "Acceso público",
+    "separator": "Seleccione la posición del separador..."
+  },
+  "toasts": {
+    "headers": {
+      "token": "Simbólico"
+    }
+  },
+  "badges": {
+    "example": "Ejemplo:",
+    "totalItems": "Total de elementos",
+    "position": "Posición"
+  },
+  "fieldsTypes": {
+    "TEXT": "Texto de una sola línea",
+    "LONGTEXT": "Texto de varias líneas",
+    "NUMBER": "Numérico",
+    "FILE": "Enlace a archivo/imagen",
+    "BOOLEAN": "Verdadero/Falso"
+  },
+  "placeholders": {
+    "noImage": "Sin imagen",
+    "descriptionInventory": "Introduce texto (compatible con Markdown)...",
+    "descriptionField": "Descripción (opcional)",
+    "initialValue": "Valor inicial",
+    "customFormat": "Formato personalizado",
+    "title": "Introduce el título",
+    "tagsNoFound": "No se encontraron",
+    "text": "Introduzca texto...",
+    "separator": "Ejemplo INV- o _"
+  },
+  "listTitle": {
+    "all": "Todos los inventarios",
+    "latest": "Últimos inventarios",
+    "topItems": "Inventarios de artículos principales",
+    "my": "Mis inventarios",
+    "other": "Los inventarios de {{userName}}",
+    "writeAccess": "Inventarios con acceso de escritura",
+    "searchResults": "Resultados de la búsqueda",
+    "allowedUsers": "Usuarios con acceso de escritura",
+    "numStats": "Estadísticas sobre campos numéricos",
+    "textStats": "Estadísticas en campos de texto"
+  },
+  "listField": {
+    "description": "Descripción",
+    "title": "Título",
+    "category": "Categoría",
+    "owner": "Dueño",
+    "name": "Nombre",
+    "email": "Correo electrónico"
+  },
+  "texts": {
+    "discussion": "Aún no hay comentarios. \nSe el primero en comentar",
+    "category": "Desarrollo de definición de valor (enum).",
+    "noFields": "No hay campos personalizados definidos para este inventario.",
+    "noPartsCustomID": "No hay piezas definidas para este ID personalizado.",
+    "noStatsNum": "Aún no hay datos agregados sobre campos numéricos disponibles",
+    "noStatsText": "Aún no hay datos agregados disponibles sobre campos numéricos.",
+    "noUsers": "A ningún usuario se le ha concedido acceso de escritura.",
+    "privateAccess": "Sólo los usuarios y administradores permitidos tienen acceso",
+    "publicAccess": "Cualquiera puede ver este inventario."
+  },
+  "alts": {
+    "imagePreview": "Avance"
+  },
+  "hints": {
+    "position": "Determina dónde se agrega el separador.",
+    "separator": "Agrega un prefijo o sufijo."
+  },
+  "searchResults": "No se encontraron resultados para <italic>{{query}}</italic>. \nPruebe con otro término de búsqueda."
+}

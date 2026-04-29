@@ -1,0 +1,23 @@
+{
+  "labels": {
+    "inventory": "Título del inventario",
+    "link": "Enlace",
+    "priority": "Prioridad",
+    "request": "Mensaje/Solicitud"
+  },
+  "notifications": {
+    "error": "Hubo errores al enviar su solicitud de soporte.",
+    "success": "Su solicitud de soporte ha sido enviada exitosamente"
+  },
+  "options": {
+    "average": "Promedio",
+    "high": "Alto",
+    "low": "Bajo",
+    "priority": "Seleccione prioridad..."
+  },
+  "placeholders": {
+    "inventory": "Ingrese el título del inventario",
+    "link": "Ingresar enlace",
+    "request": "Introducir mensaje/solicitud"
+  }
+}

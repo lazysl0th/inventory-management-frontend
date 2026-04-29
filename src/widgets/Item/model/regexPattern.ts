@@ -1,4 +1,5 @@
-import { PartIdFormat } from '@/entities/inventory/model/types'
+import { PartIdFormat } from "@/entities/inventory"
+
 
 export const partIdFormatRegexPattern: Record<PartIdFormat, string> = {
     [PartIdFormat.D1]: '\\d{1}',

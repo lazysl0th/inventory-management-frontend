@@ -1,25 +1,28 @@
 import { AppModals } from '@/shared/model/ui'
 import { IConfig } from './types'
-import { SupportRequestForm } from '@/widgets/SupportRequestForm'
-import { AdditionalInfoForm } from '@/widgets/AdditionalInfo'
-import { VersionConflictDialog } from '@/widgets/VersionConflictDialog'
+import { lazy } from 'react';
+
+const SupportRequestForm = lazy(() => import('@/widgets/SupportRequestForm').then(module => ({ default: module.SupportRequestForm })));
+const AdditionalInfoForm = lazy(() => import('@/widgets/AdditionalInfoForm').then(module => ({ default: module.AdditionalInfoForm })));
+const VersionConflictDialog = lazy(() => import('@/widgets/VersionConflictDialog').then(module => ({ default: module.VersionConflictDialog })));
+
 
 export const modalRegistry: Partial<Record<AppModals, IConfig>> = {
     [AppModals.Help]: {
         infoTooltipContent: {
-            title: 'Support Request',
+            titleKey: 'supportRequest',
             Body: SupportRequestForm,
         },
     },
     [AppModals.AdditionalInfo]: {
         infoTooltipContent: {
-            title: 'Additional info',
+            titleKey: 'additionalInfo',
             Body: AdditionalInfoForm,
         },
     },
     [AppModals.VersionConflict]: {
         infoTooltipContent: {
-            title: 'Version conflict',
+            titleKey: 'versionConflict',
             Body: VersionConflictDialog,
         },
     },

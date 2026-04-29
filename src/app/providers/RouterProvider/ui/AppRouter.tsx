@@ -1,26 +1,30 @@
-import RootLayout from '@/app/layout/RootLayout'
-import { SETTINGS } from '@/shared/config/constants'
+import { lazy, Suspense } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
-import ProtectedRoute from './ProtectedRoute'
-import { InventoryPage } from '@/pages/InventoryPage'
-import { InventoryTabsPage } from '@/pages/InventoryTabsPage'
-import AuthLayout from '@/app/layout/AuthLayout'
-import { LoginPage } from '@/pages/LoginPage'
-import { RegisterPage } from '@/pages/RegisterPage'
-import { ResetPasswordPage } from '@/pages/ResetPasswordPage'
-import { ChangePasswordPage } from '@/pages/ChangePasswordPage'
-import { useGetUserProfileQuery } from '@/entities/user'
-import { InventoryModalPage } from '@/pages/InventoryModalPage'
-import { ItemModalPage } from '@/pages/ItemModalPage'
-import { ItemPage } from '@/pages/ItemPage'
-import { AdminPage } from '@/pages/AdminPage'
-import { DeleteUserDataPage } from '@/pages/DeleteUserDataPage'
+import { useGetUserProfileQuery } from '@/entities/user/api/profileApi'
+import { Loader } from '@/shared/ui/Loader'
 import { MainPage } from '@/pages/MainPage'
-import { NotFoundPage } from '@/pages/NotFoundPage'
-import { OAuthSuccessPage } from '@/pages/OAuthSuccessPage'
-import { PrivacyPage } from '@/pages/PrivacyPage'
-import { SearchPage } from '@/pages/SearchPage'
-import { ProfilePage } from '@/pages/ProfilePage'
+import { ADMIN, AUTH_SUCCESS, CHANGE_PASSWORD, INVENTORIES, ITEMS, LOGIN, PRIVACY, PROFILE, REGISTER, RESET_PASSWORD, SEARCH, USER_DATA_DELETE, USERS } from '@/shared/config/constants'
+import RootLayout from '@/app/layout/RootLayout'
+
+const AuthLayout = lazy(() => import('@/app/layout/AuthLayout'))
+const FullPageLayout = lazy(() => import('@/app/layout/FullPageLayout'))
+const ProtectedRoute = lazy(() => import('./ProtectedRoute'))
+const SearchPage = lazy(() => import('@/pages/SearchPage').then(module => ({ default: module.SearchPage })))
+const ProfilePage = lazy(() => import('@/pages/ProfilePage').then(module => ({ default: module.ProfilePage })))
+const AdminPage = lazy(() => import('@/pages/AdminPage').then(module => ({ default: module.AdminPage })))
+const LoginPage = lazy(() => import('@/pages/LoginPage').then(module => ({ default: module.LoginPage })))
+const RegisterPage = lazy(() => import('@/pages/RegisterPage').then(module => ({ default: module.RegisterPage })))
+const ResetPasswordPage = lazy(() => import('@/pages/ResetPasswordPage').then(module => ({ default: module.ResetPasswordPage })))
+const ChangePasswordPage = lazy(() => import('@/pages/ChangePasswordPage').then(module => ({ default: module.ChangePasswordPage })))
+const OAuthSuccessPage = lazy(() => import('@/pages/OAuthSuccessPage').then(module => ({ default: module.OAuthSuccessPage })))
+const DeleteUserDataPage = lazy(() => import('@/pages/DeleteUserDataPage').then(module => ({ default: module.DeleteUserDataPage })))
+const PrivacyPage = lazy(() => import('@/pages/PrivacyPage').then(module => ({ default: module.PrivacyPage })))
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage').then(module => ({ default: module.NotFoundPage })))
+const InventoryPage = lazy(() => import('@/pages/InventoryPage').then(module => ({ default: module.InventoryPage })))
+const InventoryTabsPage = lazy(() => import('@/pages/InventoryTabsPage').then(module => ({ default: module.InventoryTabsPage })))
+const ItemPage = lazy(() => import('@/pages/ItemPage').then(module => ({ default: module.ItemPage })))
+const InventoryModalPage = lazy(() => import('@/pages/InventoryModalPage').then(module => ({ default: module.InventoryModalPage })))
+const ItemModalPage = lazy(() => import('@/pages/ItemModalPage').then(module => ({ default: module.ItemModalPage })))
 
 const AppRouter = () => {
     useGetUserProfileQuery()
@@ -29,27 +33,27 @@ const AppRouter = () => {
     return (
         <>
             <Routes location={backgroundLocation || location}>
-                <Route element={<RootLayout />}>
+                <Route element={<Suspense fallback={<Loader />}><RootLayout /></Suspense>}>
                     <Route index element={<MainPage />} />
                     <Route
-                        path={SETTINGS.routes.search}
+                        path={SEARCH}
                         element={<SearchPage />}
                     />
                     <Route element={<ProtectedRoute />}>
                         <Route
-                            path={SETTINGS.routes.profile}
+                            path={PROFILE}
                             element={<ProfilePage />}
                         />
                         <Route
-                            path={SETTINGS.routes.admin}
+                            path={ADMIN}
                             element={<AdminPage />}
                         />
                     </Route>
                     <Route
-                        path={`${SETTINGS.routes.users}/:userId`}
+                        path={`${USERS}/:userId`}
                         element={<ProfilePage />}
                     />
-                    <Route path={SETTINGS.routes.inventories}>
+                    <Route path={INVENTORIES}>
                         <Route
                             path='new/:activeTab?'
                             element={<InventoryPage />}
@@ -62,51 +66,53 @@ const AppRouter = () => {
                         </Route>
                     </Route>
                     <Route
-                        path={`${SETTINGS.routes.inventories}/:inventoryId/${SETTINGS.routes.items}/new`}
+                        path={`${INVENTORIES}/:inventoryId/${ITEMS}/new`}
                         element={<ItemPage />}
                     />
                     <Route
-                        path={`${SETTINGS.routes.inventories}/:inventoryId/${SETTINGS.routes.items}/:itemId`}
+                        path={`${INVENTORIES}/:inventoryId/${ITEMS}/:itemId`}
                         element={<ItemPage />}
                     />
                 </Route>
-                <Route element={<AuthLayout />}>
+                <Route element={<Suspense fallback={<Loader className='min-vh-100'/>}><AuthLayout /></Suspense>}>
                     <Route
-                        path={SETTINGS.routes.login}
+                        path={LOGIN}
                         element={<LoginPage />}
                     />
                     <Route
-                        path={SETTINGS.routes.register}
+                        path={REGISTER}
                         element={<RegisterPage />}
                     />
                     <Route
-                        path={SETTINGS.routes.resetPassword}
+                        path={RESET_PASSWORD}
                         element={<ResetPasswordPage />}
                     />
                     <Route
-                        path={SETTINGS.routes.changePassword}
+                        path={CHANGE_PASSWORD}
                         element={<ChangePasswordPage />}
                     />
                 </Route>
                 <Route
-                    path={SETTINGS.routes.authSuccess}
-                    element={<OAuthSuccessPage />}
+                    path={AUTH_SUCCESS}
+                    element={<Suspense fallback={<Loader className='min-vh-100'/>}><OAuthSuccessPage /></Suspense>}
                 />
-                <Route
-                    path={SETTINGS.routes.deleteUserData}
-                    element={<DeleteUserDataPage />}
-                />
-                <Route
-                    path={SETTINGS.routes.privacy}
-                    element={<PrivacyPage />}
-                />
-                <Route path='*' element={<NotFoundPage />} />
+                <Route element={<Suspense fallback={<Loader className='min-vh-100'/>}><FullPageLayout/></Suspense>}>
+                    <Route
+                        path={USER_DATA_DELETE}
+                        element={<DeleteUserDataPage />}
+                    />
+                    <Route
+                        path={PRIVACY}
+                        element={<PrivacyPage />}
+                    />
+                    <Route path='*' element={<NotFoundPage />} />
+                </Route>
             </Routes>
             {backgroundLocation && (
                 <Routes>
                     <Route
-                        path={`${SETTINGS.routes.inventories}`}
-                        element={<InventoryModalPage />}
+                        path={`${INVENTORIES}`}
+                        element={<Suspense fallback={<Loader className='min-vh-100'/>}><InventoryModalPage /></Suspense>}
                     >
                         <Route path='new' element={<InventoryPage />}>
                             <Route
@@ -120,11 +126,11 @@ const AppRouter = () => {
                                 element={<InventoryTabsPage />}
                             >
                                 <Route
-                                    path={`${SETTINGS.routes.items}/:itemId`}
+                                    path={`${ITEMS}/:itemId`}
                                     element={<ItemModalPage />}
                                 />
                                 <Route
-                                    path={`${SETTINGS.routes.items}/new`}
+                                    path={`${ITEMS}/new`}
                                     element={<ItemModalPage />}
                                 />
                             </Route>

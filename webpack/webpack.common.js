@@ -3,15 +3,16 @@ import webpack from 'webpack';
 import HTMLWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import Dotenv from 'dotenv-webpack';
+import CopyPlugin from 'copy-webpack-plugin';
 
 const production = process.env.NODE_ENV === 'production'; 
 
-export const projectDir = new URL('.', import.meta.url).pathname;
+export const projectDir = resolve(new URL('.', import.meta.url).pathname, '..');
 
 export default {
-  entry: resolve(projectDir, '..', './src/app/index.tsx'),
+  entry: resolve(projectDir, './src/app/index.tsx'),
   output: {
-    path: resolve(projectDir, '..', './dist'),
+    path: resolve(projectDir, './dist'),
     filename: production
       ? 'static/scripts/[name].[contenthash].js'
       : 'static/scripts/[name].js',
@@ -26,6 +27,9 @@ export default {
         use: [
           {
             loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+            },
           },
         ],
       },
@@ -52,6 +56,15 @@ export default {
             loader: 'sass-loader',
             options: {
               sourceMap: true,
+              sassOptions: {
+                quietDeps: true,
+                silenceDeprecations: [
+                  'color-functions',
+                  'global-builtin',
+                  'import'
+                ],
+                includePaths: [resolve(projectDir, 'node_modules')],
+              },
             },
           },
         ],
@@ -61,17 +74,39 @@ export default {
   resolve: {
     extensions: ['.js', '.jsx', '.tsx', '.ts', '.json'],
     alias: {
-      '@': resolve(projectDir, '..', 'src'), 
+      '@': resolve(projectDir, 'src'), 
     },
   },
   plugins: [
     new HTMLWebpackPlugin({
-      template: resolve(projectDir, '..', './public/index.html')
+      template: resolve(projectDir, './public/index.html')
     }),
     new MiniCssExtractPlugin({
       filename: 'static/styles/[name].[contenthash].css',
     }),
     new webpack.EnvironmentPlugin({ NODE_ENV: 'development', }),
     new Dotenv(),
+    new CopyPlugin({
+        patterns: [
+            { 
+                from: resolve(projectDir, 'public/locales'), 
+                to: resolve(projectDir, 'dist/locales'),
+                noErrorOnMissing: true
+            },
+        ],
+    }),
   ],
+  optimization: {
+concatenateModules: false,
+
+  splitChunks: {
+    chunks: 'all',
+    cacheGroups: {
+      vendor: {
+        test: /[\\/]node_modules[\\/]/,
+        chunks: 'all',
+      },
+    },
+  },
+},
 }

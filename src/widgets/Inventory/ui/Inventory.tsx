@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import './Inventory.scss'
 import { InventoryTabs } from '../model/types'
 import InventoryTabsNav from './InventoryTabsNav'
-import { useInventoryData } from '@/entities/inventory'
+import { useInventoryData } from '@/entities/inventory/lib/useInventoryData'
 
 const Inventory = () => {
     const { activeTab } = useParams()

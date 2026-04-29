@@ -1,6 +1,6 @@
-import * as Yup from 'yup'
+import { object, string } from 'yup';
 
-export const profileSchema = Yup.object({
-    name: Yup.string().required('name.required'),
-    email: Yup.string().email('email.email').required('email.required'),
+export const profileSchema = object({
+    name: string().required('name.required'),
+    email: string().email('email.email').required('email.required'),
 })

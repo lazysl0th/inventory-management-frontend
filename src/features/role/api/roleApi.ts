@@ -1,9 +1,5 @@
 import { baseApi } from '@/shared/api'
-
-interface IRoleBody {
-    userIds: string[]
-    roleIds: number[]
-}
+import type { IRoleBody } from '../model/types'
 
 export const roleApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
