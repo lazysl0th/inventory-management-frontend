@@ -20,7 +20,7 @@ const InventoryList = ({
     error,
     tableId,
     children,
-    inventoryActions
+    inventoryActions,
 }: IInventoryList) => {
     const dispatch = useDispatch()
 
@@ -41,30 +41,30 @@ const InventoryList = ({
     return (
         <Section>
             {children}
-            {
-                isLoading
-                    ? <TableSkeleton rows={6} columns={4}/>
-                    : error
-                        ? <Message variant='danger' error={error}/>
-                        : <DataTable<TInventoryListItem, string>
-                                tableId={tableId}
-                                data={data}
-                                columns={inventoryColumns}
-                                rowSelection={selectedRows}
-                                enableRowSelection={!!tableId}
-                                onRowSelectionChange={selectRowHandle}
-                                onRowClick={openRecordHandler}
-                            >
-                                {inventoryActions && (
-                                    <Suspense fallback={<Loader />}>
-                                    <ActionButtons
-                                        actions={inventoryActions}
-                                        className='d-flex'
-                                    />
-                                    </Suspense>
-                                )}
-                            </DataTable>
-            }
+            {isLoading ? (
+                <TableSkeleton rows={6} columns={4} />
+            ) : error ? (
+                <Message variant='danger' error={error} />
+            ) : (
+                <DataTable<TInventoryListItem, string>
+                    tableId={tableId}
+                    data={data}
+                    columns={inventoryColumns}
+                    rowSelection={selectedRows}
+                    enableRowSelection={!!tableId}
+                    onRowSelectionChange={selectRowHandle}
+                    onRowClick={openRecordHandler}
+                >
+                    {inventoryActions && (
+                        <Suspense fallback={<Loader />}>
+                            <ActionButtons
+                                actions={inventoryActions}
+                                className='d-flex'
+                            />
+                        </Suspense>
+                    )}
+                </DataTable>
+            )}
         </Section>
     )
 }

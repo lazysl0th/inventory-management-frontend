@@ -1,4 +1,4 @@
-import type { TTag } from "@/entities/inventory"
+import type { TTag } from '@/entities/inventory'
 
 export type TCreatableTag = TTag & {
     label?: React.ReactNode

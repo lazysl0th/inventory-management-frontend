@@ -108,24 +108,22 @@ const PartIdFieldset = ({ partId, index }: IPartIdFieldsetProps) => {
                     xs={partId.type === PartIdTypes.Sequence ? 7 : 12}
                     md={partId.type === PartIdTypes.Sequence ? 5 : 6}
                 >
-                    
                     {partId.type && partId.type === PartIdTypes.Text ? (
                         <Suspense fallback={<div>Загрузка смайликов...</div>}>
-                        <Input
-                            label={t('inventory:labels.format')}
-                            name={`customIdFormat.parts[${index}].format`}
-                            onChange={handleChangePartIdFormat}
-                            helpText={t(
-                                partId.type &&
-                                    partIdSettings[partId.type].formatHint
-                            )}
-                        >
-                            
+                            <Input
+                                label={t('inventory:labels.format')}
+                                name={`customIdFormat.parts[${index}].format`}
+                                onChange={handleChangePartIdFormat}
+                                helpText={t(
+                                    partId.type &&
+                                        partIdSettings[partId.type].formatHint
+                                )}
+                            >
                                 <EmojiButton
                                     formatValue={partId.format}
                                     onEmojiClick={partIdFormat.setValue}
                                 />
-                        </Input>
+                            </Input>
                         </Suspense>
                     ) : (
                         <Select
@@ -159,7 +157,9 @@ const PartIdFieldset = ({ partId, index }: IPartIdFieldsetProps) => {
                         <Input
                             name={`customIdFormat.parts[${index}].currentSequence`}
                             label='Initial value'
-                            placeholder={t('inventory:placeholders.initialValue')}
+                            placeholder={t(
+                                'inventory:placeholders.initialValue'
+                            )}
                         />
                     </Col>
                 )}

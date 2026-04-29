@@ -9,16 +9,13 @@ import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
 import { useInventoryAccess } from '@/entities/inventory/lib/useInventoryAccess'
 import { showToast } from '@/shared/model/ui'
 import { TagsField } from '@/features/selectTags'
-import {
-    useGetInventoryCategoriesQuery
-} from '@/entities/inventory'
+import { useGetInventoryCategoriesQuery } from '@/entities/inventory'
 import { useInventoryData } from '@/entities/inventory/lib/useInventoryData'
 import { Input } from '@/shared/ui/Form/ui/Input'
 import { Select } from '@/shared/ui/Form/ui/Select'
 import { MarkdownField } from '@/shared/ui/Form/ui/MarkdownField'
 
 const InventoryDetailsFieldset = () => {
-    
     const { data: categories, isLoading: categoriesIsLoading } =
         useGetInventoryCategoriesQuery()
 
@@ -44,7 +41,15 @@ const InventoryDetailsFieldset = () => {
             const imageUrl = await uploadImage(formData).unwrap()
             image.setValue(imageUrl.url)
         } catch {
-            dispatch(showToast({message: t('common:notifications.errorAction', { count: 1, actionType: 'loading', recordType: 'image' })}))
+            dispatch(
+                showToast({
+                    message: t('common:notifications.errorAction', {
+                        count: 1,
+                        actionType: 'loading',
+                        recordType: 'image',
+                    }),
+                })
+            )
         }
     }
 
@@ -59,7 +64,14 @@ const InventoryDetailsFieldset = () => {
                     />
                 </Col>
                 <Col xs={12} md={4}>
-                    <Select name='category' label={categoriesIsLoading ? t('common:options.loading') : t('inventory:labels.category')}>
+                    <Select
+                        name='category'
+                        label={
+                            categoriesIsLoading
+                                ? t('common:options.loading')
+                                : t('inventory:labels.category')
+                        }
+                    >
                         <option value={Category.None} disabled>
                             {t('inventory:options.category')}
                         </option>
@@ -84,7 +96,9 @@ const InventoryDetailsFieldset = () => {
                             as='textarea'
                             name='description'
                             label={t('inventory:labels.description')}
-                            placeholder={t('inventory:placeholders.descriptionInventory')}
+                            placeholder={t(
+                                'inventory:placeholders.descriptionInventory'
+                            )}
                             rows={6}
                         />
                     )}

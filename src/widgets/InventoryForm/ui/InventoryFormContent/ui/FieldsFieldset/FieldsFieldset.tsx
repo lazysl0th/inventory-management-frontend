@@ -48,7 +48,13 @@ const FieldsFieldset = () => {
                 <Button
                     name='addField'
                     placement='top'
-                    overlay={<Tooltip tooltip={t('common:actions.addRecord', { recordType: 'field' })} />}
+                    overlay={
+                        <Tooltip
+                            tooltip={t('common:actions.addRecord', {
+                                recordType: 'field',
+                            })}
+                        />
+                    }
                     variant='outline-success'
                     onClick={addFieldhandle}
                 >

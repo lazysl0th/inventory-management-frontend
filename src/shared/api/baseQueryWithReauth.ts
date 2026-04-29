@@ -45,7 +45,7 @@ export const baseQueryWithReauth: BaseQueryFn<
                     )
                     result = await baseQuery(args, api, extraOptions)
                 } else {
-                    api.dispatch({ type: 'auth/logout' });
+                    api.dispatch({ type: 'auth/logout' })
                 }
             } finally {
                 release()

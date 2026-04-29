@@ -15,19 +15,13 @@ const ProtectedRoute = () => {
     if (!isAuthChecked) {
         return (
             <Container className='d-flex'>
-                <Loader/>
+                <Loader />
             </Container>
         )
     }
 
     if (!isAuthenticated) {
-        return (
-            <Navigate
-                replace
-                to={LOGIN}
-                state={{ from: location }}
-            />
-        )
+        return <Navigate replace to={LOGIN} state={{ from: location }} />
     }
 
     if (location.pathname === ADMIN && !isAdmin) {

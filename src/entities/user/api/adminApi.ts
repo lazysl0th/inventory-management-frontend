@@ -1,5 +1,10 @@
 import { baseApi } from '@/shared/api'
-import type { IDeleteBody, ISearchParam, IUpdateBody, IUser } from '../model/types'
+import type {
+    IDeleteBody,
+    ISearchParam,
+    IUpdateBody,
+    IUser,
+} from '../model/types'
 
 export const adminApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -11,7 +16,10 @@ export const adminApi = baseApi.injectEndpoints({
             providesTags: (result) =>
                 result
                     ? [
-                          ...result.map(({ id }) => ({ type: 'User' as const, id })),
+                          ...result.map(({ id }) => ({
+                              type: 'User' as const,
+                              id,
+                          })),
                           'User',
                       ]
                     : ['User'],

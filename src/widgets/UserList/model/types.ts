@@ -1,4 +1,3 @@
-
 import type { IUser } from '@/entities/user'
 import type { TTableIds } from '@/shared/model/table'
 import type { IAction } from '@/shared/ui/ActionButtons'
@@ -9,8 +8,8 @@ import type { ReactNode } from 'react'
 export interface IUserList {
     children: ReactNode
     tableId?: TTableIds
-    data: IUser[],
-    isLoading: boolean,
-    error?: FetchBaseQueryError | SerializedError,
+    data: IUser[]
+    isLoading: boolean
+    error?: FetchBaseQueryError | SerializedError
     userActions?: IAction[]
 }

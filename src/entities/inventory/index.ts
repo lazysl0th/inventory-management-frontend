@@ -2,7 +2,8 @@ export {
     default as inventorySliceReducer,
     setActiveInventory,
 } from './model/inventorySlice'
-export { useSearchInventoriesQuery,
+export {
+    useSearchInventoriesQuery,
     useGetInventoriesQuery,
     useLazyGetInventoryQuery,
     useGetInventoryQuery,
@@ -10,7 +11,8 @@ export { useSearchInventoriesQuery,
     useDeleteInventoriesMutation,
     useCreateInventoryMutation,
     useUpdateInventoryMutation,
-    useLazyGetInventoryTokenQuery } from './api/inventoryApi'
+    useLazyGetInventoryTokenQuery,
+} from './api/inventoryApi'
 export {
     Category,
     PartIdFormat,

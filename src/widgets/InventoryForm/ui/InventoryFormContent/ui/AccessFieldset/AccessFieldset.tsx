@@ -11,16 +11,21 @@ import { showToast } from '@/shared/model/ui'
 import { Checkbox } from '@/shared/ui/Form/ui/Checkbox'
 
 const AccessFieldset = () => {
-    const {inventoryId} = useParams()
+    const { inventoryId } = useParams()
     const { t } = useTranslation('inventory')
     const { field: isPublicField } = useFormikApi<boolean>('isPublic')
     const [getInventoryToken] = useLazyGetInventoryTokenQuery()
     const dispatch = useDispatch()
 
     const getTokenHandle = async () => {
-        if (!inventoryId) return;
+        if (!inventoryId) return
         const token = await getInventoryToken({ inventoryId }).unwrap()
-        dispatch(showToast({header: t('inventory:toasts.headers.token'), message: token}))
+        dispatch(
+            showToast({
+                header: t('inventory:toasts.headers.token'),
+                message: token,
+            })
+        )
     }
 
     return (

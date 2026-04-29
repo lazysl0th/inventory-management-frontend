@@ -86,7 +86,7 @@ export const inventoryApi = baseApi.injectEndpoints({
         }),
         getInventoryToken: builder.query<string, ISelectParam>({
             query: ({ inventoryId }) => `inventories/${inventoryId}/getToken`,
-        })
+        }),
     }),
 })
 
@@ -99,5 +99,5 @@ export const {
     useDeleteInventoriesMutation,
     useCreateInventoryMutation,
     useUpdateInventoryMutation,
-    useLazyGetInventoryTokenQuery
+    useLazyGetInventoryTokenQuery,
 } = inventoryApi

@@ -10,9 +10,7 @@ import { Typename } from '@/shared/ui/DataTable'
 import { getFormatCustomId } from '../lib/itemHelpers'
 import { itemSchema } from '../model/validation'
 import useRecordHandlers from '@/shared/lib/hooks/useRecordHandlers'
-import {
-    InventoryFieldType,
-} from '@/entities/inventory'
+import { InventoryFieldType } from '@/entities/inventory'
 import {
     type IItemForm,
     type IUpdateItemData,
@@ -45,14 +43,9 @@ const Item = () => {
     const dispatch = useDispatch()
     const { currentUser } = useCurrentUser()
 
-    const {
-        data: inventory,
-        inventoryId,
-    } = useInventoryData()
+    const { data: inventory, inventoryId } = useInventoryData()
 
-    const {
-        data: item,
-    } = useGetItemQuery(
+    const { data: item } = useGetItemQuery(
         inventoryId && itemId && itemId !== 'new'
             ? { inventoryId, itemId }
             : skipToken
@@ -105,31 +98,66 @@ const Item = () => {
     const [createItem] = useCreateItemMutation()
     const [updateItem] = useUpdateItemMutation()
 
-    const create = async(payload: TCreateItemData) => {
+    const create = async (payload: TCreateItemData) => {
         try {
             const item = await createItem(payload).unwrap()
             dispatch(setActiveItem({ id: item.id }))
-            dispatch(showToast({message: t('common:notifications.successAction', { count: 1, actionType: 'created', recordType: 'item' })}))
+            dispatch(
+                showToast({
+                    message: t('common:notifications.successAction', {
+                        count: 1,
+                        actionType: 'created',
+                        recordType: 'item',
+                    }),
+                })
+            )
             openRecord(item.id, true)
         } catch (e) {
-            dispatch(showToast({message: t('common:notifications.errorAction', { count: 1, actionType: 'creating', recordType: 'item' })}))
+            dispatch(
+                showToast({
+                    message: t('common:notifications.errorAction', {
+                        count: 1,
+                        actionType: 'creating',
+                        recordType: 'item',
+                    }),
+                })
+            )
             console.log(e)
         }
     }
 
-    const update = async(payload: IUpdateItemData) => {
+    const update = async (payload: IUpdateItemData) => {
         try {
             await updateItem(payload).unwrap()
-            dispatch(showToast({message: t('common:notifications.successAction', { count: 1, actionType: 'updated', recordType: 'item' })}))
-        } catch(e) {
-            dispatch(showToast({message: t('common:notifications.errorAction', { count: 1, actionType: 'updating', recordType: 'item' })}))
+            dispatch(
+                showToast({
+                    message: t('common:notifications.successAction', {
+                        count: 1,
+                        actionType: 'updated',
+                        recordType: 'item',
+                    }),
+                })
+            )
+        } catch (e) {
+            dispatch(
+                showToast({
+                    message: t('common:notifications.errorAction', {
+                        count: 1,
+                        actionType: 'updating',
+                        recordType: 'item',
+                    }),
+                })
+            )
             console.log(e)
         }
     }
 
-    const preparePayload = (formValues: IItemForm, inventoryId: string | number) => {
-        const { createdAt, updatedAt, values, owner, ...itemData } = formValues;
-        
+    const preparePayload = (
+        formValues: IItemForm,
+        inventoryId: string | number
+    ) => {
+        const { createdAt, updatedAt, values, owner, ...itemData } = formValues
+
         return {
             ...itemData,
             inventoryId: Number(inventoryId),
@@ -137,16 +165,16 @@ const Item = () => {
                 ...value,
                 fieldId: field.id,
             })),
-        };
-    };
+        }
+    }
 
     const submitHandler = async (formValues: IItemForm) => {
         if (!inventoryId) return
-        const payload = preparePayload(formValues, inventoryId);
+        const payload = preparePayload(formValues, inventoryId)
         if (!payload.id) {
             await create(payload)
         } else {
-            await update({id: payload.id, ...payload})
+            await update({ id: payload.id, ...payload })
         }
     }
 
@@ -163,7 +191,10 @@ const Item = () => {
             : initialItem,
         onSubmit: submitHandler,
         enableReinitialize: true,
-        validationSchema: itemSchema(new RegExp(`^${customIdRegexPattern}$`), !itemId),
+        validationSchema: itemSchema(
+            new RegExp(`^${customIdRegexPattern}$`),
+            !itemId
+        ),
     }
 
     return (
@@ -173,7 +204,10 @@ const Item = () => {
                     className={`g-3 justify-content-end overflow-auto ${modalView ? 'item-modal' : 'item'}`}
                 >
                     <Col xs={12}>
-                        <Input name='customId' label={t('item:labels.customId')} />
+                        <Input
+                            name='customId'
+                            label={t('item:labels.customId')}
+                        />
                     </Col>
                     {itemValues
                         .toSorted((a, b) => a.field.order - b.field.order)

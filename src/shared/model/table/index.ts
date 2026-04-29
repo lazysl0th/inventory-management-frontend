@@ -2,6 +2,6 @@ export {
     default as tableSliceReducer,
     getSelectedRows,
     toggleSelectedRow,
-    resetSelectedRows
+    resetSelectedRows,
 } from './model/tableSlice'
-export type {TTableIds} from './model/types'
+export type { TTableIds } from './model/types'

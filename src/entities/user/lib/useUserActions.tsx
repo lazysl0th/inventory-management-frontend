@@ -17,13 +17,20 @@ export const useUserActions = ({
     onDelete,
     selectedCount,
 }: UseUserActionsProps): IAction[] => {
-    const {t} = useTranslation('commons')
-    
-    return ([
+    const { t } = useTranslation('commons')
+
+    return [
         {
             name: 'blockUsers',
             placement: 'top',
-            overlay: <Tooltip tooltip={t('common:actions.blockRecords', { count: selectedCount, recordType: 'user' })} />,
+            overlay: (
+                <Tooltip
+                    tooltip={t('common:actions.blockRecords', {
+                        count: selectedCount,
+                        recordType: 'user',
+                    })}
+                />
+            ),
             variant: 'outline-dark',
             icon: CiLock,
             onClickHandler: onBlock,
@@ -32,7 +39,14 @@ export const useUserActions = ({
         {
             name: 'unblockUsers',
             placement: 'top',
-            overlay: <Tooltip tooltip={t('common:actions.unblockRecords', { count: selectedCount, recordType: 'user' })} />,
+            overlay: (
+                <Tooltip
+                    tooltip={t('common:actions.unblockRecords', {
+                        count: selectedCount,
+                        recordType: 'user',
+                    })}
+                />
+            ),
             variant: 'outline-dark',
             icon: CiUnlock,
             onClickHandler: onUnblock,
@@ -41,7 +55,14 @@ export const useUserActions = ({
         {
             name: 'grantAdminAccessUsers',
             placement: 'top',
-            overlay: <Tooltip tooltip={t('common:actions.grantPermission', { count: selectedCount, recordType: 'user' })} />,
+            overlay: (
+                <Tooltip
+                    tooltip={t('common:actions.grantPermission', {
+                        count: selectedCount,
+                        recordType: 'user',
+                    })}
+                />
+            ),
             variant: 'outline-success',
             icon: MdOutlineAdminPanelSettings,
             onClickHandler: onGrant,
@@ -50,7 +71,14 @@ export const useUserActions = ({
         {
             name: 'revokeAdminAccessUsers',
             placement: 'top',
-            overlay: <Tooltip tooltip={t('common:actions.revokePermission', { count: selectedCount, recordType: 'user' })} />,
+            overlay: (
+                <Tooltip
+                    tooltip={t('common:actions.revokePermission', {
+                        count: selectedCount,
+                        recordType: 'user',
+                    })}
+                />
+            ),
             variant: 'outline-danger',
             icon: MdAdminPanelSettings,
             onClickHandler: onRevoke,
@@ -59,11 +87,18 @@ export const useUserActions = ({
         {
             name: 'deleteUsers',
             placement: 'top',
-            overlay: <Tooltip tooltip={t('common:actions.deleteRecords', { count: selectedCount, recordType: 'user' })} />,
+            overlay: (
+                <Tooltip
+                    tooltip={t('common:actions.deleteRecords', {
+                        count: selectedCount,
+                        recordType: 'user',
+                    })}
+                />
+            ),
             variant: 'outline-danger',
             icon: BsFillTrashFill,
             onClickHandler: onDelete,
             disabled: !selectedCount,
         },
-    ])
+    ]
 }

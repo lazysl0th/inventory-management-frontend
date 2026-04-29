@@ -1,4 +1,4 @@
-import type { IField } from '@/entities/inventory' 
+import type { IField } from '@/entities/inventory/'
 import type { IUser } from '@/entities/user'
 
 export interface IItemListItem {
@@ -12,7 +12,6 @@ export interface IItem extends IItemListItem {
     createdAt: string
     updatedAt: string
     owner: IUser | null
-    //version: number;
 }
 
 export interface IInventoryIdParam {

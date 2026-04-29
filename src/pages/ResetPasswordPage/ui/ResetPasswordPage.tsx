@@ -10,8 +10,16 @@ const ResetPasswordPage = () => {
         <>
             <ResetPasswordForm />
             <div className='d-flex text-center py-5  gap-5 justify-content-center'>
-                <TextLink text={t('auth:text.existAccount')} to={LOGIN} linkText={t('auth:actions.signin')}/>
-                <TextLink text={t('auth:text.haveAccount')} to={REGISTER} linkText={t('auth:actions.signup')}/>
+                <TextLink
+                    text={t('auth:text.existAccount')}
+                    to={LOGIN}
+                    linkText={t('auth:actions.signin')}
+                />
+                <TextLink
+                    text={t('auth:text.haveAccount')}
+                    to={REGISTER}
+                    linkText={t('auth:actions.signup')}
+                />
             </div>
         </>
     )

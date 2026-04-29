@@ -17,15 +17,20 @@ import { useUserColumns } from '@/entities/user/lib/useUserColumns'
 import { ActionButtons } from '@/shared/ui/ActionButtons'
 import { TableSkeleton } from '@/shared/ui/TableSkeleton'
 
-const ActionMenu = lazy(() => import('@/shared/ui/ActionMenu').then(module => ({ default: module.ActionMenu })))
+const ActionMenu = lazy(() =>
+    import('@/shared/ui/ActionMenu').then((module) => ({
+        default: module.ActionMenu,
+    }))
+)
 
-const UserList = ({ data,
+const UserList = ({
+    data,
     isLoading,
     error,
-    tableId, children,
-    userActions
- }: IUserList) => {
-    
+    tableId,
+    children,
+    userActions,
+}: IUserList) => {
     const dispatch = useDispatch()
 
     const selectedRows = tableId
@@ -43,37 +48,42 @@ const UserList = ({ data,
     const userColumns = useUserColumns()
 
     return (
-            <Section>
+        <Section>
             {children}
-    {isLoading ? (
-        <TableSkeleton rows={6} columns={4}/>
-    ) : error ? (
-        <Message error={error} variant='danger' className='align-self-center'/>
-    ) : (
-
-            <DataTable<IUser, string>
-                tableId={tableId}
-                data={data}
-                columns={userColumns}
-                enableRowSelection={!!tableId}
-                rowSelection={selectedRows}
-                onRowSelectionChange={selectRowHandle}
-                onRowClick={openRecordHandler}
-            >
-                {userActions && (
-                    <Suspense fallback={<Loader />}>
-                    <ActionButtons
-                        actions={userActions}
-                        className='d-flex'
-                    />
-                    <ActionMenu actions={userActions} className='d-sm-none' />
-                    </Suspense>
-                )}
-                
-            </DataTable>
-        
-    )}
-    </Section>)
+            {isLoading ? (
+                <TableSkeleton rows={6} columns={4} />
+            ) : error ? (
+                <Message
+                    error={error}
+                    variant='danger'
+                    className='align-self-center'
+                />
+            ) : (
+                <DataTable<IUser, string>
+                    tableId={tableId}
+                    data={data}
+                    columns={userColumns}
+                    enableRowSelection={!!tableId}
+                    rowSelection={selectedRows}
+                    onRowSelectionChange={selectRowHandle}
+                    onRowClick={openRecordHandler}
+                >
+                    {userActions && (
+                        <Suspense fallback={<Loader />}>
+                            <ActionButtons
+                                actions={userActions}
+                                className='d-flex'
+                            />
+                            <ActionMenu
+                                actions={userActions}
+                                className='d-sm-none'
+                            />
+                        </Suspense>
+                    )}
+                </DataTable>
+            )}
+        </Section>
+    )
 }
 
 export default UserList

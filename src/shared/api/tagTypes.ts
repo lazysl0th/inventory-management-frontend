@@ -8,4 +8,4 @@ export const TAG_TYPES = {
     ME: 'Me',
 } as const
 
-export const TAG_TYPES_LIST = Object.values(TAG_TYPES);
+export const TAG_TYPES_LIST = Object.values(TAG_TYPES)

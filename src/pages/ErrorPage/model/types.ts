@@ -1,4 +1,4 @@
-export interface IErrorPageProps { 
-    error: Error, 
-    resetErrorBoundary: () => void 
+export interface IErrorPageProps {
+    error: Error
+    resetErrorBoundary: () => void
 }

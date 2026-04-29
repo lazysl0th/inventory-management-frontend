@@ -1,4 +1,4 @@
-import { TTableIds } from "@/shared/model/table"
+import { TTableIds } from '@/shared/model/table'
 
 export interface IAllowedUserList {
     tableId?: TTableIds

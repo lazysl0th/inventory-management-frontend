@@ -28,7 +28,7 @@ const initialAllowedUser: TAllowedUser = {
 }
 
 const AllowedUserList = ({ tableId }: IAllowedUserList) => {
-    const {t} = useTranslation('inventory')
+    const { t } = useTranslation('inventory')
     const dispatch = useDispatch()
 
     const { inventoryId } = useParams()
@@ -75,8 +75,8 @@ const AllowedUserList = ({ tableId }: IAllowedUserList) => {
         onAdd: addAllowedUserHandler,
         onDelete: deleteAllowedUsersHandler,
         onAddState: !isAdmin && !isOwner,
-        onDeleteState: (!isAdmin && !isOwner),
-        selectedCount: Object.keys(selectedRows).length
+        onDeleteState: !isAdmin && !isOwner,
+        selectedCount: Object.keys(selectedRows).length,
     })
 
     const allowedUserColumns = useAllowedUserColumns()

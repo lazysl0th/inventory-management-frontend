@@ -5,7 +5,11 @@ import { useRegisterMutation } from '@/features/auth/api/authApi'
 import type { IRegisterForm } from '../model/types'
 import { signupSchema } from '../model/validations'
 import ShowPasswordButton from './ShowPasswordButton/ShowPasswordButton'
-import { isBackendError, isFetchBaseQueryError, isValidationError } from '@/shared/lib/utils'
+import {
+    isBackendError,
+    isFetchBaseQueryError,
+    isValidationError,
+} from '@/shared/lib/utils'
 import { FormProvider } from '@/shared/ui/Form/ui/FormProvider'
 import { FloatingInput } from '@/shared/ui/Form/ui/FloatingInput'
 import { SubmitButton } from '@/shared/ui/Form/ui/SubmitButton'
@@ -70,8 +74,9 @@ const RegisterForm = () => {
                     type='invalid'
                     className='d-flex justify-content-center'
                 >
-                                        {isValidationError(error.data) && error.data.validation.body.message || isBackendError(error.data) && error.data.message}
-                    
+                    {(isValidationError(error.data) &&
+                        error.data.validation.body.message) ||
+                        (isBackendError(error.data) && error.data.message)}
                 </Form.Control.Feedback>
             )}
         </>

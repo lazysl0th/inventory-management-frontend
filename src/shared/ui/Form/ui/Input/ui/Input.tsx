@@ -26,7 +26,13 @@ const Input: ForwardRefRenderFunction<InputElement, IInputProps> = (
     return (
         <Form.Group controlId={`${name}_${fieldId}`}>
             {label && <Form.Label>{label}</Form.Label>}
-            {type === 'file' && <ImagePreview imageUrl={field.value} alt={rest.alt} placeholder={rest.placeholder}/>}
+            {type === 'file' && (
+                <ImagePreview
+                    imageUrl={field.value}
+                    alt={rest.alt}
+                    placeholder={rest.placeholder}
+                />
+            )}
             <InputGroup hasValidation>
                 {inputPrefix && (
                     <InputGroup.Text id={`${name}-prepend`}>

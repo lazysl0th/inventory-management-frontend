@@ -11,21 +11,20 @@ const TagsCloud = ({
     minFontSize,
     maxFontSize,
 }: ITagsCloudProps) => {
-
-    return (
-        isLoading
-            ? <Loader/>
-            : error
-                ? <Message variant='danger' error={error}/>
-                : <TagCloud
-                    minSize={minFontSize}
-                    maxSize={maxFontSize}
-                    tags={data.map((tag) => ({
-                        value: tag.name,
-                        count: tag._count.inventories,
-                    }))}
-                    colorOptions={COLOR_OPTIONS}
-                />
+    return isLoading ? (
+        <Loader />
+    ) : error ? (
+        <Message variant='danger' error={error} />
+    ) : (
+        <TagCloud
+            minSize={minFontSize}
+            maxSize={maxFontSize}
+            tags={data.map((tag) => ({
+                value: tag.name,
+                count: tag._count.inventories,
+            }))}
+            colorOptions={COLOR_OPTIONS}
+        />
     )
 }
 

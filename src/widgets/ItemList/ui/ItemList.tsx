@@ -44,8 +44,10 @@ const ItemList = ({ tableId }: IItemList) => {
 
     const [deleteItems] = useDeleteItemsMutation()
 
-    const deleteItemsHandler = (itemIds: string[]): Promise<{ count: number }> => {
-        if (!inventoryId) throw new Error ('Отсутствует идентификатор инвентаря')
+    const deleteItemsHandler = (
+        itemIds: string[]
+    ): Promise<{ count: number }> => {
+        if (!inventoryId) throw new Error('Отсутствует идентификатор инвентаря')
         return deleteItems({ inventoryId, itemIds }).unwrap()
     }
 
@@ -59,8 +61,8 @@ const ItemList = ({ tableId }: IItemList) => {
         onAdd: addRecord,
         onDelete: deleteRecords,
         onAddState: !isAdmin && !isOwner && !hasWriteAccess,
-        onDeleteState: (!isAdmin && !isOwner && !hasWriteAccess),
-        selectedCount: Object.keys(selectedRecords).length
+        onDeleteState: !isAdmin && !isOwner && !hasWriteAccess,
+        selectedCount: Object.keys(selectedRecords).length,
     })
 
     const selectedRows = tableId
@@ -74,27 +76,32 @@ const ItemList = ({ tableId }: IItemList) => {
     const itemBaseColumns = useItemColumns()
 
     return (
-    <Section>
-    {isLoading
-        ? <TableSkeleton rows={6} columns={4}/>
-        : error
-            ? <Message error={error} variant='danger' className='align-self-center'/>
-            : (
-                
-                    <DataTable<IItemListItem, string>
-                        tableId={tableId}
-                        data={items}
-                        columns={[...itemBaseColumns, ...itemColumns]}
-                        rowSelection={selectedRows}
-                        enableRowSelection={
-                            !isAdmin && !isOwner && !hasWriteAccess ? false : true
-                        }
-                        onRowSelectionChange={selectRowHandle}
-                        onRowClick={openRecord}
-                    >
-                        <ActionButtons actions={itemActions} className='d-flex' />
-                    </DataTable>
-                )}</Section>)
+        <Section>
+            {isLoading ? (
+                <TableSkeleton rows={6} columns={4} />
+            ) : error ? (
+                <Message
+                    error={error}
+                    variant='danger'
+                    className='align-self-center'
+                />
+            ) : (
+                <DataTable<IItemListItem, string>
+                    tableId={tableId}
+                    data={items}
+                    columns={[...itemBaseColumns, ...itemColumns]}
+                    rowSelection={selectedRows}
+                    enableRowSelection={
+                        !isAdmin && !isOwner && !hasWriteAccess ? false : true
+                    }
+                    onRowSelectionChange={selectRowHandle}
+                    onRowClick={openRecord}
+                >
+                    <ActionButtons actions={itemActions} className='d-flex' />
+                </DataTable>
+            )}
+        </Section>
+    )
 }
 
 export default ItemList

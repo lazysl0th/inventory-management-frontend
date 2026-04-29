@@ -18,10 +18,7 @@ const StateField = () => {
         ShippingStateCode.setValue('')
     }, [ShippingCountryCode.value])
 
-    const {
-        data: address,
-        isLoading: addressIsLoading,
-    } = useGetAddressQuery()
+    const { data: address, isLoading: addressIsLoading } = useGetAddressQuery()
 
     const getStatesForCountry = (countryCode: string) => {
         const index = address?.countries.findIndex(
@@ -36,12 +33,11 @@ const StateField = () => {
     const filteredStates = getStatesForCountry(ShippingCountryCode.value) || []
 
     return (
-        <FloatingSelect
-            name='ShippingStateCode'
-            label={t('geo:labels.state')}
-        >
+        <FloatingSelect name='ShippingStateCode' label={t('geo:labels.state')}>
             <option value='' disabled>
-                {addressIsLoading ? t('common:options.loading') : t('geo:options.state')}
+                {addressIsLoading
+                    ? t('common:options.loading')
+                    : t('geo:options.state')}
             </option>
             {filteredStates.map((state) => (
                 <option key={state.label} value={state.value}>

@@ -34,18 +34,42 @@ const VersionConflictDialog = () => {
                     version: inventory.version,
                 }).unwrap()
                 dispatch(closeModal())
-                dispatch(showToast({message: t('common:notifications.successAction', { count: 1, actionType: 'overwrited', recordType: 'inventory' })}))
+                dispatch(
+                    showToast({
+                        message: t('common:notifications.successAction', {
+                            count: 1,
+                            actionType: 'overwrited',
+                            recordType: 'inventory',
+                        }),
+                    })
+                )
             }
         } catch (e) {
             dispatch(closeModal())
-            dispatch(showToast({message: t('common:notifications.eerorAction', { count: 1, actionType: 'overwriting', recordType: 'inventory' })}))
+            dispatch(
+                showToast({
+                    message: t('common:notifications.eerorAction', {
+                        count: 1,
+                        actionType: 'overwriting',
+                        recordType: 'inventory',
+                    }),
+                })
+            )
             console.log(e)
         }
     }
 
-    const handleClose = async() => {
-        dispatch(closeModal());
-        dispatch(showToast({message: t('common:notifications.successAction', { count: 1, actionType: 'updated', recordType: 'inventory' })}))
+    const handleClose = async () => {
+        dispatch(closeModal())
+        dispatch(
+            showToast({
+                message: t('common:notifications.successAction', {
+                    count: 1,
+                    actionType: 'updated',
+                    recordType: 'inventory',
+                }),
+            })
+        )
     }
 
     useEffect(() => {
@@ -58,7 +82,9 @@ const VersionConflictDialog = () => {
                 <p className='mb-2'>{t('common:versionConflict.paragraph')}</p>
                 <ListGroup.Item className='d-flex align-items-start'>
                     <div>
-                        <strong>{t('common:versionConflict.listItems.update')}</strong>{' '}
+                        <strong>
+                            {t('common:versionConflict.listItems.update')}
+                        </strong>{' '}
                         — {t('common:versionConflict.listItems.textUpdate')}
                     </div>
                 </ListGroup.Item>
@@ -75,10 +101,7 @@ const VersionConflictDialog = () => {
             {container &&
                 createPortal(
                     <>
-                        <Button
-                            variant='dark'
-                            onClick={handleClose}
-                        >
+                        <Button variant='dark' onClick={handleClose}>
                             <GrUpdate /> {t('common:actions.update')}
                         </Button>
                         <Button variant='danger' onClick={handleRewrite}>

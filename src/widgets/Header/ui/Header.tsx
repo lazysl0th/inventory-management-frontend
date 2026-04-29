@@ -15,7 +15,7 @@ export default function Header(): React.ReactNode {
     const isAuthenticated = useSelector(getIsAuthenticated)
     const [expanded, setExpanded] = useState(false)
     const expandedHadle = () => setExpanded(false)
-    const { t } = useTranslation('common');
+    const { t } = useTranslation('common')
 
     return (
         <Navbar
@@ -27,11 +27,7 @@ export default function Header(): React.ReactNode {
             className='pt-5 pb-3'
         >
             <Container className='mw-100 gap-2'>
-                <Navbar.Brand
-                    as={Link}
-                    to={MAIN}
-                    className='text-wrap mx-0'
-                >
+                <Navbar.Brand as={Link} to={MAIN} className='text-wrap mx-0'>
                     <h2 className='mb-0 text-nowrap'>{t('common:title')}</h2>
                 </Navbar.Brand>
                 <Navbar.Toggle

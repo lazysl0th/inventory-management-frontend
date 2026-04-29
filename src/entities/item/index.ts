@@ -3,8 +3,15 @@ export {
     setActiveItem,
     resetActiveItem,
 } from './model/itemSlice'
-export type { IItem, IItemListItem, IItemForm, IUpdateItemData, TCreateItemData } from './model/types'
-export { useGetItemsQuery,
+export type {
+    IItem,
+    IItemListItem,
+    IItemForm,
+    IUpdateItemData,
+    TCreateItemData,
+} from './model/types'
+export {
+    useGetItemsQuery,
     useGetItemQuery,
     useDeleteItemsMutation,
     useCreateItemMutation,
@@ -12,4 +19,5 @@ export { useGetItemsQuery,
     useGetLikesQuery,
     useGetLikeQuery,
     useAddLikeMutation,
-    useDeleteLikeMutation,} from './api/itemApi'
+    useDeleteLikeMutation,
+} from './api/itemApi'

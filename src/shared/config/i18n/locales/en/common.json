@@ -1,106 +1,104 @@
 {
-  "title": "Inventory Management",
-  "actions": {
-    "back": "Back",
-    "retry": "Try again",
-    "create": "Create",
-    "update": "Update",
-    "overwrite": "Overwrite",
-    "save": "Save",
-    "addRecord": "Add $t(common:recordTypes.{{recordType}}, lowercase)",
-    "deleteRecords_one": "Delete $t(common:recordTypes.{{recordType}}, lowercase)",
-    "deleteRecords_other": "Delete {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
-    "blockRecords_one": "Block $t(common:recordTypes.{{recordType}}, lowercase)",
-    "blockRecords_other": "Block {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
-    "unblockRecords_one": "Unblock $t(common:recordTypes.{{recordType}}, lowercase)",
-    "unblockRecords_other": "Unblock {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
-    "grantPermission_one": "Grant admin access $t(common:recordTypes.{{recordType}}, lowercase)",
-    "grantPermission_other": "Grant admin access {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
-    "revokePermission_one": "Revoke admin access $t(common:recordTypes.{{recordType}}, lowercase)",
-    "revokePermission_other": "Revoke admin access {{count}} $t(common:recordType.{{recordType}}_plural, lowercase)",
-    "up": "Up",
-    "down": "Down",
-    "delete": "Delete",
-    "send": "Send"
-  },
+    "title": "Inventory Management",
+    "actions": {
+        "back": "Back",
+        "retry": "Try again",
+        "create": "Create",
+        "update": "Update",
+        "overwrite": "Overwrite",
+        "save": "Save",
+        "addRecord": "Add $t(common:recordTypes.{{recordType}}, lowercase)",
+        "deleteRecords_one": "Delete $t(common:recordTypes.{{recordType}}, lowercase)",
+        "deleteRecords_other": "Delete {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
+        "blockRecords_one": "Block $t(common:recordTypes.{{recordType}}, lowercase)",
+        "blockRecords_other": "Block {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
+        "unblockRecords_one": "Unblock $t(common:recordTypes.{{recordType}}, lowercase)",
+        "unblockRecords_other": "Unblock {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
+        "grantPermission_one": "Grant admin access $t(common:recordTypes.{{recordType}}, lowercase)",
+        "grantPermission_other": "Grant admin access {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
+        "revokePermission_one": "Revoke admin access $t(common:recordTypes.{{recordType}}, lowercase)",
+        "revokePermission_other": "Revoke admin access {{count}} $t(common:recordType.{{recordType}}_plural, lowercase)",
+        "up": "Up",
+        "down": "Down",
+        "delete": "Delete",
+        "send": "Send"
+    },
 
-  "modalTitles": {
-    "additionalInfo": "Additional info",
-    "supportRequest": "Support request",
-    "versionConflict": "Version conflict"
-  },
+    "modalTitles": {
+        "additionalInfo": "Additional info",
+        "supportRequest": "Support request",
+        "versionConflict": "Version conflict"
+    },
 
-  "placeholders": {
-    "search": "Search...",
-    "writeComment": "Write a comment",
-    "email": "Enter email",
-    "name": "Enter name"
-  },
+    "placeholders": {
+        "search": "Search...",
+        "writeComment": "Write a comment",
+        "email": "Enter email",
+        "name": "Enter name"
+    },
 
-  "options": {
-    "loading": "Loading..."
-  },
+    "options": {
+        "loading": "Loading..."
+    },
 
-  "labels": {
-    "name": "Name",
-    "email": "Email",
-    "owner": "Owner",
-    "createdBy": "Created",
-    "updateAt": "Updated"
-  },
+    "labels": {
+        "name": "Name",
+        "email": "Email",
+        "owner": "Owner",
+        "createdBy": "Created",
+        "updateAt": "Updated"
+    },
 
-  "recordTypes": {
-    "inventory": "Inventory",
-    "inventory_plural": "Inventories",
-    "item": "Item",
-    "item_plural": "items",
-    "user": "User",
-    "user_plural": "Users",
-    "partId": "Part ID",
-    "field": "Field",
-    "image": "Image"
-  },
+    "recordTypes": {
+        "inventory": "Inventory",
+        "inventory_plural": "Inventories",
+        "item": "Item",
+        "item_plural": "items",
+        "user": "User",
+        "user_plural": "Users",
+        "partId": "Part ID",
+        "field": "Field",
+        "image": "Image"
+    },
 
-  "actionTypes": {
-    "created": "created",
-    "updated": "updated",
-    "overwrited": "overwrited",
-    "deleted": "deleted",
-    "creating": "creating",
-    "deleting": "deleting",
-    "updating": "updating",
-    "overwriting": "overwriting",
-    "loading": "loading"
+    "actionTypes": {
+        "created": "created",
+        "updated": "updated",
+        "overwrited": "overwrited",
+        "deleted": "deleted",
+        "creating": "creating",
+        "deleting": "deleting",
+        "updating": "updating",
+        "overwriting": "overwriting",
+        "loading": "loading"
+    },
 
-  },
+    "notifications": {
+        "successAction_one": "$t(common:recordTypes.{{recordType}}) successfully $t(common:actionTypes.{{actionType}}).",
+        "successAction_other": "Successfully $t(common:actionTypes.{{actionType}}) {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
+        "errorAction_one": "An error occurred while $t(common:actionTypes.{{actionType}}) $t(common:recordTypes.{{recordType}}, lowercase)",
+        "errorAction_other": "An error occurred while $t(common:actionTypes.{{actionType}}) {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)"
+    },
 
-  "notifications": {
-    "successAction_one": "$t(common:recordTypes.{{recordType}}) successfully $t(common:actionTypes.{{actionType}}).",
-    "successAction_other": "Successfully $t(common:actionTypes.{{actionType}}) {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)",
-    "errorAction_one": "An error occurred while $t(common:actionTypes.{{actionType}}) $t(common:recordTypes.{{recordType}}, lowercase)",
-    "errorAction_other": "An error occurred while $t(common:actionTypes.{{actionType}}) {{count}} $t(common:recordTypes.{{recordType}}_plural, lowercase)"
-  },
+    "versionConflict": {
+        "paragraph": "This data has been modified by another user. You can:",
+        "listItems": {
+            "update": "Update",
+            "textUpdate": "download the latest version from the server",
+            "overwrite": "Overwrite",
+            "textOverwrite": "save your changes over the current version"
+        }
+    },
 
-  "versionConflict": {
-    "paragraph": "This data has been modified by another user. You can:",
-    "listItems": {
-      "update": "Update",
-      "textUpdate": "download the latest version from the server",
-      "overwrite": "Overwrite",
-      "textOverwrite": "save your changes over the current version"
+    "pageTitle": {
+        "errorPage": "Oops!",
+        "adminPage": "Admin panel"
+    },
+    "pageDescriptions": {
+        "errorPage": "An error occurred while loading the page. Please try again.",
+        "notFoundPage": "Page not found"
+    },
+    "errors": {
+        "unknown": "Unknown error"
     }
-  },
-
-  "pageTitle": {
-    "errorPage": "Oops!",
-    "adminPage": "Admin panel"
-  },
-  "pageDescriptions": {
-    "errorPage": "An error occurred while loading the page. Please try again.",
-    "notFoundPage": "Page not found"
-  },
-  "errors": {
-    "unknown": "Unknown error"
-  }
-
 }

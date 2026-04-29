@@ -10,8 +10,8 @@ export const useFieldsetActions = ({
     onMoveDown,
     onDelete,
 }: IUseFieldsetActionsProps): IAction[] => {
-    const {t} = useTranslation('common')
-    return ([
+    const { t } = useTranslation('common')
+    return [
         {
             name: 'partIdMoveUp',
             placement: 'top',
@@ -36,5 +36,5 @@ export const useFieldsetActions = ({
             icon: BsFillTrashFill,
             onClickHandler: onDelete,
         },
-    ])
+    ]
 }

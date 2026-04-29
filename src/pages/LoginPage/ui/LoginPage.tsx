@@ -10,8 +10,15 @@ const LoginPage = () => {
             <LoginForm />
             <SocialButtons />
             <div className='d-flex text-center py-5 gap-5 justify-content-center'>
-                <TextLink text={t('auth:text.haveAccount')} to={REGISTER} linkText={t('auth:actions.signup')}/>
-                <TextLink to={RESET_PASSWORD} linkText={t('auth:links.forgotPassword')}/>
+                <TextLink
+                    text={t('auth:text.haveAccount')}
+                    to={REGISTER}
+                    linkText={t('auth:actions.signup')}
+                />
+                <TextLink
+                    to={RESET_PASSWORD}
+                    linkText={t('auth:links.forgotPassword')}
+                />
             </div>
         </>
     )

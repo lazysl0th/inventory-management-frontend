@@ -8,14 +8,12 @@ import { Input } from '@/shared/ui/Form/ui/Input'
 import { SEARCH } from '@/shared/config/constants'
 
 const SearchForm = () => {
-    const navigate = useNavigate();
-    const {t} = useTranslation('common')
+    const navigate = useNavigate()
+    const { t } = useTranslation('common')
 
     const submitHandler = (values: ISearchForm) => {
         if (values.searchQuery)
-            navigate(
-                `${SEARCH}?q=${encodeURIComponent(values.searchQuery)}`
-            )
+            navigate(`${SEARCH}?q=${encodeURIComponent(values.searchQuery)}`)
     }
 
     const initialValues = { searchQuery: '' }
@@ -27,7 +25,11 @@ const SearchForm = () => {
 
     return (
         <FormProvider<ISearchForm> config={formikConfig}>
-            <Input name='searchQuery' type='search' placeholder={t('common:placeholders.search')}>
+            <Input
+                name='searchQuery'
+                type='search'
+                placeholder={t('common:placeholders.search')}
+            >
                 <Button variant='dark' type='submit'>
                     <FaSearch />
                 </Button>

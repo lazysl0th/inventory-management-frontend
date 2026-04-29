@@ -16,9 +16,7 @@ const DiscussionTab = () => {
     const { inventoryId, activeTab } = useParams()
     const listGroupRef = useRef<HTMLDivElement>(null)
 
-    const {
-        data: comments,
-    } = useGetInventoryCommentsQuery(
+    const { data: comments } = useGetInventoryCommentsQuery(
         inventoryId && !isNaN(Number(inventoryId)) ? { inventoryId } : skipToken
     )
 

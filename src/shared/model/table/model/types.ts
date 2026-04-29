@@ -1,7 +1,13 @@
-import { MY_INVENTORIES, ALL_INVENTORIES, ALLOWED_USERS, INVENTORY_ITEMS, ALL_USERS } from "@/shared/config/constants/tableIds"
-import type { RowSelectionState } from "@tanstack/react-table"
+import {
+    MY_INVENTORIES,
+    ALL_INVENTORIES,
+    ALLOWED_USERS,
+    INVENTORY_ITEMS,
+    ALL_USERS,
+} from '@/shared/config/constants/tableIds'
+import type { RowSelectionState } from '@tanstack/react-table'
 
-export type TTableIds = 
+export type TTableIds =
     | typeof MY_INVENTORIES
     | typeof ALL_INVENTORIES
     | typeof ALLOWED_USERS

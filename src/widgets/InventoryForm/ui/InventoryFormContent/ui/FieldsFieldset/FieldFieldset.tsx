@@ -5,10 +5,7 @@ import { useFormikApi } from '@/shared/lib/hooks/useFormikApi'
 import useSortableHandlers from '@/shared/lib/hooks/useSortableHandlers'
 import { SortableFieldset } from '@/shared/ui/DragDrop'
 import { useFieldsetActions } from '@/widgets/InventoryForm/lib/useFieldsetAction'
-import {
-    type IField,
-    InventoryFieldType,
-} from '@/entities/inventory'
+import { type IField, InventoryFieldType } from '@/entities/inventory'
 import type { IFieldFieldsetProps } from '@/widgets/InventoryForm/model/types'
 import { useInventoryData } from '@/entities/inventory/lib/useInventoryData'
 import { useInventoryAccess } from '@/entities/inventory/lib/useInventoryAccess'
@@ -83,7 +80,9 @@ const FieldFieldset = ({ field }: IFieldFieldsetProps) => {
                         as='textarea'
                         name={`fields[${field.order}].description`}
                         label={t('inventory:labels.description')}
-                        placeholder={t('inventory:placeholders.descriptionField')}
+                        placeholder={t(
+                            'inventory:placeholders.descriptionField'
+                        )}
                         rows={2}
                     />
                 </Col>

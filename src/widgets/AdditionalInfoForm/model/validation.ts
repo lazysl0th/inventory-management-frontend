@@ -1,4 +1,4 @@
-import { object, string } from 'yup';
+import { object, string } from 'yup'
 import { isValidPhoneNumber } from 'libphonenumber-js'
 
 export const AdditionalInfoSchema = object({

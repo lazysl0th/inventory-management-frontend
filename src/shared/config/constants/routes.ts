@@ -4,7 +4,7 @@ export const SEARCH = '/search'
 
 export const LOGIN = '/sign-in'
 
-export const REGISTER ='/sign-up'
+export const REGISTER = '/sign-up'
 
 export const USER_DATA_DELETE = '/delete-user-data'
 

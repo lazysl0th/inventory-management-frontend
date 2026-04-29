@@ -25,14 +25,11 @@ const AdditionalInfoForm = () => {
     const { t } = useTranslation(['common', 'user'])
     const dispatch = useDispatch()
 
-    const {
-        data: address,
-        isLoading: addressIsLoading,
-    } = useGetAddressQuery()
+    const { data: address, isLoading: addressIsLoading } = useGetAddressQuery()
 
-    const {
-        data: additionalInfo,
-    } = useGetAdditionInfoQuery(userId ? { userId } : skipToken)
+    const { data: additionalInfo } = useGetAdditionInfoQuery(
+        userId ? { userId } : skipToken
+    )
 
     const [addAditionalInfo] = useAddAdditionInfoMutation()
 
@@ -40,9 +37,9 @@ const AdditionalInfoForm = () => {
         if (!userId) return
         try {
             await addAditionalInfo({ userId, ...values }).unwrap()
-            dispatch(showToast({message: t('user:toasts.updateUserSuccess')}))
+            dispatch(showToast({ message: t('user:toasts.updateUserSuccess') }))
         } catch (e) {
-            dispatch(showToast({message: t('user:toasts.updateUserFailed')}))
+            dispatch(showToast({ message: t('user:toasts.updateUserFailed') }))
             console.log(e)
         }
     }

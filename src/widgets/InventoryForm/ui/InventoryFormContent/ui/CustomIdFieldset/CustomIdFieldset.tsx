@@ -10,7 +10,6 @@ import { Tooltip } from '@/shared/ui/Tooltip'
 import type { IPartId } from '@/entities/inventory'
 import PartIdFieldset from './PartIdFieldset'
 
-
 const initialPartId: IPartId = {
     guid: '',
     type: null,
@@ -60,7 +59,13 @@ const CustomIdFieldset = () => {
                 <Button
                     name='addPartId'
                     placement='top'
-                    overlay={<Tooltip tooltip={t('common:actions.addRecord', { recordType: 'partId' })} />}
+                    overlay={
+                        <Tooltip
+                            tooltip={t('common:actions.addRecord', {
+                                recordType: 'partId',
+                            })}
+                        />
+                    }
                     variant='outline-success'
                     onClick={addPartIdHandle}
                 >

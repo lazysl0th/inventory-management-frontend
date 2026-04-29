@@ -1,7 +1,11 @@
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Form } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import { isBackendError, isFetchBaseQueryError, isValidationError } from '../../../shared/lib/utils'
+import {
+    isBackendError,
+    isFetchBaseQueryError,
+    isValidationError,
+} from '../../../shared/lib/utils'
 import ShowPasswordButton from './ShowPasswordButton/ShowPasswordButton'
 import { useChangePasswordMutation } from '@/features/auth/api/authApi'
 import { changePasswordSchema } from '../model/validations'
@@ -35,30 +39,32 @@ const ChangePasswordForm = () => {
 
     return (
         <>
-        <FormProvider<IChangePasswordForm>
-            config={formikConfig}
-            className='d-flex flex-wrap flex-column align-content-center gap-2'
-        >
-            <h2>{t('auth:formTitle.changePassword')}</h2>
+            <FormProvider<IChangePasswordForm>
+                config={formikConfig}
+                className='d-flex flex-wrap flex-column align-content-center gap-2'
+            >
+                <h2>{t('auth:formTitle.changePassword')}</h2>
 
-            <FloatingInput
-                name='password'
-                label={t('auth:labels.password')}
-                type='password'
-                placeholder={t('auth:placeholders.password')}
-                button={ShowPasswordButton}
-            />
+                <FloatingInput
+                    name='password'
+                    label={t('auth:labels.password')}
+                    type='password'
+                    placeholder={t('auth:placeholders.password')}
+                    button={ShowPasswordButton}
+                />
 
-            <SubmitButton<IChangePasswordForm>
-                label={t('auth:actions.changePassword')}
-            />
-        </FormProvider>
-                    {error && isFetchBaseQueryError(error) && (
+                <SubmitButton<IChangePasswordForm>
+                    label={t('auth:actions.changePassword')}
+                />
+            </FormProvider>
+            {error && isFetchBaseQueryError(error) && (
                 <Form.Control.Feedback
                     type='invalid'
                     className='d-flex justify-content-center'
                 >
-                    {isValidationError(error.data) && error.data.validation.body.message || isBackendError(error.data) && error.data.message}
+                    {(isValidationError(error.data) &&
+                        error.data.validation.body.message) ||
+                        (isBackendError(error.data) && error.data.message)}
                 </Form.Control.Feedback>
             )}
         </>

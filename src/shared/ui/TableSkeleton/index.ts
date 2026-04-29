@@ -1,1 +1,1 @@
-export {default as TableSkeleton} from './ui/TableSkeleton'
+export { default as TableSkeleton } from './ui/TableSkeleton'

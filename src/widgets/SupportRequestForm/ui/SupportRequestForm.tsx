@@ -17,7 +17,7 @@ const SupportRequestForm = () => {
     const match = useMatch('/inventories/:inventoryId')
     const inventoryId = match?.params.inventoryId
     const dispatch = useDispatch()
-    const { t } = useTranslation(['support', 'validation', 'common']);
+    const { t } = useTranslation(['support', 'validation', 'common'])
     const { currentUser } = useCurrentUser()
 
     const [sendSupportRequest] = useSendSupportRequestMutation()
@@ -25,22 +25,14 @@ const SupportRequestForm = () => {
     const submitHandler = async (values: ISupportRequestForm) => {
         try {
             await sendSupportRequest(values).unwrap()
-            dispatch(
-                showToast({message: t('support:notifications.success')})
-            )
+            dispatch(showToast({ message: t('support:notifications.success') }))
         } catch (e) {
-            dispatch(
-                showToast(
-                    {message: t('support:notifications.error')}
-                )
-            )
+            dispatch(showToast({ message: t('support:notifications.error') }))
             console.log(e)
         }
     }
 
-    const {
-        data: inventory,
-    } = useGetInventoryQuery(
+    const { data: inventory } = useGetInventoryQuery(
         inventoryId && inventoryId !== 'new' ? { inventoryId } : skipToken
     )
 
@@ -90,7 +82,10 @@ const SupportRequestForm = () => {
                 placeholder={t('support:placeholders.link')}
             />
 
-            <FloatingSelect name='priority' label={t('support:labels.priority')}>
+            <FloatingSelect
+                name='priority'
+                label={t('support:labels.priority')}
+            >
                 <option value='' disabled>
                     {t('support:options.priority')}
                 </option>

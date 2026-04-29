@@ -9,7 +9,10 @@ const InfoToast = () => {
     const closeHandle = () => dispatch(hideToast())
 
     return (
-        <ToastContainer position={toastState.header ? 'middle-center' : 'bottom-end'} className='p-3 position-fixed'>
+        <ToastContainer
+            position={toastState.header ? 'middle-center' : 'bottom-end'}
+            className='p-3 position-fixed'
+        >
             <Toast
                 show={toastState.show}
                 onClose={closeHandle}
@@ -17,10 +20,14 @@ const InfoToast = () => {
                 autohide={!toastState.header}
                 bg={toastState.header ? 'dark' : 'warning'}
             >
-                {toastState.header && <Toast.Header>
-                    <strong className="me-auto">{toastState.header}</strong>
-                </Toast.Header>}
-                <Toast.Body className={toastState.header && 'text-white'} >{toastState.message}</Toast.Body>
+                {toastState.header && (
+                    <Toast.Header>
+                        <strong className='me-auto'>{toastState.header}</strong>
+                    </Toast.Header>
+                )}
+                <Toast.Body className={toastState.header && 'text-white'}>
+                    {toastState.message}
+                </Toast.Body>
             </Toast>
         </ToastContainer>
     )

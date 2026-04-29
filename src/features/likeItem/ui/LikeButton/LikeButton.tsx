@@ -15,19 +15,13 @@ const LikeButton = () => {
     const { inventoryId, itemId } = useParams()
     const { currentUser } = useCurrentUser()
 
-    const {
-        data: likes,
-        isLoading: likesIsLoading,
-    } = useGetLikesQuery(
+    const { data: likes, isLoading: likesIsLoading } = useGetLikesQuery(
         inventoryId && itemId && itemId !== 'new'
             ? { inventoryId, itemId }
             : skipToken
     )
 
-    const {
-        data: like,
-        isLoading: likeIsLoading,
-    } = useGetLikeQuery(
+    const { data: like, isLoading: likeIsLoading } = useGetLikeQuery(
         inventoryId && itemId && itemId !== 'new' && currentUser
             ? { inventoryId, itemId }
             : skipToken

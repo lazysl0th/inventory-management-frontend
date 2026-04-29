@@ -11,10 +11,7 @@ import { Tooltip } from '@/shared/ui/Tooltip'
 import { Button } from '@/shared/ui/Button'
 import { profileSchema } from '../model/validation'
 import { AppModals, openModal, showToast } from '@/shared/model/ui'
-import {
-    useGetUserQuery,
-    useUpdateUserMutation,
-} from '@/entities/user'
+import { useGetUserQuery, useUpdateUserMutation } from '@/entities/user'
 import { FormProvider } from '@/shared/ui/Form/ui/FormProvider'
 import { Input } from '@/shared/ui/Form/ui/Input'
 import { Select } from '@/shared/ui/Form/ui/Select'
@@ -29,9 +26,7 @@ const ProfileForm = () => {
     const { isAdmin, currentUser } = useCurrentUser()
     const [updateUser] = useUpdateUserMutation()
 
-    const {
-        data: user,
-    } = useGetUserQuery(userId || skipToken)
+    const { data: user } = useGetUserQuery(userId || skipToken)
 
     const submitHandler: TSubmitHandler = async (values) => {
         const { language, theme, ...userData } = values
@@ -43,9 +38,13 @@ const ProfileForm = () => {
                     id: user?.id || currentUser?.id,
                     ...userData,
                 }).unwrap()
-                dispatch(showToast({ message: t('user:toasts.updateUserSuccess')}))
+                dispatch(
+                    showToast({ message: t('user:toasts.updateUserSuccess') })
+                )
             } catch (e) {
-                dispatch(showToast({message: t('user:toasts.updateUserFailed')}))
+                dispatch(
+                    showToast({ message: t('user:toasts.updateUserFailed') })
+                )
                 console.log(e)
             }
         }
@@ -65,8 +64,10 @@ const ProfileForm = () => {
         enableReinitialize: true,
     }
 
-    const editTooltip = <Tooltip tooltip={t('user:actions.editPersonalData')}/>
-    const additionalInfoTooltip = <Tooltip tooltip={t('user:tooltip.additionalInfo')}/>
+    const editTooltip = <Tooltip tooltip={t('user:actions.editPersonalData')} />
+    const additionalInfoTooltip = (
+        <Tooltip tooltip={t('user:tooltip.additionalInfo')} />
+    )
 
     return (
         <Row className='g-2'>
@@ -74,45 +75,47 @@ const ProfileForm = () => {
                 <Card className='text-center shadow-sm'>
                     <Card.Body>
                         <FormProvider<IProfileForm> config={formikConfig}>
-                        <Card.Text className='d-flex justify-content-end mb-1'>
-                            {(isAdmin || !userId) && (
-                                <Button
-                                    name='additionalInfo'
-                                    placement='top'
-                                    overlay={additionalInfoTooltip}
-                                    variant='outline-dark'
-                                    className='border-0 p-1 me-2'
-                                    onClick={() =>
-                                        dispatch(
-                                            openModal({
-                                                name: AppModals.AdditionalInfo,
-                                            })
-                                        )
-                                    }
-                                >
-                                    <FaRegAddressCard size={24} />
-                                </Button>
-                            )}
-                            {!userId && (
-                                <Button
-                                    name='editPersonalData'
-                                    placement='top'
-                                    overlay={editTooltip}
-                                    variant='outline-dark'
-                                    type='submit'
-                                    className='border-0 p-1'
-                                    onClick={() => setIsEdit(!isEdit)}
-                                >
-                                    <CiEdit size={24} />
-                                </Button>
-                            )}
-                        </Card.Text>
+                            <Card.Text className='d-flex justify-content-end mb-1'>
+                                {(isAdmin || !userId) && (
+                                    <Button
+                                        name='additionalInfo'
+                                        placement='top'
+                                        overlay={additionalInfoTooltip}
+                                        variant='outline-dark'
+                                        className='border-0 p-1 me-2'
+                                        onClick={() =>
+                                            dispatch(
+                                                openModal({
+                                                    name: AppModals.AdditionalInfo,
+                                                })
+                                            )
+                                        }
+                                    >
+                                        <FaRegAddressCard size={24} />
+                                    </Button>
+                                )}
+                                {!userId && (
+                                    <Button
+                                        name='editPersonalData'
+                                        placement='top'
+                                        overlay={editTooltip}
+                                        variant='outline-dark'
+                                        type='submit'
+                                        className='border-0 p-1'
+                                        onClick={() => setIsEdit(!isEdit)}
+                                    >
+                                        <CiEdit size={24} />
+                                    </Button>
+                                )}
+                            </Card.Text>
                             <fieldset disabled={!isEdit}>
                                 {isEdit ? (
                                     <Input
                                         name='name'
                                         type='text'
-                                        placeholder={t('common:placeholders.name')}
+                                        placeholder={t(
+                                            'common:placeholders.name'
+                                        )}
                                         className='text-center mb-2'
                                     />
                                 ) : (
@@ -124,7 +127,9 @@ const ProfileForm = () => {
                                     <Input
                                         name='email'
                                         type='email'
-                                        placeholder={t('common:placeholders.email')}
+                                        placeholder={t(
+                                            'common:placeholders.email'
+                                        )}
                                         className='text-center'
                                     />
                                 ) : (
@@ -136,7 +141,9 @@ const ProfileForm = () => {
                                 {!user && (
                                     <fieldset className='text-start'>
                                         <Card.Text className='m-1'>
-                                            <strong>{t('user:legends.preferences')}</strong>
+                                            <strong>
+                                                {t('user:legends.preferences')}
+                                            </strong>
                                         </Card.Text>
                                         <Select
                                             name='language'
@@ -154,9 +161,16 @@ const ProfileForm = () => {
                                             </option>
                                         </Select>
 
-                                        <Select name='theme' label={t('user:labels.theme')}>
-                                            <option value='dark'>{t('user:options.dark')}</option>
-                                            <option value='light'>{t('user:options.light')}</option>
+                                        <Select
+                                            name='theme'
+                                            label={t('user:labels.theme')}
+                                        >
+                                            <option value='dark'>
+                                                {t('user:options.dark')}
+                                            </option>
+                                            <option value='light'>
+                                                {t('user:options.light')}
+                                            </option>
                                         </Select>
                                     </fieldset>
                                 )}

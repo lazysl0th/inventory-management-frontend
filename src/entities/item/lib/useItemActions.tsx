@@ -12,12 +12,18 @@ export const useItemActions = ({
     onDeleteState,
     selectedCount,
 }: UseItemActionsProps): IAction[] => {
-    const {t} = useTranslation('common');
-    return ([
+    const { t } = useTranslation('common')
+    return [
         {
             name: 'addItem',
             placement: 'top',
-            overlay: <Tooltip tooltip={t('common:actions.addRecord', { recordType: 'item' })} />,
+            overlay: (
+                <Tooltip
+                    tooltip={t('common:actions.addRecord', {
+                        recordType: 'item',
+                    })}
+                />
+            ),
             variant: 'outline-success',
             icon: VscAdd,
             onClickHandler: onAdd,
@@ -26,11 +32,18 @@ export const useItemActions = ({
         {
             name: 'deleteItems',
             placement: 'top',
-            overlay: <Tooltip tooltip={t('common:actions.deleteRecords', { count: selectedCount, recordType: 'item' })} />,
+            overlay: (
+                <Tooltip
+                    tooltip={t('common:actions.deleteRecords', {
+                        count: selectedCount,
+                        recordType: 'item',
+                    })}
+                />
+            ),
             variant: 'outline-danger',
             icon: BsFillTrashFill,
             onClickHandler: onDelete,
             disabled: onDeleteState || !selectedCount,
         },
-    ])
+    ]
 }

@@ -79,7 +79,15 @@ const InventoryForm: React.FC = () => {
         }
         try {
             await updateInventory(updateInventoryData).unwrap()
-            dispatch(showToast({message: t('common:notifications.successAction', { count: 1, actionType: 'updated', recordType: 'inventory' })}))
+            dispatch(
+                showToast({
+                    message: t('common:notifications.successAction', {
+                        count: 1,
+                        actionType: 'updated',
+                        recordType: 'inventory',
+                    }),
+                })
+            )
         } catch (e) {
             if (isFetchBaseQueryError(e) && e.status === 409) {
                 dispatch(
@@ -89,7 +97,15 @@ const InventoryForm: React.FC = () => {
                     })
                 )
             } else {
-                dispatch(showToast({message: t('common:notifications.errorAction', { count: 1, actionType: 'updating', recordType: 'inventory' })}))
+                dispatch(
+                    showToast({
+                        message: t('common:notifications.errorAction', {
+                            count: 1,
+                            actionType: 'updating',
+                            recordType: 'inventory',
+                        }),
+                    })
+                )
             }
             console.log(e)
         }
@@ -98,11 +114,27 @@ const InventoryForm: React.FC = () => {
     const create = async (inventoryData: TCreateInventoryData) => {
         try {
             const inventory = await createInventory(inventoryData).unwrap()
-            dispatch(showToast({message: t('common:notifications.successAction', { count: 1, actionType: 'created', recordType: 'inventory' })}))
+            dispatch(
+                showToast({
+                    message: t('common:notifications.successAction', {
+                        count: 1,
+                        actionType: 'created',
+                        recordType: 'inventory',
+                    }),
+                })
+            )
             dispatch(setActiveInventory({ id: inventory.id }))
             openRecord(inventory.id, true)
         } catch (e) {
-            dispatch(showToast({message: t('common:notifications.errorAction', { count: 1, actionType: 'creating', recordType: 'inventory' })}))
+            dispatch(
+                showToast({
+                    message: t('common:notifications.errorAction', {
+                        count: 1,
+                        actionType: 'creating',
+                        recordType: 'inventory',
+                    }),
+                })
+            )
             console.log(e)
         }
     }
@@ -137,29 +169,31 @@ const InventoryForm: React.FC = () => {
 
     return (
         <FormProvider<IInventoryForm> config={formikConfig} id='inventory'>
-            {inventoryIsLoading 
-                ? <Loader/>
-                : inventoryError
-                    ? <Message variant='danger' error={inventoryError}/>
-                    : (<>
-                            <fieldset disabled={!!inventoryId && !isAdmin && !isOwner}>
-                                <InventoryFormContent />
-                            </fieldset>
-                            <SubmitButton
-                                disabled={!isAdmin && !isOwner}
-                                containerId={
-                                    modalView
-                                        ? 'inventory-modal--footer'
-                                        : 'inventory--submit-button'
-                                }
-                                label={
-                                    inventory?.id
-                                        ? t('common:actions.update')
-                                        : t('common:actions.create')
-                                }
-                                form='inventory'
-                            />
-                        </>)}
+            {inventoryIsLoading ? (
+                <Loader />
+            ) : inventoryError ? (
+                <Message variant='danger' error={inventoryError} />
+            ) : (
+                <>
+                    <fieldset disabled={!!inventoryId && !isAdmin && !isOwner}>
+                        <InventoryFormContent />
+                    </fieldset>
+                    <SubmitButton
+                        disabled={!isAdmin && !isOwner}
+                        containerId={
+                            modalView
+                                ? 'inventory-modal--footer'
+                                : 'inventory--submit-button'
+                        }
+                        label={
+                            inventory?.id
+                                ? t('common:actions.update')
+                                : t('common:actions.create')
+                        }
+                        form='inventory'
+                    />
+                </>
+            )}
         </FormProvider>
     )
 }

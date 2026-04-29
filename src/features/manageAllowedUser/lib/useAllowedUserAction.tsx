@@ -10,14 +10,20 @@ export const useAllowedUserActions = ({
     onDelete,
     onAddState,
     onDeleteState,
-    selectedCount
+    selectedCount,
 }: UseAllowedUserActionsProps): IAction[] => {
-    const {t} = useTranslation('common')
-    return ([
+    const { t } = useTranslation('common')
+    return [
         {
             name: 'addUser',
             placement: 'top',
-            overlay: <Tooltip tooltip={t('common:actions.addRecord', { recordType: 'user' })} />,
+            overlay: (
+                <Tooltip
+                    tooltip={t('common:actions.addRecord', {
+                        recordType: 'user',
+                    })}
+                />
+            ),
             variant: 'outline-success',
             icon: VscAdd,
             onClickHandler: onAdd,
@@ -26,11 +32,18 @@ export const useAllowedUserActions = ({
         {
             name: 'deleteUsers',
             placement: 'top',
-            overlay: <Tooltip tooltip={t('common:actions.deleteRecords', { count: selectedCount, recordType: 'user' })} />,
+            overlay: (
+                <Tooltip
+                    tooltip={t('common:actions.deleteRecords', {
+                        count: selectedCount,
+                        recordType: 'user',
+                    })}
+                />
+            ),
             variant: 'outline-danger',
             icon: BsFillTrashFill,
             onClickHandler: onDelete,
             disabled: onDeleteState || !selectedCount,
         },
-    ])
+    ]
 }

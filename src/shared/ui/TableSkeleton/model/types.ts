@@ -1,4 +1,4 @@
 export interface ITableSkeletonProps {
-  rows?: number
-  columns?: number
+    rows?: number
+    columns?: number
 }

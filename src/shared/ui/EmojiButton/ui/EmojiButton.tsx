@@ -24,17 +24,19 @@ const EmojiButton = ({ formatValue, onEmojiClick }: IEmojiButtonProps) => {
             showOverlay={showEmojiPicker}
             placement='top'
             overlay={
-                showEmojiPicker ? (<Popover id='emojiButton'>
-                    <Suspense fallback={null}>
-                    <EmojiPicker
-                        width={280}
-                        height={350}
-                        theme={Theme.AUTO}
-                        onEmojiClick={handleEmojiClick}
-                    />
-                    </Suspense>
-                    
-                </Popover>): undefined}
+                showEmojiPicker ? (
+                    <Popover id='emojiButton'>
+                        <Suspense fallback={null}>
+                            <EmojiPicker
+                                width={280}
+                                height={350}
+                                theme={Theme.AUTO}
+                                onEmojiClick={handleEmojiClick}
+                            />
+                        </Suspense>
+                    </Popover>
+                ) : undefined
+            }
             onClick={handleClick}
         >
             😊

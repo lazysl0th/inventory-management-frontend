@@ -1,4 +1,4 @@
-import { object, string } from 'yup';
+import { object, string } from 'yup'
 
 export const supportRequestShema = object({
     userName: string().required('name.required'),

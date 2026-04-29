@@ -1,4 +1,4 @@
-import { object, string } from 'yup';
+import { object, string } from 'yup'
 
 export const changePasswordSchema = object({
     password: string().min(1, 'password.min').required('password.required'),

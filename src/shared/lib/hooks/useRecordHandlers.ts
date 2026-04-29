@@ -6,7 +6,11 @@ import type { RowSelectionState } from '@tanstack/react-table'
 import type { TRowData } from '@/shared/ui/DataTable'
 import { showToast } from '@/shared/model/ui'
 import { useTranslation } from 'react-i18next'
-import { getSelectedRows, resetSelectedRows, type TTableIds } from '@/shared/model/table'
+import {
+    getSelectedRows,
+    resetSelectedRows,
+    type TTableIds,
+} from '@/shared/model/table'
 
 export interface IUpdateData<T> {
     ids: string[]
@@ -40,8 +44,8 @@ export default function useRecordHandlers<T extends TRowData>(
     entity: TEntity,
     options?: IUseActionOptions<T>
 ): IRecordHandlers<T> {
-    const dispatch = useDispatch();
-    const {t} = useTranslation('common');
+    const dispatch = useDispatch()
+    const { t } = useTranslation('common')
 
     const selectedRecords =
         useSelector(
@@ -64,11 +68,27 @@ export default function useRecordHandlers<T extends TRowData>(
         const ids = Object.keys(selectedRecords)
         if (!options?.onDelete || ids.length === 0) return
         try {
-            const deletedRecords = await options.onDelete(ids);
-            dispatch(showToast({message: t('common:notifications.successAction', { count: deletedRecords.count, actionType: 'deleted', recordType: entity.toLocaleLowerCase() })}))
+            const deletedRecords = await options.onDelete(ids)
+            dispatch(
+                showToast({
+                    message: t('common:notifications.successAction', {
+                        count: deletedRecords.count,
+                        actionType: 'deleted',
+                        recordType: entity.toLocaleLowerCase(),
+                    }),
+                })
+            )
             resetSelection()
-        } catch(e) {
-            dispatch(showToast({message: t('common:notifications.errorAction', { count: ids.length, actionType: 'deleting', recordType: entity.toLocaleLowerCase() })}))
+        } catch (e) {
+            dispatch(
+                showToast({
+                    message: t('common:notifications.errorAction', {
+                        count: ids.length,
+                        actionType: 'deleting',
+                        recordType: entity.toLocaleLowerCase(),
+                    }),
+                })
+            )
             console.log(e)
         }
     }
@@ -77,11 +97,27 @@ export default function useRecordHandlers<T extends TRowData>(
         const ids = Object.keys(selectedRecords)
         if (!options?.onUpdate || ids.length === 0) return
         try {
-            const updatedRecords = await options.onUpdate({ ids, data });
-            dispatch(showToast({message: t('common:notifications.successAction', { count: updatedRecords.count, actionType: 'updated', recordType: entity.toLocaleLowerCase() })}))
+            const updatedRecords = await options.onUpdate({ ids, data })
+            dispatch(
+                showToast({
+                    message: t('common:notifications.successAction', {
+                        count: updatedRecords.count,
+                        actionType: 'updated',
+                        recordType: entity.toLocaleLowerCase(),
+                    }),
+                })
+            )
             resetSelection()
-        } catch(e) {
-            dispatch(showToast({message: t('common:notifications.errorAction', { count: ids.length, actionType: 'updating', recordType: entity.toLocaleLowerCase() })}))
+        } catch (e) {
+            dispatch(
+                showToast({
+                    message: t('common:notifications.errorAction', {
+                        count: ids.length,
+                        actionType: 'updating',
+                        recordType: entity.toLocaleLowerCase(),
+                    }),
+                })
+            )
             console.log(e)
         }
     }
@@ -90,24 +126,56 @@ export default function useRecordHandlers<T extends TRowData>(
         const userIds = Object.keys(selectedRecords)
         if (!options?.onGrant || userIds.length === 0) return
         try {
-            const updatedRecords = await options.onGrant({ userIds, roleIds });
-            dispatch(showToast({message: t('common:notifications.successAction', { count: updatedRecords.count, actionType: 'updated', recordType: entity.toLocaleLowerCase() })}))
+            const updatedRecords = await options.onGrant({ userIds, roleIds })
+            dispatch(
+                showToast({
+                    message: t('common:notifications.successAction', {
+                        count: updatedRecords.count,
+                        actionType: 'updated',
+                        recordType: entity.toLocaleLowerCase(),
+                    }),
+                })
+            )
             resetSelection()
-        } catch(e) {
-            dispatch(showToast({message: t('common:notifications.errorAction', { count: userIds.length, actionType: 'updating', recordType: entity.toLocaleLowerCase() })}))
+        } catch (e) {
+            dispatch(
+                showToast({
+                    message: t('common:notifications.errorAction', {
+                        count: userIds.length,
+                        actionType: 'updating',
+                        recordType: entity.toLocaleLowerCase(),
+                    }),
+                })
+            )
             console.log(e)
         }
     }
 
-    const revokeRecords = async(roleIds: number[]): Promise<void> => {
+    const revokeRecords = async (roleIds: number[]): Promise<void> => {
         const userIds = Object.keys(selectedRecords)
         if (!options?.onRevoke || userIds.length === 0) return
         try {
-            const updatedRecords = await options.onRevoke({ userIds, roleIds });
-            dispatch(showToast({message: t('common:notifications.successAction', { count: updatedRecords.count, actionType: 'updated', recordType: entity.toLocaleLowerCase() })}))
+            const updatedRecords = await options.onRevoke({ userIds, roleIds })
+            dispatch(
+                showToast({
+                    message: t('common:notifications.successAction', {
+                        count: updatedRecords.count,
+                        actionType: 'updated',
+                        recordType: entity.toLocaleLowerCase(),
+                    }),
+                })
+            )
             resetSelection()
-        } catch(e) {
-            dispatch(showToast({message: t('common:notifications.errorAction', { count: userIds.length, actionType: 'updating', recordType: entity.toLocaleLowerCase() })}))
+        } catch (e) {
+            dispatch(
+                showToast({
+                    message: t('common:notifications.errorAction', {
+                        count: userIds.length,
+                        actionType: 'updating',
+                        recordType: entity.toLocaleLowerCase(),
+                    }),
+                })
+            )
             console.log(e)
         }
     }

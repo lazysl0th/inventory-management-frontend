@@ -33,7 +33,7 @@ const ModalProvider = () => {
             title={t(`common:modalTitles.${titleKey}`)}
             footerId='infoTooltip--footer'
         >
-                <Body />
+            <Body />
         </ModalView>
     )
 }

@@ -4,7 +4,11 @@ import { useLoginByEmailMutation } from '@/features/auth/api/authApi'
 import type { ILoginForm } from '../model/types'
 import ShowPasswordButton from './ShowPasswordButton/ShowPasswordButton'
 import { signinSchema } from '../model/validations'
-import { isBackendError, isFetchBaseQueryError, isValidationError } from '@/shared/lib/utils'
+import {
+    isBackendError,
+    isFetchBaseQueryError,
+    isValidationError,
+} from '@/shared/lib/utils'
 import { Form } from 'react-bootstrap'
 import { FormProvider } from '@/shared/ui/Form/ui/FormProvider'
 import { FloatingInput } from '@/shared/ui/Form/ui/FloatingInput'
@@ -71,8 +75,9 @@ const LoginForm = () => {
                     type='invalid'
                     className='d-flex justify-content-center'
                 >
-
-                    {isValidationError(error.data) && error.data.validation.body.message || isBackendError(error.data) && error.data.message}
+                    {(isValidationError(error.data) &&
+                        error.data.validation.body.message) ||
+                        (isBackendError(error.data) && error.data.message)}
                 </Form.Control.Feedback>
             )}
         </>

@@ -1,4 +1,4 @@
-import { object, string } from 'yup';
+import { object, string } from 'yup'
 
 export const profileSchema = object({
     name: string().required('name.required'),

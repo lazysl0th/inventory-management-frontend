@@ -1,6 +1,6 @@
 export interface ITextLink {
-    text?: string,
+    text?: string
     to: string
-    linkText: string,
+    linkText: string
     className?: string
 }

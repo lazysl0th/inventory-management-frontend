@@ -16,7 +16,11 @@ import DataTablePagination from './DataTablePagination/DataTablePagination'
 import DataTableToolbar from './DataTableToolbar/DataTableToolbar'
 import type { IDataTableProps, TRowData } from '../model/types'
 
-const IndeterminateCheckbox = lazy(() => import('../../IndeterminateCheckbox').then(module => ({ default: module.IndeterminateCheckbox })))
+const IndeterminateCheckbox = lazy(() =>
+    import('../../IndeterminateCheckbox').then((module) => ({
+        default: module.IndeterminateCheckbox,
+    }))
+)
 
 export default function DataTable<TData extends TRowData, TValue>({
     tableId,
