@@ -16,7 +16,7 @@ export const useInventoryActions = ({
     onDelete,
     selectedCount,
 }: IUseInventoryActionsProps): IAction[] => {
-    const { t } = useTranslation('commons')
+    const { t } = useTranslation('common')
     return [
         {
             name: 'addInventory',
