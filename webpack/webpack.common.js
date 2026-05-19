@@ -5,7 +5,8 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import Dotenv from 'dotenv-webpack';
 import CopyPlugin from 'copy-webpack-plugin';
 
-const production = process.env.NODE_ENV === 'production'; 
+const production = process.env.NODE_ENV === 'production';
+console.log(production);
 
 export const projectDir = resolve(new URL('.', import.meta.url).pathname, '..');
 
