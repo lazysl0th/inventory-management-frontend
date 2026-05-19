@@ -84,7 +84,7 @@ export default {
     new MiniCssExtractPlugin({
       filename: 'static/styles/[name].[contenthash].css',
     }),
-    new webpack.EnvironmentPlugin({ NODE_ENV: 'development', }),
+    //new webpack.EnvironmentPlugin({ NODE_ENV: 'development', }),
     new Dotenv({
       systemvars: production, 
     }),
