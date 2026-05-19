@@ -85,7 +85,9 @@ export default {
       filename: 'static/styles/[name].[contenthash].css',
     }),
     new webpack.EnvironmentPlugin({ NODE_ENV: 'development', }),
-    new Dotenv(),
+    new Dotenv({
+      systemvars: production, 
+    }),
     new CopyPlugin({
         patterns: [
             { 
