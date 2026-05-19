@@ -2,6 +2,10 @@ const { NODE_ENV, API_URL, WS_URL } = process.env
 
 const isProd = NODE_ENV === 'production'
 
+console.log(process.env)
+console.log(process.env.NODE_ENV)
+console.log(process.env.API_URL)
+console.log(process.env.WS_URL)
 console.log(NODE_ENV)
 console.log(API_URL)
 console.log(WS_URL)
