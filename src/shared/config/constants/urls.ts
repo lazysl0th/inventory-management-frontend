@@ -1,5 +1,3 @@
-const { NODE_ENV, API_URL, WS_URL } = process.env
-
 const isProd = process.env.NODE_ENV === 'production'
 
 export const BASE_API = isProd && process.env.API_URL ? process.env.API_URL : 'http://localhost:3001'

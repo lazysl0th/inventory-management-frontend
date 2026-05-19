@@ -179,7 +179,7 @@ const InventoryForm: React.FC = () => {
                         <InventoryFormContent />
                     </fieldset>
                     <SubmitButton
-                        disabled={!isAdmin && !isOwner}
+                        disabled={!!inventoryId && !isAdmin && !isOwner}
                         containerId={
                             modalView
                                 ? 'inventory-modal--footer'

@@ -19,7 +19,7 @@ const InventoryDetailsFieldset = () => {
     const { data: categories, isLoading: categoriesIsLoading } =
         useGetInventoryCategoriesQuery()
 
-    const { data: inventory } = useInventoryData()
+    const { data: inventory, inventoryId } = useInventoryData()
 
     const { isAdmin, isOwner } = useInventoryAccess(inventory)
 
@@ -84,7 +84,7 @@ const InventoryDetailsFieldset = () => {
                     </Select>
                 </Col>
                 <Col xs={12}>
-                    {!isAdmin && !isOwner ? (
+                    {!!inventoryId && !isAdmin && !isOwner ? (
                         <MarkdownField
                             name='description'
                             label={t('inventory:labels.description')}
@@ -116,7 +116,7 @@ const InventoryDetailsFieldset = () => {
                 </Col>
                 {
                     <Col xs={12} md={6} lg={4}>
-                        <TagsField disabled={!isAdmin && !isOwner} />
+                        <TagsField disabled={!!inventoryId && !isAdmin && !isOwner} />
                     </Col>
                 }
                 <Col md={12} lg={4}>

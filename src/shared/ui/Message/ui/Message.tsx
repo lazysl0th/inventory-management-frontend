@@ -8,7 +8,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 const Message = ({ error, ...rest }: IMessage) => {
-    const { t } = useTranslation('commom')
+    const { t } = useTranslation('common')
 
     let message: string = t('common:errors.unknown')
 
