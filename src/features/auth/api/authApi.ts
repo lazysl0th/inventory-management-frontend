@@ -16,16 +16,15 @@ export const authApi = baseApi.injectEndpoints({
                 method: 'POST',
                 body,
             }),
-            async onQueryStarted(_, { queryFulfilled }) {
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled
-
                     localStorage.setItem('accessToken', data.accessToken)
+                    dispatch(profileApi.util.invalidateTags(['Me']))
                 } catch (e) {
                     console.log(e)
                 }
             },
-            invalidatesTags: ['Me'],
         }),
         logout: builder.mutation({
             query: () => '/signout',

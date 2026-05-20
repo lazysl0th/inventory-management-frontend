@@ -73,11 +73,11 @@ const ProfilePage = () => {
                 </Col>
                 <Col md={9}>
                     <InventoryList
-                        tableId={MY_INVENTORIES}
+                        tableId={!userId ? MY_INVENTORIES : undefined}
                         isLoading={ownerInventoriesLoading}
                         data={ownerInventories}
                         error={ownerInventoriesError}
-                        inventoryActions={inventoryActions}
+                        inventoryActions={!userId ? inventoryActions : undefined}
                     >
                         <h3 className='mb-0'>
                             {userId

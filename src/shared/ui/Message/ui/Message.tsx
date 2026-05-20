@@ -23,7 +23,7 @@ const Message = ({ error, ...rest }: IMessage) => {
         message = error.message || message
     }
 
-    return <Alert {...rest}>{message}</Alert>
+    return <Alert {...rest}>{rest.children ? rest.children : message}</Alert>
 }
 
 export default Message
